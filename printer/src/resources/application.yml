@@ -1,0 +1,25 @@
+server:
+  port: 7511
+
+datasource:
+#  url: jdbc:mysql://10.253.102.74:3306/vie_sys
+#  username: iyb
+#  password: Abcd2017
+  url: jdbc:mysql://localhost:3307/system
+  username: root
+  password: ftp123
+
+path:
+  printer: ./static/
+  temp: ./static/temp/
+
+url:
+  temp: http://www.lerrain.com:7511/temp
+
+mail:
+  account: service@lerrain.com
+  password: Fffsg1m6
+  smtp:
+    host: smtp.mxhichina.com
+    port: 25
+    auth: true

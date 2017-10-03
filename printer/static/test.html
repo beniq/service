@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>PRINTER</title>
+
+  <link href="common/bootstrap.min.css" rel="stylesheet">
+  <link href="common/common.css" rel="stylesheet">
+
+  <script src="common/jquery.min.js"></script>
+  <script src="common/common.js"></script>
+  <script src="preview.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="list.html">PRINTER</a>
+      </div>
+      <div class="navbar-header" id="menu"></div>
+    </div>
+  </nav>
+
+  <div class="container-fluid" id="content">
+    <br/>
+    <textarea id="example" class="form-control" style="height:300px"></textarea>
+    <br/>
+    <button class="btn btn-primary btn-lg" onClick="printer.scale(10)">+</button>
+    <button class="btn btn-primary btn-lg" onClick="preview()">PREVIEW</button>
+    <button class="btn btn-primary btn-lg" onClick="printer.scale(-10)">-</button>
+    &nbsp;&nbsp;
+    <button class="btn btn-primary btn-lg" onClick="goPdf()">OUTPUT pdf</button>
+    <button class="btn btn-primary btn-lg" onClick="goPng()">OUTPUT png</button>
+    <br/><br/>
+  </div>
+
+  <div id="preview"></div>
+</body>
+
+<script>
+  var clientKey = "dd2dada7e27f51a5832dc4e7903be28d";
+  function refresh() {
+    common.req("view.json", {templateId:env.templateId, templateCode:env.templateCode}, function(r) {
+      env.workDir = r.workDir;
+      if (r.example != null) {
+        $("#example").html(r.example);
+      }
+    });
+  }
+  function goPdf() {
+    common.req("print.json", {key:clientKey, templateId:env.templateId, outputType:"pdf", content:JSON.parse($("#example").val())}, function(r) {
+      document.location.href = r;
+//        window.open(r);
+    });
+  }
+  function goPng() {
+    common.req("print.json", {key:clientKey, templateId:env.templateId, outputType:"png", content:JSON.parse($("#example").val())}, function(r) {
+      r.forEach(function(e) {
+        $("#preview").append("<img src='" + e + "'/>");
+      });
+    });
+  }
+  function preview() {
+    printer.preview(env.templateId, "preview", env.workDir, JSON.parse($("#example").val()));
+  }
+  $(document).ready( function() {
+    env.templateId = common.param("templateId");
+    env.templateCode = common.param("templateCode");
+    refresh();
+  });
+</script>
+
+</html>

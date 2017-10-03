@@ -1,0 +1,37 @@
+{
+  "productName": "尊享e生",
+  "policyNo": "1234567890123456",
+  "applicant": {
+    "birthday": "1977-01-01",
+    "gender": "男",
+    "name": "王老鸭",
+    "phone": "13512345678",
+    "email": "wanglaoya@qq.com",
+    "certType": "身份证",
+    "certNo": "123456781234567890"
+  },
+  "insurant": {
+    "birthday": "1980-01-01",
+    "gender": "女",
+    "name": "张小雅",
+    "phone": "13532345678",
+    "email": "wangxiaoya@qq.com",
+    "certType": "身份证",
+    "certNo": "223456781234567890",
+    "relation": "配偶",
+    "beneficiary": "本人"
+  },
+  "coverage": [
+    ["身故", "1000000"], ["伤残", "500000"]
+  ],
+  "rate": "1234567890123456",
+  "premium1": "三百七十二圆",
+  "premium": "372.00",
+  "insureFrom": "2017年9月10日",
+  "insureTo": "2018年9月9日",
+  "excess": "10000元",
+  "payPeriod": "年缴1年期",
+  "dispute": "无",
+  "special": "无",
+  "clause": "《成年人重大疾病保险》"
+}

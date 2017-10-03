@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<proposal>
+	<font_mapping>
+		<font name="hei" value="FONT_HEI"/>
+		<font name="kai" value="FONT_KAI"/>
+		<font name="song" value="FONT_SONG"/>
+	</font_mapping>
+
+	<page_setting>
+		<page name="default" default="yes" size="A4" x="150" y="220" width="1800" height="2500">
+			<template name="header" x="150" y="100" width="1800" height="120">
+				<image x="30" y="8" width="448" height="74" src="'logo.png'" url="'logo.png'"/>
+				<image x="500" y="28" width="134" height="46" src="'logo_slog.png'" url="'logo_slog.png'"/>
+			</template>
+
+			<template name="footer" x="150" y="2720" width="1800" height="170">
+				<rect x="0" y="22" width="1800" height="3" color="black"/>
+				<text x="0" y="40" width="1800" height="40" font="hei" font_size="32" color="black" align="center,middle" value="'本报价书仅供投保人理解保险条款时参考，各项内容以保险条款约定为准。'"/>
+				<text x="500" y="130" width="450" height="40" font="hei" font_size="32" color="black" align="right" value="'第' + PAGE.SEQUENCE + '页，'"/>
+				<text x="950" y="130" width="450" height="40" font="hei" font_size="32" color="black" align="left" mode="reset_at_final" value="'共' + PAGE.TOTAL + '页'"/>
+			</template>
+		</page>
+
+		<page name="cover" size="A4" x="0" y="0" width="2100" height="2970">
+		</page>
+	</page_setting>
+
+	<paragraph page="cover">
+		<image x="0" y="0" width="2100" height="2970" src="'cover.jpg'" url="'cover.jpg'"/>
+		<text x="1100" y="1200" width="800" height="130" font="hei" font_size="50" align="left,middle" color="black" value="'出具日期：' + PRINT_DATE"/>
+		<text x="1100" y="1300" width="800" height="130" font="hei" font_size="50" align="left,middle" color="black" value="'有效期间：' + VALID_DAY"/>
+	</paragraph>
+
+	<paragraph>
+		<text x="20" y="50" width="1760" height="200" font="hei" font_size="70" align="center" color="black" value="'方案阅读指引'"/>
+		<reset/>
+		<text x="100" y="0" width="1200" height="150" font="hei" font_size="50" align="left" color="black" value="'第一部分  公司介绍'"/>
+		<reset/>
+		<text x="100" y="0" width="1200" height="150" font="hei" font_size="50" align="left" color="black" value="'第二部分  致客户信'"/>
+		<reset/>
+		<text x="100" y="0" width="1200" height="150" font="hei" font_size="50" align="left" color="black" value="'第三部分  保障方案'"/>
+		<reset/>
+		<text x="100" y="0" width="1200" height="150" font="hei" font_size="50" align="left" color="black" value="'第四部分  保障条款'"/>
+		<reset/>
+		<text x="100" y="0" width="1200" height="150" font="hei" font_size="50" align="left" color="black" value="'第五部分  服务项目'"/>
+	</paragraph>
+
+	<paragraph>
+		<rect x="0" y="0" width="1800" height="170" color="darkcyan"/>
+		<rect x="10" y="10" width="1780" height="150" color="white"/>
+		<rect x="15" y="15" width="1770" height="140" color="darkcyan"/>
+		<text x="20" y="20" width="1760" height="130" font="hei" font_size="50" align="center" color="white" value="'公 司 简 介'"/>
+		<reset skip="50"/>
+		<rect x="0" y="47" width="650" height="6" color="darkcyan"/>
+		<rect x="1150" y="47" width="650" height="6" color="darkcyan"/>
+		<text x="20" y="0" width="1760" height="50" font="hei" font_size="40" align="center" color="black" value="'众安保险'"/>
+		<text x="20" y="50" width="1760" height="50" font="hei" font_size="36" align="center" color="black" value="'国内首家互联网保险公司'"/>
+		<reset skip="30"/>
+		<text x="0" y="0" width="1800" font="kai" font_size="40" line-height="70" align="left,top" color="black" value=
+			"'　　众安保险，全称“众安在线财产保险股份有限公司”, 2013年11月6日揭牌，由蚂蚁金服、腾讯、中国平安等知名企业发起成立。作为中国首家互联网保险公司，众安也是一家以技术创新带动金融发展的金融科技公司。'"/>
+		<reset skip="50"/>
+		<image x="0" y="0" width="1800" height="1181" src="'photo1.jpg'" url="'photo1.jpg'"/>
+		<reset skip="50"/>
+		<text x="0" y="0" width="1800" font="kai" font_size="40" line-height="70" align="left,top" color="black" value="'
+　　众安保险总部设在中国上海，注册资本12.40625亿人民币，不设任何分支机构。客户可以通过互联网进行便利的在线承保、保全和理赔服务。\n\n 
+　　2015年6月，成立仅17个月的众安保险获得57.75亿元的A轮融资，新增摩根士丹利、中金、鼎晖投资、赛富基金、凯斯博5家财务投资机构，估值达到500亿元。2015年12月，澳大利亚知名金融科技风投机构H2 Ventures联手KPMG（毕马威）发布的全球金融科技百强榜，众安保险摘得桂冠。\n\n
+　　在全新的互联网保险领域，作为拓荒者，众安保险最初从电商场景切入业务，从退货运费险、保证金保险等创新型产品起步，如今已完成投资型产品、信保产品、健康险、车险、开放平台、航旅及商险等多个事业线的搭建。\n\n 
+　　目前，众安保险的业务经营范围包括：与互联网交易直接相关的企业/家庭财产保险、货运保险、责任保险、信用保证保险；短期健康/意外伤害保险；机动车保险，包括机动车交通事故责任强制保险和机动车商业保险；上述业务的再保险分出业务；国家法律、法规允许的保险资金运用业务；保险信息服务业务；经中国保监会批准的其他业务。\n\n
+　　截至2016年12月31日，众安保险累计服务客户数量5.23亿，保单数量超过72.79亿。众安健康自成立以来，以服务互联网生态为目标，以数据技术为驱动，设计碎片化、场景化的贴心保险，从源头主动预防风险。为用户定制全覆盖，一站式的综合健康管理方案。成立至今累计客户数逾百万，服务企业数超过2000家，覆盖员工数近50万。\n\n 
+　　成立多年以来，众安保险已形成核心优势：产品设计基于场景定制，快速响应需求；定价基于互联网大数据，动态承保；销售则无缝接入场景，直面客户，交叉销售；理赔服务实现高度自动化，迅速而透明。\n\n 
+　　此外，作为国内首家核心系统搭建在云上的金融机构，众安基于云服务平台，搭建更加开放、灵活、可扩展的核心系统，适应互联网海量、高速的业务需求。\n\n
+　　金融科技的未来非常广阔，一起做有温度的保险！\n\n
+	'"/>
+	</paragraph>
+
+	<paragraph>
+		<rect x="0" y="0" width="1800" height="170" color="darkcyan"/>
+		<rect x="10" y="10" width="1780" height="150" color="white"/>
+		<rect x="15" y="15" width="1770" height="140" color="darkcyan"/>
+		<text x="20" y="20" width="1760" height="130" font="hei" font_size="50" align="center" color="white" value="'至 客 户 信'"/>
+		<reset skip="70"/>
+		<text x="0" y="0" width="1800" height="50" font="hei" font_size="43" color="black" value="'致尊敬的：'+GROUP.NAME+'（以下简称贵公司）'"/>
+		<reset skip="70"/>
+		<text x="0" y="0" width="1800" font="kai" font_size="43" line-height="70" align="left,top" color="black" value=
+			"'　　感谢贵公司选择众安在线财产保险股份有限公司为贵公司设计员工福利计划并提供相关服务。\n\n
+　　员工福利计划是员工薪酬福利的重要组成部分，不但体现了企业对员工和家属的关怀，也反映了企业的价值观，对于吸引人才、留住人才、提高绩效至关重要。\n\n
+　　众安保险将按照贵公司的个性需求，量身定制方案并充分依托互联网技术提供便捷、高效、以人为本的服务，帮助贵公司以最经济的投入，最大程度的提高员工士气，增强员工的归属感，最大程度发挥人才优势。\n\n
+　　感谢贵公司对众安保险的信任和支持。\n\n'"/>
+		<reset skip="70"/>
+		<text x="0" y="0" width="1800" height="50" font="hei" font_size="43" color="black" value="'重要声明：'"/>
+		<reset skip="70"/>
+		<text x="0" y="0" width="1800" font="kai" font_size="43" line-height="70" align="left,top" color="black" value="'
+1. 本建议书仅提供贵公司建议保险方案，不视为我公司发出的要约。贵公司向本公司投保后，经本公司同意承保，保险合同方成立。\n\n 
+2. 本建议书非我公司正式投保单和保险合同。保险责任及责任免除等以本公司签发的保险合同为准。\n\n
+3. 本建议书根据贵公司所提供的基本信息进行报价设计，如贵公司提供的具体信息发生变化，本建议书的产品及报价信息也可能随之变化。\n\n 
+4. 本建议书有效期为 90 天, 如贵公司确认建议书内容并有投保意向，请尽快与本公司联投保相关事宜。\n\n
+	'"/>
+	</paragraph>
+
+	<paragraph>
+		<rect x="0" y="0" width="1800" height="170" color="darkcyan"/>
+		<rect x="10" y="10" width="1780" height="150" color="white"/>
+		<rect x="15" y="15" width="1770" height="140" color="darkcyan"/>
+		<text x="20" y="20" width="1760" height="130" font="hei" font_size="50" align="center" color="white" value="'保 障 方 案'"/>
+		<reset/>
+		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'员工人数：'+GROUP.NUMBER"/>
+		<reset/>
+		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'员工平均年龄：'+GROUP.AGE"/>
+		<reset/>
+		<loop name="PLAN" value="PLANS">
+			<script>
+				var t1 = new map();
+				t1.NAME = '基础保障';
+				t1.HEADER = [['保障项目', '保险金额', '保费']];
+				t1.CONTENT = new list();
+				var t2 = new map();
+				t2.NAME = '医疗费用补偿';
+				t2.HEADER = [['保障项目', '保险金额', '附加保障信息', '保费']];
+				t2.CONTENT = new list();
+				var t3 = new map();
+				t3.NAME = '公共交通意外伤害保障';
+				t3.HEADER = [['保障项目', '保险金额', '保费']];
+				t3.CONTENT = new list();
+				var t4 = new map();
+				t4.NAME = '住院津贴保障';
+				t4.HEADER = [['保障项目', '保险金额', '附加保障信息', '保费']];
+				t4.CONTENT = new list();
+				for (var p : val(PLAN.DETAIL)) {
+				if (p.DETAIL == null) {
+				if (p.AMOUNT != null and p.AMOUNT > 0){
+				if (p.CODE == 'C006'){
+				if(p.CLAUSE_ITEM == '2')
+				p.NAME='意外住院津贴（仅含意外）';
+				else
+				p.NAME='综合住院津贴（含意外、疾病）';
+				t4.CONTENT += [p.NAME, p.AMOUNT+'元/天', p.EXTRA==null?'':p.EXTRA, p.PREMIUM];
+				}else{
+				t1.CONTENT += [p.NAME, p.AMOUNT, p.PREMIUM];
+				}
+				}
+				} else {
+				for (var q : val(p.DETAIL)) {
+				if (q.AMOUNT != null and q.CODE != null and q.AMOUNT > 0) {
+				if (str_begin(q.CODE, 'C002')) {
+				if (q.CODE == 'C00204' and q.EXP == 1) {
+				t3.CONTENT += [q.NAME+'(扩展自驾、乘坐私家车)', q.AMOUNT, q.PREMIUM];
+				} else {
+				t3.CONTENT += [q.NAME, q.AMOUNT, q.PREMIUM];
+				}
+
+				}
+
+				else if (str_begin(q.CODE, 'C005'))
+				t2.CONTENT += [q.NAME, q.AMOUNT, (q.EXTRA==null?'':q.EXTRA)+(q.TYPE_B==1?' 含乙类药品保障':''), q.PREMIUM];
+				}
+				}
+				}
+				}
+				var tables = new list();
+				if (size(t1.CONTENT) > 0)
+				tables += t1;
+				if (size(t3.CONTENT) > 0)
+				tables += t3;
+				if (size(t2.CONTENT) > 0)
+				tables += t2;
+				if (size(t4.CONTENT) > 0)
+				tables += t4;
+			</script>
+			<reset/>
+			<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 保障详情：'+PLAN.NAME"/>
+			<reset/>
+			<if condition="PLAN.TYPE == 1">
+				<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'RMB：'+PLAN.PRICE+'/人/年，职业类别：'+(PLAN.OCCUPATION_LEVEL=='3'?'1-3':'4')+'类，'+(PLAN.SOCIAL_INS=='Y'?'有医保':'无医保')+'   '"/>
+			</if>
+			<if condition="PLAN.TYPE != 1">
+				<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'RMB：'+PLAN.PRICE+'/人/年'"/>
+			</if>
+			<reset/>
+			<loop name="T" value="tables">
+				<reset skip="30"/>
+				<text x="0" y="0" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• ' + T.NAME"/>
+				<grid x="0" y="60" width="1800" font="hei" font_size="32" color="black" align="center,middle" split="no" header="T.HEADER" content="T.CONTENT" border_color="darkcyan" border="3" theme="simple" style="header-bgcolor:darkcyan; header-border-color:darkcyan; line-color:darkcyan;"/>
+			</loop>
+		</loop>
+		<reset/>
+		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 承保规则与特别约定'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 承保规则'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 本计划适用于3-300人投保的中小型企业。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 投保保险期间为1年。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 主被保险人为公司16-60周岁的投保人在职职工 (可包括临时工及实习生）；连带子女被保险人需要为主被保险人18周岁以下(全日制学生可拓展至23周岁)、未参加工作的未婚子女，其中新生婴儿要求健康出院，并自其出生之日起30天起保。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 一般特别约定'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 转（续）保人员无等待期，后续加保新入职员工或其连带被保险人的疾病身故、重大疾病设30天等待期外，其他各险种均不设任何形式的等待期。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 在合同有效期间内，新增被保险人保险责任起期不得早于被保险人实际入职当日零时，减少被保险人责任终期不得早于其离职当日二十四时，且新增被保险人责任起期或减少被保险人责任终期不得早于投保单位提交新增或减少被保险人书面申请之日前30个自然日。对新增被保险人于其保险责任起期至投保单位提交该保全申请当日零时期间发生的意外事故，理赔时在保险合同条款中约定的申请资料寄出上，还需补充提供被保险人劳动时手册（或者劳动合同）及社保缴费记录清单，如投保单位在新员工入职后30个自然日内没有以书面形式通知我司做新增人员操作，则我司不再提供新增被保险人的保全追溯，保险责任起期为我司收到投保单位新增被保险人的书面保全申请次日零时。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人意外伤害、疾病身故、重大疾病以及公共交通发生理赔后减保，未满期保费为0元。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'4. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人综合医疗（含意外医疗）、女性生育、住院津贴（含意外住院津贴）以及公共保额发生理赔后减保，按天退回未满期保费。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'5. 意外医疗指定医院：应在二级或二级以上的公立医院就诊；如因意外导致的急诊可放宽至任意公立医院就诊，待病情稳定后需转入指定医院治疗。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'6. 综合医疗指定医院：如按有社保人员投保应在居住或工作所在城市社会基本医疗保险指定的二级或二级以上的公立医院持本人医保卡就诊；此外，急诊可放宽至任意一家一级或以上公立医院就诊，待病情稳定后需转入二级或二级以上的公立医院治疗；被保险人休假期间，可在当地社保范围内二级或二级以上的公立医院就诊。被保险人因公出差期间，急诊可放宽至任意一家一级或以上公立医院就诊，待病情稳定后需转入二级或二级以上的公立医院治疗。在北京工作且参加北京医保的指定医院范围为医疗蓝本上的四家指定医院、19家北京市基本医疗保险A类定点医疗机构、专科医院和中医医院。 对于武汉大学中南医院、湖北省人民医院、武汉大学人民医院、武汉大学口腔医院、湖北省妇幼保健院、华中科技大学同济医学院附属协和医院、华中科技大学同济医学院附属同济医院门诊无须使用社保卡，住院需要经过医保结算；无社保投保人员指定就诊医院同上但无需使用社保卡就医。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 其他特别约定'"/>
+		<script>
+			var agreement = new object[size(PLANS)][2];
+			for (var i=0;size(PLANS)>i;i++) {
+			agreement[i][0] = PLANS[i].NAME;
+			agreement[i][1] = PLANS[i].SPAG;
+			}
+		</script>
+		<reset/>
+		<grid x="0" y="30" width="1800" font="hei" font_size="32" color="black" align="center,middle" split="yes" header="[['计划名称','特别约定']]" content="agreement" border_color="darkcyan" border="3" theme="simple" style="header-bgcolor:darkcyan; header-border-color:darkcyan; line-color:darkcyan; col-margin:10,10,10,10" col_width="[1,3]" col_align="[5,4]"/>
+	</paragraph>
+
+	<paragraph>
+		<rect x="0" y="0" width="1800" height="170" color="darkcyan"/>
+		<rect x="10" y="10" width="1780" height="150" color="white"/>
+		<rect x="15" y="15" width="1770" height="140" color="darkcyan"/>
+		<text x="20" y="20" width="1760" height="130" font="hei" font_size="50" align="center" color="white" value="'保 障 条 款'"/>
+		<reset/>
+		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'您本次员工福利计划保障涉及众安保险的如下条款：'"/>
+		<reset/>
+		<script>
+			var ac = new map();
+			ac.L1 = '团体人身意外伤害保险条款';
+			ac.L2 = '团体疾病身故与全残保险条款';
+			ac.L3 = '营运交通工具团体人身意外伤害保险条款';
+			ac.L4 = '团体重大疾病保险条款';
+			ac.L5 = '附加团体意外伤害医疗保险条款';
+			ac.L6 = '团体住院津贴医疗保险条款';
+			ac.L7 = '团体门诊急诊医疗保险条款';
+			ac.L8 = '团体住院医疗保险条款';
+			ac.L9 = '团体生育医疗保险条款';
+			ac.L10 = '附加团体公共保额医疗保险条款';
+
+			var clauses = new list();
+			for (var plan : PLANS) {
+			for (var p : val(plan.DETAIL)) {
+			//print('*****'+p);
+			if (p.AMOUNT != null and p.AMOUNT > 0) {
+			if (p.CODE == 'C001') {
+			if (find(clauses, 'L1') == null) clauses += 'L1';
+			} else if (p.CODE == 'C002') {
+			if (find(clauses, 'L3') == null) clauses += 'L3';
+			} else if (p.CODE == 'C003') {
+			if (find(clauses, 'L2') == null) clauses += 'L2';
+			} else if (p.CODE == 'C004') {
+			if (find(clauses, 'L4') == null) clauses += 'L4';
+			} else if (p.CODE == 'C006') {
+			if (find(clauses, 'L6') == null) clauses += 'L6';
+			}
+			}
+			if (p.DETAIL != null) {
+			for (var q : val(p.DETAIL)) {
+			//print('*********'+q);
+			if (q.AMOUNT != null and q.AMOUNT > 0 and q.CODE != null) {
+			if (q.CODE == 'C00501' or q.CODE == 'C00501A') {
+			if (find(clauses, 'L7') == null) clauses += 'L7';
+			}
+			if (q.CODE == 'C00501' or q.CODE == 'C00501B') {
+			if (find(clauses, 'L8') == null) clauses += 'L8';
+			}
+			if (str_begin(q.CODE, 'C002')) {
+			if (find(clauses, 'L3') == null) clauses += 'L3';
+			} else if (q.CODE == 'C00502') {
+			if (find(clauses, 'L5') == null) clauses += 'L5';
+			} else if (q.CODE == 'C00503') {
+			if (find(clauses, 'L9') == null) clauses += 'L9';
+			} else if (q.CODE == 'C00504') {
+			if (find(clauses, 'L10') == null) clauses += 'L10';
+			}
+			}
+			}
+			}
+			}
+			}
+		</script>
+		<loop y="30" name="c" value="clauses">
+			<reset/>
+			<text x="0" y="20" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　• ' + ac[c]"/>
+		</loop>
+		<reset/>
+		<text x="0" y="50" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'我们在下方为您列示了将各条款对应的保险责任等关键信息摘要。'"/>
+		<reset/>
+		<text x="0" y="20" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'如您需要了解条款详细信息，可以登录众安官网(www.zhongan.com)，点击“公开信息披露”获取更多信息。'"/>
+		<reset new_page="yes"/>
+		<loop y="0" name="c" value="clauses">
+			<reset/>
+			<text x="0" y="0" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ ' + ac[c]"/>
+			<reset/>
+			<if condition="c == 'L1'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在保险期间内，被保险人因遭受意外伤害事故导致身故或伤残的，保险人依照下列约定给付保险金，且给付各项保险金之和不超过本保险合同的保险金额：\n
+（一）身故保险责任\n
+　　在保险期间内，被保险人遭受意外伤害事故，并自该事故发生之日起180日内（含第180日）因该事故身故的，保险人按意外伤害保险金额给付身故保险金，给付身故保险金后对该被保险人的保险责任终止。\n
+　　被保险人因遭受意外伤害事故且自该事故发生日起下落不明，后经人民法院宣告死亡的，保险人按意外伤害保险金额给付身故保险金。但若被保险人被宣告死亡后生还的，保险金受领人应于知道或应当知道被保险人生还后30日内退还保险人给付的身故保险金。\n
+　　被保险人身故前保险人已给付本条第（二）款约定的伤残保险金的，身故保险金应扣除已给付的伤残保险金。\n
+（二）伤残保险责任\n
+　　在保险期间内，被保险人遭受意外伤害事故，并自该事故发生之日起180日内（含第180日）因该事故造成《人身保险伤残评定标准（行业标准）》（中保协发【2013】88号，详见附件）所列伤残的，保险人根据伤残评定结果所确定的给付比例乘以意外伤害保险金额给付伤残保险金。如第180日治疗仍未结束的，按被保险人当日的身体情况进行伤残鉴定，并据此按前述计算方式给付伤残保险金。本次意外伤害事故之前被保险人的已有伤残，应在鉴定时予以剔除。伤残的评定原则如下：\n
+（1）确定伤残类别：评定伤残时，应根据人体的身体结构与功能损伤情况确定所涉及的伤残类别。\n
+（2）确定伤残等级：应根据伤残情况，在同类别伤残下，确定伤残等级。\n
+（3）确定保险金给付比例：应根据伤残等级对应的百分比，确定保险金给付比例。\n
+（4）多处伤残的评定原则：当同一保险事故造成两处或两处以上伤残时，应首先对各处伤残程度分别进行评定，如果几处伤残等级不同，以最重的伤残等级作为最终的评定结论；如果两处或两处以上伤残等级相同，伤残等级在原评定基础上最多晋升一级，最高晋升至第一级。同一部位和性质的伤残，不应采用本标准条文两条以上或者同一条文两次以上进行评定。\n'"/>
+			</if>
+			<if condition="c == 'L2'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在保险期间内，保险人按下列约定承担保险责任：\n
+（一）疾病身故保险金\n
+	在保险期间内，被保险人在保险合同生效之日起60日后（续保不受60日的限制）因疾病身故，保险人按照保险合同载明的保险金额给付疾病身故保险金。\n
+（二）疾病全残保险金\n
+　　在保险期间内，被保险人在保险合同生效之日起60日后（续保不受60日的限制）因疾病造成《人身保险伤残评定标准（行业标准）》（中保协发【2013】88 号,详见附件）所列伤残程度第一级之一者，保险人按照保险合同载明的保险金额给付疾病全残保险金。\n
+　　上述疾病身故保险金和疾病全残保险金两者不可兼得，保险人给付其中的任意一项保险金后，对该被保险人的保险责任终止。\n'"/>
+			</if>
+			<if condition="c == 'L3'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在保险期间内，被保险人持有效客票(包括依法免票)乘坐合法从事客运的营运交通工具，在交通工具内因交通事故导致身故或伤残的，保险人依照下列约定给付保险金：\n
+（一）身故保险责任\n
+　　在保险期间内，被保险人遭受交通意外伤害事故，并自该事故发生之日起180日内（含第180日）因该事故身故的，保险人按保险合同上所载的相应交通工具所对应的保险金额给付身故保险金，对该被保险人的保险责任终止。\n
+　　被保险人因遭受交通意外伤害事故且自该事故发生日起下落不明，后经人民法院宣告死亡的，保险人按保险金额给付身故保险金。但若被保险人被宣告死亡后生还的，保险金受领人应于知道或应当知道被保险人生还后30日内退还保险人给付的身故保险金。\n
+　　被保险人身故前保险人已给付本条第（二）款约定的伤残保险金的，身故保险金应扣除已给付的伤残保险金。\n
+（二）伤残保险责任\n
+　　在保险期间内，被保险人遭受交通意外伤害事故，并自该事故发生之日起180日内（含第180日）因该事故造成《人身保险伤残评定标准（行业标准）》（中保协发【2013】88号，详见附件）所列伤残的，保险人根据伤残评定结果所确定的给付比例乘以意外伤害保险金额给付伤残保险金。如第180日治疗仍未结束的，按被保险人当日的身体情况进行伤残鉴定，并据此按前述计算方式给付伤残保险金。本次意外伤害事故之前被保险人的已有伤残，应在鉴定时予以剔除。伤残的评定原则如下：\n
+（1）确定伤残类别：评定伤残时，应根据人体的身体结构与功能损伤情况确定所涉及的伤残类别。\n
+（2）确定伤残等级：应根据伤残情况，在同类别伤残下，确定伤残等级。\n
+（3）确定保险金给付比例：应根据伤残等级对应的百分比，确定保险金给付比例。\n
+（4）多处伤残的评定原则：当同一保险事故造成两处或两处以上伤残时，应首先对各处伤残程度分别进行评定，如果几处伤残等级不同，以最重的伤残等级作为最终的评定结论；如果两处或两处以上伤残等级相同，伤残等级在原评定基础上最多晋升一级，最高晋升至第一级。同一部位和性质的伤残，不应采用本标准条文两条以上或者同一条文两次以上进行评定。\n
+（5）保险人对被保险人乘坐同一类别交通工具所负的给付上述各项保险金的责任，以该类别交通工具所对应的保险金额为限。一次或累计给付的保险金达到该类交通工具的保险金额时，保险人对被保险人乘坐该类别交通工具的保险责任终止。\n'"/>
+			</if>
+			<if condition="c == 'L4'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在本保险合同保险期间内，被保险人经中华人民共和国境内（不含港、澳、台地区）二级及以上医院或保险人认可的医疗机构确诊于其保险责任生效日起60日后（不含第60日）初次罹患本保险合同下列三十八种重大疾病，保险人按保险金额给付重大疾病保险金，对该被保险人保险责任终止。\n
+　　被保险人经医院确诊于其保险责任生效日起60日内初次罹患本保险合同下列三十八种重大疾病，保险人对投保人无息返还该被保险人对应的所交保险费，对该被保险人保险责任终止。\n
+　　若被保险人为续保或因意外伤害事故导致罹患本保险合同下列的三十八种重大疾病，则无60日的限制。\n
+一、恶性肿瘤-不包括部分早期恶性肿瘤\n
+二、急性心肌梗塞\n
+三、脑中风后遗症-永久性的功能障碍\n
+四、重大器官移植术或造血肝细胞移植术-须异体移植手术\n
+五、冠状动脉搭桥术（或称冠状动脉旁路移植术）-须开胸手术\n
+六、终末期肾病（或称慢性肾功能衰竭尿毒症期）-须透析治疗或肾脏移植手术\n
+七、多个肢体缺失-完全性断离\n
+八、急性或亚急性重症肝炎\n
+九、良性脑肿瘤-须开颅手术或放射治疗\n
+十、慢性肝功能衰竭失代偿期-不包括酗酒或药物滥用所致\n
+十一、脑炎后遗症或脑膜炎后遗症-永久性的功能障碍\n
+十二、深度昏迷-不包括酗酒或药物滥用所致\n
+十三、双耳失聪-永久不可逆\n
+十四、双目失明-永久不可逆\n
+十五、瘫痪-永久完全\n
+十六、心脏瓣膜手术-须开胸手术\n
+十七、严重阿尔茨海默病-自主生活能力完全丧失\n
+十八、严重脑损伤-永久性的功能障碍\n
+十九、严重帕金森病-自主生活能力完全丧失\n
+二十、严重III度烧伤-至少达体表面积的20%\n
+二十一、严重原发性肺动脉高压-有心力衰竭表现\n
+二十二、严重运动神经元病-自主生活能力完全丧失\n
+二十三、语言能力丧失-完全丧失且经积极治疗至少12个月\n
+二十四、重型再生障碍性贫血\n
+二十五、主动脉手术-须开胸或开腹手术\n
+二十六、严重多发性硬化症\n
+二十七、脊髓灰质炎\n
+二十八、植物人\n
+二十九、肌营养不良症\n
+三十、象皮病\n
+三十一、肾髓质囊性病\n
+三十二、埃博拉病毒感染\n
+三十三、坏死性筋膜炎\n
+三十四、慢性呼吸功能衰竭\n
+三十五、I 型糖尿病\n
+三十六、脑动脉瘤破裂开颅手术\n
+三十七、严重心肌病\n
+三十八、终末期肺病\n'"/>
+			</if>
+			<if condition="c == 'L5'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在本保险合同保险期间内，被保险人因主保险合同责任范围内的意外伤害，在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可的医院进行治疗，就其事故发生之日起一百八十日内（含第一百八十日）支出的、符合当地社会医疗保险主管部门规定的、必需且合理的医疗费用，保险人按下列约定承担保险金给付责任：\n
+（一）保险人对于每次事故的医疗费用，保险人在扣除免赔额后，按约定的给付比例在保险金额内给付意外伤害医疗保险金。免赔额和给付比例由投保人和保险人在投保时约定，并在保险合同中载明。\n
+　　保险期间届满被保险人治疗仍未结束的，保险人继续承担保险金给付保险责任，住院治疗者最长至意外伤害发生之日起第一百八十日止，门诊治疗者最长至意外伤害发生之日起第十五日止。\n
+（二）被保险人不论一次或多次发生意外伤害事故，保险人均按上述规定分别给付意外伤害医疗保险金，但累计给付金额以不超过该被保险人的保险金额为限，累计给付金额达到其保险金额时，对该被保险人保险责任终止。\n
+（三）被保险人如果已从其它途径（包括农村合作医疗保险、社会基本医疗保险、工作单位、本公司在内的任何商业保险机构等）就保险责任范围内的损失获得赔偿，则保险人只承担合理医疗费用剩余部分的保险责任。\n'"/>
+			</if>
+			<if condition="c == 'L6'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在本保险合同保险期间内，被保险人因意外伤害或者自本保险合同生效之日起三十日后因患疾病在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可的医院住院诊疗，保险人按每次实际住院天数扣除约定免赔天数后乘以本保险合同约定的日生活津贴计算给付住院津贴医疗保险金。\n
+　　本保险责任须符合如下规定：\n
+   （一）投保人首次投保本保险或非连续投保本保险时，被保险人因疾病住院诊疗的等待期为三十天，续保或在本保险合同有效期内因意外伤害而住院诊疗无等待期。被保险人在等待期内发生的住院治疗，保险人不承担给付保险金的责任。\n
+   （二）对于保险期间内发生且延续至合同到期日后三天内的住院诊疗，保险人给付保险金责任。\n
+   （三）被保险人多次进行住院治疗，保险人按约定分别给付住院津贴医疗保险金，但在本保险年度内对同一被保险人一次或多次累计给付津贴天数以180天为限，当累计给付天数达到180天时，本保险合同对该被保险人的保险责任终止。\n'"/>
+			</if>
+			<if condition="c == 'L7'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在保险期间内，如被保险人因意外伤害事故或疾病在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可的医院治疗的，保险人对于被保险人支出的、符合当地社会医疗保险主管部门规定的、必需且合理的医疗费用，在扣除免赔额后，依照约定的给付比例给付门诊急诊医疗保险金。\n
+　　保险人按如下约定承担保险责任：\n
+（一）投保人首次投保本保险或非连续投保本保险时，自本保险合同生效日起，被保险人因疾病进行门诊急诊治疗的，等待期为30天。投保人连续投保本保险或被保险人因意外伤害事故进行门诊急诊治疗的无等待期。被保险人在等待期内或本保险合同生效前发生的门诊急诊治疗，保险人不承担给付保险金的责任；\n
+（二）被保险人因他人责任造成伤害而引起的医疗费用，如果已从他人处获得赔偿，保险人不负给付医疗保险金的责任；\n
+（三）本保险合同为费用补偿型保险合同，适用医疗费用补偿原则。若门诊急诊医疗费用可依法律及政府之规定而有所补偿，或从其它福利计划或医疗保险计划（包括农村合作医疗保险、社会基本医疗保险、工作单位、保险人在内的任何商业保险机构等）取得部分或全部补偿，保险人仅负责补偿剩余部分，并以保险金额为限；\n
+（四）被保险人一次或多次因意外伤害事故或疾病进行门诊急诊治疗，累计给付金额以不超过该被保险人的保险金额为限。累计给付金额达到其保险金额时，本保险合同对该被保险人的保险责任终止；\n
+（五）若被保险人于中国境外、台湾、香港、澳门地区发生意外伤害事故所致的各项医疗费用均参照国内医疗机构同等诊疗标准进行给付；但必须提供当地使领馆或法律上认可的机构出具的保险事故性质确认文件。\n'"/>
+			</if>
+			<if condition="c == 'L8'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在本保险合同保险期间内，被保险人因意外伤害事故或疾病在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可的医院住院治疗的，保险人对于被保险人支出的、符合当地社会医疗保险主管部门规定的、必需且合理的医疗费用，在扣除免赔额后，依照约定的给付比例给付住院医疗保险金。免赔额和给付比例由投保人和保险人在投保时约定，并在保险合同中载明。\n
+　　保险人按如下约定承担保险责任：\n
+（一）投保人首次投保本保险或非连续投保本保险时，自本保险合同生效日起，被保险人因疾病进行住院治疗的，等待期为30天。投保人连续投保本保险或被保险人在本保险合同有效期内因意外伤害事故而进行住院治疗的无等待期。被保险人在等待期内或本保险合同生效前发生的住院治疗，保险人不承担给付保险金的责任。\n
+（二）对于保险期间内发生且延续至合同到期日后三天内的住院治疗，保险人负给付保险金责任。\n
+（三）被保险人因他人责任造成伤害而引起的医疗费用，如果已从他人处获得赔偿，保险人不负给付医疗保险金的责任。\n
+（四）本保险合同为费用补偿型保险合同，适用医疗费用补偿原则。若医疗费用可依法律及政府之规定而有所补偿，或从其它福利计划或医疗保险计划（包括农村合作医疗保险、社会基本医疗保险、工作单位、保险人在内的任何商业保险机构等）取得部分或全部补偿，保险人仅负责补偿剩余部分，并以保险金额为限。\n
+（五）被保险人一次或多次因意外伤害事故或疾病进行住院治疗，累计给付金额以不超过该被保险人的保险金额为限。累计给付金额达到其保险金额时，本保险合同对该被保险人的保险责任终止。\n'"/>
+			</if>
+			<if condition="c == 'L9'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　本保险合同的保险责任分为生育门诊急诊医疗保险责任和生育住院医疗保险责任，投保人可选择投保或全部投保，在本保险合同保险期间内，保险人根据投保人选择，根据本保险合同的约定承担以下保险责任：\n
+（一）生育门诊急诊医疗保险责任\n
+　　在保险期间内，被保险人因人工流产、妊娠或分娩，在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可医院治疗，对于被保险人支出的合理的、符合当地社会医疗保险主管部门规定的生育门诊急诊医疗费用，保险人在扣除该被保险人的免赔金额后，按约定的比例给付生育门诊急诊医疗保险金。\n
+　　在本保险合同保险期间内，被保险人不论一次或多次发生生育门诊急诊医疗费用，保险人累计给付保险金达到本保险合同约定的保险金额时，该项保险责任终止。\n
+（二）生育住院医疗保险责任\n
+　　保险期间内，被保险人因人工流产、正常妊娠或正常分娩在中华人民共和国境内（不含港、澳、台地区）二级及以上或保险人指定或认可医院治疗，对于被保险人支出的合理的、符合当地社会医疗保险主管部门规定的住院医疗费用，保险人在扣除该被保险人的免赔金额后按约定的比例给付生育住院医疗保险金。\n
+　　在本保险合同保险期间内，被保险人不论一次或多次发生住院医疗费用，保险人累计给付保险金达到本保险合同约定的保险金额时，该项保险责任终止。\n
+　　本保险合同为费用补偿型保险合同，适用医疗费用补偿原则。上述的生育门诊急诊医疗费用或生育住院医疗费用可依据法律或政府规定而有所补偿，或从其他福利计划或医疗保险计划（包括农村合作医疗保险、社会基本医疗保险、工作单位、保险人在内的任何商业保险机构等）取得部分或全部补偿,保险人仅负责补偿剩余部分，并以保险金额为限。\n
+				'"/>
+			</if>
+			<if condition="c == 'L10'">
+				<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="
+'　　在本附加合同保险期间内，当被保险人在同一保险期间内累计的医疗赔付费用超过主合同上载明的该被保险人对应的年赔付限额时，保险人就其超出主合同中年赔付限额的部分，按本附加合同约定的公共保额医疗保险金给付予该被保险人。\n
+　　保险人对每一被保险人同一保险期间所累计给付的公共保额医疗保险金以本附加合同上载明的该被保险人对应的公共保额医疗保险金个人保险金额为限。保险人对同一团体同一保险期间所累计给付的公共保额医疗保险金以本附加合同上载明的该被保险团体公共保额医疗保险金额为限。\n'"/>
+			</if>
+			<reset skip="30"/>
+		</loop>
+	</paragraph>
+
+	<paragraph>
+		<rect x="0" y="0" width="1800" height="170" color="darkcyan"/>
+		<rect x="10" y="10" width="1780" height="150" color="w g.v,hite"/>
+		<rect x="15" y="15" width="1770" height="140" color="darkcyan"/>
+		<text x="20" y="20" width="1760" height="130" font="hei" font_size="50" align="center" color="white" value="'服 务 项 目'"/>
+		<reset/>
+		<text x="0" y="50" width="1800" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 服务时效承诺'"/>
+		<reset/>
+		<grid x="0" y="30" width="1800" font="hei" font_size="32" color="black" align="center,middle" split="no" header="[['服务项目','服务时效']]" content="[['缮发保险合同','3个工作日'], ['员工资料变更','5个工作日'], ['理赔','8个工作日
+复杂案件20个工作日内给予理赔决定'], ['客户查询','1个工作日'], ['承诺划款时效','1个工作日'], ['普通问题投诉咨询回复时间','2个工作日'], ['需调查问题投诉咨询回复时间','3-5个工作日']]" border_color="darkcyan" border="3" theme="simple" style="header-bgcolor:darkcyan; header-border-color:darkcyan; line-color:darkcyan;"/>
+		<reset/>
+		<text x="0" y="50" width="1800" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 保全操作逻辑'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'1. 增减被保险人'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　被保险人人数增加时，保险人在审核同意后，于收到申请之日的次日零时开始承担保险。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　被保险人人数减少时，保险人在审核同意后，于收到申请之日的次日零时起，对减少的被保险人终止保险责任。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'2. 增减被保险人时的保费计算'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　增加被保险人收取短期保险费 = 年保险费×承保天数/365'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　减少被保险人退还短期保险费 = 年保险费×（未经过天数/365）'"/>
+		<reset new_page="yes"/>
+		<text x="0" y="50" width="1800" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 理赔服务流程'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'1. 线上理赔服务（小额医疗案件极速通道）'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　开通理赔绿色通道，对于3000元以下医药费理赔提供在线服务，只需对就诊资料和发票拍照即可申请理赔。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　理赔款可以通过支付宝、微信、银行卡等多种方式直接支付。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'2. 企业的其他理赔服务'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　可根据企业的人员分布情况，提供现场收单、答疑咨询服务。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　根据不同的承保范围及出险原因（扫描二维码即可获取员工手册，了解保单和服务详情），员工准备理赔申请资料。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　单证不齐全的案件，在收到理赔材料之日起10个工作日内，一次性通知索赔申请人补充提供。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　如需对理赔案件进行调查的，在收到理赔单证后15日内完成案件调查工作；并最迟不晚于初次收到被保险人或受益人理赔单证之日起20日内，做出理赔决定。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　正常案件8个工作日内完成所有的理算及结案工作，结案后1个工作日内支付赔款。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'3. 重疾等疑难案件赔付流程'"/>
+		<reset/>
+		<image x="100" y="30" width="1600" height="744" src="'claim.png'" url="'claim.png'"/>
+		<reset new_page="yes"/>
+		<text x="0" y="50" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'4. 理赔资料'"/>
+		<reset/>
+		<grid x="0" y="30" width="1800" font="hei" font_size="32" color="black" align="center,middle" split="no" header="[['索赔材料','医疗费用','@0,1','住院津贴','@0,3','重大
+疾病','身故','伤残','生育费用/
+津贴'], ['@0,0','意外','疾病','意外','疾病','@0,5','@0,6','@0,7','@0,8']]" content="[['理赔申请书','√','√','√','√','√','√','√','√'], ['被保险人身份证明','√','√','√','√','√','√','√','√'], ['被保险人身份证明','√','√','√','√','√','√','√','√'], ['医疗费用收据原件','√','√','','','','','','√'], ['病情诊断书','','','','√','√','','',''], ['病历','√','√','√','√','√','√','√','√'], ['医疗费用明细清单/处方','√','√','√','√','','','',''], ['病理、血液、影像检查报告','','','','','√','','√',''], ['死亡证明书','','','','','','√','',''], ['户口注销证明','','','','','','√','',''], ['丧葬火化证明','','','','','','√','',''], ['意外事故证明','√','','√','','','√','√',''], ['残疾鉴定报告','','','','','','','√',''], ['受益人身份证明','','','','','','√','',''], ['子女出生证明','','','','','','','','√'], ['结婚证及准生证','','','','','','','','√'], ['孕检服务手册','','','','','','','','√']]" col_width="[3,1,1,1,1,1,1,1,1]" border_color="darkcyan" border="3" theme="simple" style="header-bgcolor:darkcyan; header-border-color:darkcyan; line-color:darkcyan;"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'注释：'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 包括身份证、户口本、出生证明。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 含首次就诊记录及与发票日期对应的所有门诊病历、住院病历的入院记录及出院小结；未住院的仅需提供门诊病历。申请住院津贴超30天的需提供医嘱单和护理记录；申请手术津贴、重大疾病、身故、伤残项目需提供手术记录。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 死亡证明：居民死亡医学证明书（非医院内死亡的，需要提供法医尸检报告；宣告死亡的需要提供法院宣告死亡书）、户口注销证明、殡葬证明，上述证明材料需验证原件，收取复印件。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'4. 意外事故证明包括：因公受到伤害的需提供单位证明；因交通事故伤害的，需提供交通事故认定书；如被保人驾驶机动车出险的需提供驾驶证、行驶证；因民事、刑事损害导致受伤的提供公安机关证明、法院判决书等；旅行等意外伤害由旅游地风景管理部门、旅行社或公安机关等提供事故证明；申请前已经涉及法律诉讼的死亡案件，应提交法院判决书；境外发生事故的需要提供当地处理机关或医疗机构的相关证明，导致死亡的另需提供当地我国使、领馆证明文件。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'5. 由具有相应资质的司法鉴定机构或医疗执业机构出具的正式鉴定文书。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'6. 受益人身份证明和受益人与被保险人关系证明，如户籍证明、结婚证明、公安部门出具的关系证明等；如受益人先于被保险人死亡的，需提供当地派出所或居（村）委会出具的相关证明。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'7. 为保证保险金受领的安全性，请尽量转账至受益人银行账户；存在多个受益人，委托其中一个受益人或委托他人代领时，请提供授权委托书，必要时还须对委托进行公证。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'8. 保险条款中对职业类别有明确约定的，应该提供被保险人职业证明（单位证明或工作证或执业证明或工资表）。'"/>
+		<reset new_page="yes"/>
+		<text x="0" y="50" width="1800" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 电子化服务'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'1. 查询服务'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　开通了众安网站、手机网站、微信公众号等多种查询途径。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　可查询保险责任、医疗险限额和使用情况以及理赔信息。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　承保、保全、理赔服务完成后主动通过短信通知被保险人。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'2. 定制投保服务'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　通过集成OA、网站、手机H5页面等多种方式提供定制投保服务。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　被保险人根据指引填写个人信息，自动生成投保名单供投保单位审核，简化单位联系人的工作。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'3. 定制保全服务'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　通过集成OA、网站、定制手机H5页面等多种方式提供定制保全服务。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　被保险人根据指引填写个人信息，自动生成投保名单供投保单位审核，简化单位联系人的工作。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　线上减少被保险人。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'　　众安保险提供的电子化保全不但大幅提高效率，减少投保单位的工作量，同时及时的增减被保险人，也更好的为被保险人提供保障并有效控制投保单位成本。'"/>
+		<reset/>
+		<image x="0" y="50" width="1800" height="821" src="'photo2.jpg'" url="'photo2.jpg'"/>
+	</paragraph>
+</proposal>

@@ -1,0 +1,130 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>PRINTER</title>
+
+  <link href="common/bootstrap.min.css" rel="stylesheet">
+  <link href="common/common.css" rel="stylesheet">
+
+  <script src="common/jquery.min.js"></script>
+  <script src="common/common.js"></script>
+  <script src="preview.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="list.html">PRINTER</a>
+      </div>
+      <div class="navbar-header" id="menu"></div>
+    </div>
+  </nav>
+
+  <div class="container-fluid" id="content">
+    <br/>
+    <input id="templateId" type="hidden"/>
+    模板代码：<input id="code" class="form-control"/>
+    <br/>
+    模板名称：<input id="name" class="form-control"/>
+    <br/>
+    相关附件：<div id="files"></div>
+    <br/>
+    测试脚本：
+    <textarea id="example" class="form-control" style="height:300px"></textarea>
+    <br/>
+    <button class="btn btn-primary btn-lg" onClick="printer.scale(10)">+</button>
+    <button class="btn btn-primary btn-lg" onClick="preview()">PREVIEW</button>
+    <button class="btn btn-primary btn-lg" onClick="printer.scale(-10)">-</button>
+    &nbsp;&nbsp;
+    <button class="btn btn-primary btn-lg" onClick="save()">SAVE ALL</button>
+    <br/><br/>
+  </div>
+
+  <div id="preview"></div>
+</body>
+
+<script>
+  function refresh() {
+    common.req("view.json", {templateId:env.templateId}, function(r) {
+      env.workDir = r.workDir;
+      $("#templateId").val(r.id);
+      $("#code").val(r.code);
+      $("#name").val(r.name);
+      if (r.files != null) {
+        var fhtml = "";
+        for (var f in r.files) {
+          var url = common.link("resource/template/" + env.workDir + "/" + r.files[f]);
+          fhtml += "<a class='btn btn-primary btn-lg' href='"+url+"'>" + r.files[f] + "</a>";
+          //fhtml += "<a href='" + common.link("resource/template/" + env.workDir + "/" + r.files[f]) + "'>" + r.files[f] + "</a>";
+          fhtml += "<button class='btn btn-primary btn-lg' onClick='del(\"" + r.files[f] + "\")'>X</button>";
+          fhtml += "&nbsp;&nbsp;";
+        }
+        if (fhtml == "") fhtml = "<br/>";
+        $("#files").html(fhtml);
+      }
+      if (r.example != null) {
+        $("#example").html(r.example);
+      }
+    });
+  }
+  function del(file) {
+    common.req("delete.json", {templateId:env.templateId, file:file}, function(r) {
+      refresh();
+    });
+  }
+  function save() {
+    common.req("save.json", {templateId:env.templateId, code:$("#code").val(), name:$("#name").val(), test:$("#example").val()}, function(r) {
+      refresh();
+    });
+  }
+  function preview() {
+    printer.preview(env.templateId, "preview", env.workDir, JSON.parse($("#example").val()));
+  }
+  $(document).ready( function() {
+    env.templateId = common.param("templateId");
+    refresh();
+    $(document).on({
+      dragleave:function(e){    //拖离
+        e.preventDefault();
+      },
+      drop:function(e){  //拖后放
+        e.preventDefault();
+      },
+      dragenter:function(e){    //拖进
+        e.preventDefault();
+      },
+      dragover:function(e){    //拖来拖去
+        e.preventDefault();
+      }
+    });
+
+    var box = document.getElementById('files'); //拖拽区域
+    box.addEventListener("drop", function(e){
+      e.preventDefault();
+      var fileList = e.dataTransfer.files;
+      if(fileList.length == 0)
+        return false;
+
+      xhr = new XMLHttpRequest();
+      xhr.open("post", common.url(env.templateId + "/upload"), true);
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhr.onreadystatechange = refresh;
+
+      var fd = new FormData();
+      for (var i=0;i<fileList.length;i++)
+        fd.append("file", fileList[i]);
+      xhr.send(fd);
+
+      console.log(xhr.response)
+    }, false);
+  });
+</script>
+
+</html>

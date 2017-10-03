@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="gbk" ?>
+<proposal>
+    <font_mapping>
+        <font name="hei" value="FONT_HEI"/>
+        <font name="kai" value="FONT_KAI"/>
+        <font name="song" value="FONT_SONG"/>
+    </font_mapping>
+
+    <page_setting>
+        <page name="default" default="yes" size="A4" x="100" y="220" width="1900" height="2500">
+            <template x="0" y="0" width="2100" height="2970">
+                <reset skip="0"/>
+                <image x="50" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="1050" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <reset/>
+                <image x="50" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="1050" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <reset/>
+                <image x="50" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="1050" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+            </template>
+
+            <template name="header" x="100" y="100" width="1900" height="120">
+                <image x="30" y="0" width="274" height="90" src="'logo.png'" url="'logo.png'"/>
+                <text x="1600" y="10" width="300" height="40" font="hei" font_size="30" color="black" align="center" value="applicant.name + (applicant.name == '' or applicant.name == null ? '' : '的') + '综合保障计划'"/>
+                <text x="1600" y="50" width="300" height="40" font="hei" font_size="30" color="black" align="center" value="'寿险顾问：' + agent.name"/>
+                <rect x="0" y="95" width="1900" height="3" color="black"/>
+            </template>
+
+            <template name="footer" x="100" y="2720" width="1900" height="170">
+                <rect x="0" y="22" width="1900" height="3" color="black"/>
+                <text x="0" y="40" width="1900" height="40" font="hei" font_size="30" color="black" align="center" value="'本产品说明书仅供投保人理解保险条款时参考，各项内容以保险条款约定为准。'"/>
+                <text x="500" y="130" width="450" height="40" font="hei" font_size="30" color="black" align="right" value="'第' + PAGE.SEQUENCE + '页，'"/>
+                <text x="950" y="130" width="450" height="40" font="hei" font_size="30" color="black" align="left" mode="reset_at_final" value="'共' + PAGE.TOTAL + '页'"/>
+            </template>
+        </page>
+
+        <page name="landscape" size="A4_rotate" x="100" y="220" width="2770" height="1630">
+            <template x="0" y="0" width="2970" height="2100">
+                <reset skip="50"/>
+                <image x="0" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="1000" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="2000" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <reset/>
+                <image x="0" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="1000" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+                <image x="2000" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
+            </template>
+
+            <template name="header" x="100" y="100" width="2770" height="120">
+                <image x="30" y="0" width="274" height="90" src="'logo.png'" url="'logo.png'"/>
+                <text x="2470" y="10" width="300" height="40" font="hei" font_size="30" color="black" align="center" value="applicant.name + (applicant.name == '' or applicant.name == null ? '' : '的') + '综合保障计划'"/>
+                <text x="2470" y="50" width="300" height="40" font="hei" font_size="30" color="black" align="center" value="'寿险顾问：' + agent.name"/>
+                <rect x="0" y="95" width="2770" height="3" color="black"/>
+            </template>
+
+            <template name="footer" x="100" y="1850" width="2770" height="170">
+                <rect x="0" y="22" width="2770" height="3" color="black"/>
+                <text x="0" y="40" width="2770" height="40" font="hei" font_size="30" color="black" align="center" valign="middle" value="'本产品说明书仅供投保人理解保险条款时参考，各项内容以保险条款约定为准。'"/>
+                <text x="1000" y="130" width="385" height="40" font="hei" font_size="30" color="black" align="right" value="'第' + PAGE.SEQUENCE + '页，'"/>
+                <text x="1385" y="130" width="385" height="40" font="hei" font_size="30" color="black" align="left" mode="reset_at_final" value="'共' + PAGE.TOTAL + '页'"/>
+                <!--<text x="1000" y="130" width="770" height="40" font="hei" font_size="30" color="black" align="center" valign="middle" value="'第' + PAGE.SEQUENCE + '页，共' + PAGE.TOTAL + '页'"/>-->
+            </template>
+        </page>
+
+        <page name="cover" size="A4" x="0" y="0" width="2100" height="2970"></page>
+    </page_setting>
+
+    <paragraph page="cover">
+        <image x="0" y="0" width="2100" height="2970" src="'cover.jpg'" url="'cover.jpg'"/>
+    </paragraph>
+
+    <loop name="p" value="plan">
+
+        <paragraph>
+            <text x="50" y="20" width="1800" height="60" font="hei" font_size="45" color="black" value="'您投保的保险计划'"/>
+            <rect x="0" y="80" width="1900" height="10" color="darkcyan"/>
+            <reset skip="30"/>
+            <text x="50" y="0" width="1800" height="45" font="song" font_size="35" color="black" value="'被保险人：' + p.insurant.name + '（' + (p.insurant.gender == 1 ? '男' : '女') + '/' + p.insurant.age + '周岁）'"/>
+            <reset skip="20"/>
+            <text x="30" y="0" width="620" height="60" font="hei" font_size="35" color="white" bgcolor="darkcyan" align="center" value="'险种名称'"/>
+            <text x="650" y="0" width="350" height="60" font="hei" font_size="35" color="white" bgcolor="darkcyan" align="center" value="'保额/档次/份数'"/>
+            <text x="1000" y="0" width="250" height="60" font="hei" font_size="35" color="white" bgcolor="darkcyan" align="center" value="'保险期间'"/>
+            <text x="1250" y="0" width="250" height="60" font="hei" font_size="35" color="white" bgcolor="darkcyan" align="center" value="'交费期间'"/>
+            <text x="1500" y="0" width="370" height="60" font="hei" font_size="35" color="white" bgcolor="darkcyan" align="center" value="'保费'"/>
+            <loop name="c" value="p.product" y="70">
+                <reset skip="10"/>
+                <text x="50" y="0" width="590" height="60" font="hei" font_size="35" color="black" align="left,middle" value="c.name"/>
+                <text x="650" y="0" width="350" height="60" font="hei" font_size="35" color="black" align="center" value="c.amount"/>
+                <text x="1000" y="0" width="250" height="60" font="hei" font_size="35" color="black" align="center" value="c.insure"/>
+                <text x="1250" y="0" width="250" height="60" font="hei" font_size="35" color="black" align="center" value="c.pay"/>
+                <text x="1500" y="0" width="350" height="60" font="hei" font_size="35" color="black" align="right,middle" value="c.premium"/>
+                <loop name="d" value="c.children" y="60">
+                    <reset skip="10"/>
+                    <text x="50" y="0" width="590" height="60" font="hei" font_size="35" color="black" align="left,middle" value="' - ' + d.name"/>
+                    <text x="650" y="0" width="350" height="60" font="hei" font_size="35" color="black" align="center" value="d.amount"/>
+                    <text x="1000" y="0" width="250" height="60" font="hei" font_size="35" color="black" align="center" value="d.insure"/>
+                    <text x="1250" y="0" width="250" height="60" font="hei" font_size="35" color="black" align="center" value="d.pay"/>
+                    <text x="1500" y="0" width="350" height="60" font="hei" font_size="35" color="black" align="right,middle" value="d.premium"/>
+                </loop>
+            </loop>
+            <reset/>
+            <text x="1000" y="20" width="850" height="60" font="hei" font_size="35" color="black" align="right,middle" value="'首期保费：'+p.premium"/>
+            <reset skip="30"/>
+
+            <text x="50" y="20" width="1800" height="60" font="hei" font_size="45" color="black" value="'投保计划的保险责任'"/>
+            <rect x="0" y="80" width="1900" height="10" color="darkcyan"/>
+            <reset skip="30"/>
+            <loop name="c" value="p.coverage" y="0">
+                <if condition="size(p.coverage[c]) > 0">
+                    <text x="50" y="0" width="1800" height="50" font="hei" font_size="35" color="black" value="c"/>
+                    <rect x="0" y="70" width="1900" height="3" color="darkcyan"/>
+                    <reset/>
+                    <loop name="i" value="p.coverage[c]" y="20">
+                        <if condition="i.title != null">
+                            <text x="50" y="0" width="1800" height="50" font="song" font_size="35" color="black" value="i.title"/>
+                        </if>
+                        <reset/>
+                        <loop name="j" value="i.content" y="20">
+                            <text x="50" y="0" width="1800" height="50" line_skip="10" font="kai" font_size="35" color="black" value="'　　' + j.text"/>
+                            <reset skip="20"/>
+                        </loop>
+                        <reset skip="20"/>
+                    </loop>
+                    <reset skip="30"/>
+                </if>
+                <reset/>
+            </loop>
+        </paragraph>
+
+        <paragraph page="landscape">
+            <loop name="c" value="p.table" y="0">
+                <if condition="size(p.table[c]) > 0">
+                    <loop name="i" value="p.table[c]" y="0">
+                        <text x="50" y="0" width="1400" height="45" font="hei" font_size="35" color="black" value="c"/>
+                        <text x="1500" y="0" width="1200" height="45" font="hei" font_size="35" color="black" align="right" value="i.title"/>
+                        <sheet x="0" y="50" width="2770" font="hei" font_size="24" color="black" align="right,middle" header="i.head" content="i.body"/>
+                        <reset new_page="yes"/>
+                    </loop>
+                    <reset skip="0"/>
+                </if>
+                <reset skip="20"/>
+            </loop>
+        </paragraph>
+
+    </loop>
+
+</proposal>
