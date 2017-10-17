@@ -155,6 +155,7 @@ public class PrinterService
 		param.put("FONT_HEI", "simhei.ttf");
 		param.put("FONT_KAI", "simkai.ttf");
 		param.put("FONT_SONG", "stsong.ttf");
+		param.put("FONT_YOU", "simyou.ttf");
 		param.put("FONT_CONSOLA", "consola.ttf");
 		param.put("FONT_COURIER", "courier.ttf");
 		param.put("RESOURCE_PATH", TypesetUtil.getResourcePath() + File.separator + template.getCode() + File.separator);

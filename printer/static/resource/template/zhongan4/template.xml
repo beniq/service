@@ -3,12 +3,12 @@
     <font_mapping>
         <font name="hei" value="FONT_HEI"/>
         <font name="kai" value="FONT_KAI"/>
-        <font name="song" value="FONT_SONG"/>
+        <font name="song" value="FONT_YOU"/>
     </font_mapping>
 
     <page_setting>
-        <page name="default" default="yes" size="A4" x="100" y="220" width="1900" height="2580">
-            <template x="0" y="0" width="2100" height="2970">
+        <page name="default" default="yes" size="A4" x="100" y="240" width="1900" height="2540">
+            <!-- template x="0" y="0" width="2100" height="2970">
                 <reset skip="0"/>
                 <image x="50" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
                 <image x="1050" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
@@ -18,7 +18,7 @@
                 <reset/>
                 <image x="50" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
                 <image x="1050" y="0" width="1000" height="1000" src="'watermark.png'" url="'watermark.png'"/>
-            </template>
+            </template -->
 
             <template name="header" x="100" y="100" width="1900" height="120">
                 <image x="30" y="0" width="460" height="100" src="'logo.png'" url="'logo.png'"/>
@@ -34,10 +34,10 @@
     </page_setting>
 
     <paragraph>
-        <text x="50" y="0" width="1800" height="200" font="hei" font_size="50" color="black" align="center" value="'众安在线财产保险股份有限公司\n电子保险单'"/>
+        <text x="50" y="0" width="1800" height="160" font="hei" font_size="50" color="black" align="center" value="'众安在线财产保险股份有限公司\n电子保险单'"/>
 
         <reset/>
-        <text x="20" y="0" width="1860" height="60" font="kai" font_size="36" color="black" align="left" value="'根据投保人申请，本公司承担下列保险责任，特此签发本保险单为据。'"/>
+        <text x="20" y="20" width="1860" height="60" font="kai" font_size="36" color="black" align="left" value="'根据投保人申请，本公司承担下列保险责任，特此签发本保险单为据。'"/>
         <reset/>
         <text x="20" y="0" width="1000" height="60" font="kai" font_size="36" color="black" align="left" value="'保险产品名称：' + basePolicyInfo.productName"/>
         <text x="1080" y="0" width="800" height="60" font="kai" font_size="36" color="black" align="right" value="'保险单号：' + basePolicyInfo.policyNo"/>
@@ -45,47 +45,47 @@
         <reset skip="40"/>
         <text x="0" y="0" width="100" height="240" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'投\n保\n人'"/>
 
-        <text x="100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'投保人姓名'"/>
-        <text x="400" y="0" width="300" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.name"/>
-        <text x="700" y="0" width="200" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'性别'"/>
-        <text x="900" y="0" width="200" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.gender"/>
-        <text x="1100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'出生日期'"/>
-        <text x="1400" y="0" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.birthday"/>
+        <text x="100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'投保人姓名'"/>
+        <text x="400" y="0" width="300" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.name"/>
+        <text x="700" y="0" width="200" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'性别'"/>
+        <text x="900" y="0" width="200" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.gender"/>
+        <text x="1100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'出生日期'"/>
+        <text x="1400" y="0" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.birthday"/>
 
-        <text x="100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'证件类型'"/>
-        <text x="400" y="80" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.certificateType"/>
-        <text x="1100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'证件号码'"/>
-        <text x="1400" y="80" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.certificateNo"/>
+        <text x="100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'证件类型'"/>
+        <text x="400" y="80" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.certificateType"/>
+        <text x="1100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'证件号码'"/>
+        <text x="1400" y="80" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.certificateNo"/>
 
-        <text x="100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'联系电话'"/>
-        <text x="400" y="160" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.phoneNo"/>
-        <text x="1100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="'客户编号'"/>
-        <text x="1400" y="160" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" top_border="1" right_border="1" bottom_border="1" value="policyHolder.userId"/>
+        <text x="100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'联系电话'"/>
+        <text x="400" y="160" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.phoneNo"/>
+        <text x="1100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'客户编号'"/>
+        <text x="1400" y="160" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="policyHolder.userId"/>
 
         <reset/>
-        <text x="0" y="0" width="100" height="320" font="hei" font_size="36" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="'被\n保\n险\n人'"/>
+        <text x="0" y="0" width="100" height="320" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'被\n保\n险\n人'"/>
 
-        <text x="100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'被保险人姓名'"/>
-        <text x="400" y="0" width="300" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.name"/>
-        <text x="700" y="0" width="200" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'性别'"/>
-        <text x="900" y="0" width="200" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.gender"/>
-        <text x="1100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'出生日期'"/>
-        <text x="1400" y="0" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.birthday"/>
+        <text x="100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'被保险人姓名'"/>
+        <text x="400" y="0" width="300" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.name"/>
+        <text x="700" y="0" width="200" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'性别'"/>
+        <text x="900" y="0" width="200" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.gender"/>
+        <text x="1100" y="0" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'出生日期'"/>
+        <text x="1400" y="0" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.birthday"/>
 
-        <text x="100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'证件类型'"/>
-        <text x="400" y="80" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.certificateType"/>
-        <text x="1100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'证件号码'"/>
-        <text x="1400" y="80" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.certificateNo"/>
+        <text x="100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'证件类型'"/>
+        <text x="400" y="80" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.certificateType"/>
+        <text x="1100" y="80" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'证件号码'"/>
+        <text x="1400" y="80" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.certificateNo"/>
 
-        <text x="100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'联系电话'"/>
-        <text x="400" y="160" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.phoneNo"/>
-        <text x="1100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'客户编号'"/>
-        <text x="1400" y="160" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.userId"/>
+        <text x="100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'联系电话'"/>
+        <text x="400" y="160" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.phoneNo"/>
+        <text x="1100" y="160" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'客户编号'"/>
+        <text x="1400" y="160" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.userId"/>
 
-        <text x="100" y="240" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'与投保人关系'"/>
-        <text x="400" y="240" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.relation"/>
-        <text x="1100" y="240" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="'身故受益人'"/>
-        <text x="1400" y="240" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" right_border="1" bottom_border="1" value="insurant.benefitMan"/>
+        <text x="100" y="240" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'与投保人关系'"/>
+        <text x="400" y="240" width="700" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.relation"/>
+        <text x="1100" y="240" width="300" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'身故受益人'"/>
+        <text x="1400" y="240" width="500" height="80" font="song" font_size="36" color="black" align="center" border_color="black" border="1" value="insurant.benefitMan"/>
 
         <reset/>
         <script>
@@ -105,38 +105,38 @@
                 }
             }
         </script>
-        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="'保险利益摘要'"/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'保险利益摘要'"/>
         <reset/>
         <loop from="0" to="5" name="i">
-            <text x="x[i]" y="0" width="c[i]" height="80" font="hei" font_size="28" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="head[i]"/>
+            <text x="x[i]" y="0" width="c[i]" height="80" font="hei" font_size="28" color="black" align="center" border_color="black" border="1" value="head[i]"/>
         </loop>
         <reset/>
         <loop name="j" value="body">
             <loop from="0" to="5" name="i">
-                <text x="x[i]" y="0" width="c[i]" height="80" font="song" font_size="28" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="j[i]"/>
+                <text x="x[i]" y="0" width="c[i]" height="80" font="song" font_size="28" color="black" align="center" border_color="black" border="1" value="j[i]"/>
             </loop>
             <reset/>
         </loop>
         <reset/>
-        <text x="0" y="0" width="400" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="'保险费'"/>
-        <text x="400" y="0" width="1500" height="80" font="song" font_size="36" color="black" align="left" border_color="black" right_border="1" bottom_border="1" value="' （大写）' + basePolicyInfo.premiumCN"/>
+        <text x="0" y="0" width="400" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'保险费'"/>
+        <text x="400" y="0" width="1500" height="80" font="song" font_size="36" color="black" align="left" border_color="black" border="1" value="' （大写）' + basePolicyInfo.premiumCN"/>
         <text x="1300" y="0" width="600" height="80" font="song" font_size="36" color="black" align="left" value="'￥' + basePolicyInfo.policyPremium"/>
         <reset/>
-        <text x="0" y="0" width="400" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="'保险期间'"/>
-        <text x="400" y="0" width="1500" height="80" font="song" font_size="36" color="black" align="left" border_color="black" right_border="1" bottom_border="1" value="basePolicyInfo.insuredPeriod"/>
+        <text x="0" y="0" width="400" height="80" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="'保险期间'"/>
+        <text x="400" y="0" width="1500" height="80" font="song" font_size="36" color="black" align="left" border_color="black" border="1" value="basePolicyInfo.insuredPeriod"/>
         <reset/>
-        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" left_border="1" right_border="1" bottom_border="1" value="' 特别约定'"/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" border="1" value="' 特别约定'"/>
         <reset/>
-        <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" left_border="1" right_border="1" bottom_border="1" value="spec"/>
+        <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" border="1" value="spec"/>
         <reset/>
-        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" left_border="1" right_border="1" bottom_border="1" value="' 适用条款'"/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" border="1" value="' 适用条款'"/>
         <reset/>
         <loop name="j" value="productClauses.productClause">
-            <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" left_border="1" right_border="1" bottom_border="1" value="j.clauseName"/>
+            <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" border="1" value="j.clauseName"/>
             <reset/>
         </loop>
         <reset/>
-        <text x="0" y="0" width="1900" height="320" font="hei" font_size="36" color="black" align="center" border_color="black" left_border="1" right_border="1" bottom_border="1" value="''"/>
+        <text x="0" y="0" width="1900" height="320" font="hei" font_size="36" color="black" align="center" border_color="black" border="1" value="''"/>
         <text x="1200" y="40" width="500" height="80" font="hei" font_size="36" color="black" align="left" value="'保险人（签章）：'"/>
         <text x="1300" y="200" width="500" height="80" font="hei" font_size="36" color="black" align="right" value="'年    月    日'"/>
 
