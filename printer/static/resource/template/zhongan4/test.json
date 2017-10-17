@@ -1,37 +1,165 @@
 {
-  "productName": "尊享e生",
-  "policyNo": "1234567890123456",
-  "applicant": {
-    "birthday": "1977-01-01",
-    "gender": "男",
-    "name": "王老鸭",
-    "phone": "13512345678",
-    "email": "wanglaoya@qq.com",
-    "certType": "身份证",
-    "certNo": "123456781234567890"
-  },
-  "insurant": {
-    "birthday": "1980-01-01",
-    "gender": "女",
-    "name": "张小雅",
-    "phone": "13532345678",
-    "email": "wangxiaoya@qq.com",
-    "certType": "身份证",
-    "certNo": "223456781234567890",
-    "relation": "配偶",
-    "beneficiary": "本人"
-  },
-  "coverage": [
-    ["身故", "1000000"], ["伤残", "500000"]
-  ],
-  "rate": "1234567890123456",
-  "premium1": "三百七十二圆",
-  "premium": "372.00",
-  "insureFrom": "2017年9月10日",
-  "insureTo": "2018年9月9日",
-  "excess": "10000元",
-  "payPeriod": "年缴1年期",
-  "dispute": "无",
-  "special": "无",
-  "clause": "《成年人重大疾病保险》"
+    "basePolicyInfo": {
+      "currency": "RMB",
+      "currentDate": "20171010",
+      "data": "",
+      "disputeWay": "诉讼",
+      "effDate": "20171011",
+      "expDate": "20181010",
+      "insuredPeriod": "自2017年10月11日零时起至2018年10月10日二十四时止",
+      "issueDate": "2017年10月10日",
+      "policyNo": "887382001402530091",
+      "policyPremium": "215.10",
+      "premiumCN": "贰佰壹拾伍圆壹角",
+      "productName": "尊享e生·全保通（基础版）"
+    },
+    "insurant": {
+      "benefitMan": "法定受益人",
+      "birthday": "1999-10-10",
+      "certificateNo": "520302199910101305",
+      "certificateType": "身份证",
+      "gender": "女",
+      "name": "被保人",
+      "phoneNo": "",
+      "relation": "父母",
+      "userId": "I5003000844"
+    },
+    "insureBenefits": {
+      "insureBenefitVo": [
+        {
+          "flag": "1",
+          "planName": "意外伤害保险",
+          "premium": "100000",
+          "responsibility": "人身意外伤害-身故、残疾"
+        },
+        {
+          "flag": "1",
+          "planName": "附加个人轻度疾病保险",
+          "premium": "20000",
+          "responsibility": "轻度疾病保险金"
+        },
+        {
+          "claimRate": "100%",
+          "flag": "1",
+          "hasClaimRate": "100%",
+          "planName": "附加意外伤害医疗费用保险（C款）",
+          "premium": "10000",
+          "responsibility": "意外医疗费用（C款）"
+        },
+        {
+          "flag": "1",
+          "planName": "成年人重大疾病及疾病身故保险",
+          "premium": "100000",
+          "responsibility": "重大疾病保险金"
+        },
+        {
+          "flag": "1",
+          "planName": "成年人重大疾病及疾病身故保险",
+          "premium": "100000",
+          "responsibility": "疾病身故保险金"
+        },
+        {
+          "claimRate": "60%",
+          "deductible": "10000",
+          "flag": "1",
+          "hasClaimRate": "100%",
+          "planName": "个人中高端医疗保险",
+          "premium": "1000000",
+          "responsibility": "一般医疗保险金"
+        },
+        {
+          "claimRate": "60%",
+          "deductible": "10000",
+          "flag": "1",
+          "hasClaimRate": "100%",
+          "planName": "个人中高端医疗保险",
+          "premium": "1000000",
+          "responsibility": "恶性肿瘤医疗保险金"
+        }
+      ]
+    },
+    "policyHolder": {
+      "birthday": "1999-10-10",
+      "certificateNo": "460100199910108785",
+      "certificateType": "身份证",
+      "email": "",
+      "gender": "女",
+      "name": "投保人",
+      "phoneNo": "17153064345",
+      "userId": "I5003000843"
+    },
+    "productClauses": {
+      "productClause": [
+        {
+          "clauseName": "《众安在线财产保险股份有限公司意外伤害保险条款》 众安备-意外伤害【2014】主9号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_773.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司附加个人轻度疾病保险条款》 (众安在线)(备-疾病保险)【2016】(附)044 号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_71W.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司附加意外伤害医疗费用保险条款（C款）》 (众安在线)(备-普通意外保险)【2016】(附)037号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_70G.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司成年人重大疾病及疾病身故保险条款》 (众安在线)(备-疾病保险)【2016】(主)056 号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_71V.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司个人中高端医疗保险条款》 (众安在线)(备-医疗保险)【2016】(主)051号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_71E.pdf"
+        }
+      ]
+    },
+    "specials": {
+      "specialAgreement": [
+        {
+          "content": "1. 本保单重大疾病保险金和疾病身故保险金两者不可兼得，保险人给付其中的任意一项保险金后，对该被保险人的保险责任终止。",
+          "flag": "1"
+        },
+        {
+          "content": "2. 本保单一般医疗保险金和恶性肿瘤医疗保险的免赔额共计为1万元。",
+          "flag": "1"
+        },
+        {
+          "content": "3. 重大疾病保险金或轻度疾病保险金，若发生理赔，续保保单中该项责任终止。",
+          "flag": "1"
+        },
+        {
+          "content": "4. 若以有社会医疗保险身份投保，但未以社会医疗保险身份就诊并结算的，一般医疗保险金和恶性肿瘤医疗保险金按照应赔付金额的60%进行赔付。",
+          "flag": "1"
+        },
+        {
+          "content": "5. 被保险人首次投保或非连续投保时，一般医疗保险金和恶性肿瘤医疗保险金等待期为30天，重大疾病保险金、轻度疾病保险金、疾病身故保险金的等待期为90天。",
+          "flag": "1"
+        },
+        {
+          "content": "6. 保单周期内提供以下增值服务:",
+          "flag": "1"
+        },
+        {
+          "content": " 1) 重大疾病日常预防、治疗和康复咨询服务, 24小时服务专线96169026。",
+          "flag": "1"
+        },
+        {
+          "content": " 2) 知名专家二次诊疗（限1次）：电话沟通病情后7个工作日内安排转诊至普通或特需门诊。",
+          "flag": "1"
+        },
+        {
+          "content": " 3) 网络医院住院及手术安排（限1次）：在符合医院住院的条件下，14个工作日内推荐并安排网络医院的住院床位、协助快速办理住院手续，并协调相关专家（需具有副高及以上职称）快速安排手术。",
+          "flag": "1"
+        },
+        {
+          "content": "7.本保单被保险人应为从事属于《众安保险职业类别表》中的1-4类职业人员。",
+          "flag": "1"
+        }
+      ]
+    },
+    "voName": "GenBasePolicyVo_flag"
 }
