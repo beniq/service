@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>BOOT</title>
+    
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="./js/common.js"></script>
+
+    <style> 
+        .info {width:95%; margin: 10px auto 10px auto; border:1px solid #FFF;} 
+        .info tr {padding:0;} 
+        .info td {border-left:1px solid #FFF;border-top:1px solid #FFF;} 
+    </style>
+  </head>
+
+  <body style="margin:0; padding:0; background-color:#000; color:#FFF;">
+    <table class="info" border="1">
+        <tbody id="info"></tbody>
+    </table>
+  </body>
+
+	<script>
+        common.req("info.json", {instanceId:common.param("instanceId")}, r => {
+            console.log(r);
+            for (var v in r) {
+                var str = "<tr><td>{0}</td><td>{1}</td><td><pre>{2}</pre></td></tr>".format(r[v][0], r[v][1], r[v][2]);
+                $("#info").append(str);
+            }
+        });
+	</script>
+</html>

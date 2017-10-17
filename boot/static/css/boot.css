@@ -1,0 +1,204 @@
+/*
+ * Base structure
+ */
+* { 
+outline: none !important; 
+border-radius: 0 !important;
+}
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+div,
+h1, 
+h2, 
+h3, 
+h4 {
+font-family: 'Microsoft Yahei', arial;
+}
+h4 {
+line-height: 2.0;
+}
+table thead th{
+	text-align:center;
+}
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+	background-color: #286090;
+	height: 100%;
+	padding: 0px; 
+	position: fixed;
+	right: auto;
+	width: 40%;
+	left: -40%;
+	top: 50px;
+	z-index: 1;
+	transition: left 0.5s;
+	-o-transition: left 0.5s;
+	-moz-transition: left 0.5s;
+	-webkit-transition: left 0.5s;
+	overflow-y: hidden;
+}
+.sidebar.show {
+	left: 0;
+	display: block;
+}
+@media (min-width: 768px) {
+  .sidebar {
+	position: fixed;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+	width: 16.66%;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+	background-color: #286090;
+    border-right: 1px solid #eee;
+  }
+}
+.panel {
+	border: 0;
+	box-shadow: none;
+}
+
+.panel-default > .panel-heading {
+	background-color: #6595BC;
+}
+.panel-default > .panel-heading:hover {
+	background-color: #5B86A9;
+}
+.panel-default > .panel-heading  a {
+	color: #FFF;
+	display: block;
+	padding: 8px 0px;
+}
+
+.list-group-item {
+	padding-left: 25px;
+	border: 0;
+	background: #286090;
+}
+.list-group-item:hover {
+	background: #365167;
+       padding-left: 15px;
+	transition-delay: 0s;
+       transition-duration: 0.3s;
+       transition-property: all;
+       transition-timing-function: linear;	
+}
+a.list-group-item {
+	color: #FFF;
+}
+a.list-group-item:hover {
+	background: #5881A2;
+	color: #FFF;
+}
+.solso-active {
+	background: #385269 !important;
+}
+
+.list-group-item.no-border {
+	border: 0;
+}	
+
+.panel-group .panel + .panel {
+	margin-top: 0px;
+}	
+/* Sidebar navigation */
+.sidebar {
+  margin-right: 0px; /* 20px padding + 1px border */
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
+.sidebar > li > a {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.sidebar > .active > a,
+.sidebar > .active > a:hover,
+.sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.popup {
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #FFF;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 400px;
+  display: none;
+  margin: -200px -150px;
+  border:#000 2pt solid;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

@@ -1,0 +1,11 @@
+server:
+  port: 7500
+
+datasource:
+  url: jdbc:mysql://120.27.167.233:2892/vie_sys
+  username: iyb_life
+  password: Iyblife2018!
+
+  #url: jdbc:mysql://localhost:3307/vienna
+  #username: root
+  #password: ftp123

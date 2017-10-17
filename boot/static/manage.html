@@ -1,0 +1,273 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>BOOT</title>
+
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <link href="./css/boot.css" rel="stylesheet">
+
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/jquery.cookie.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/common.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="boot.html">BOOT</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a>刷新</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <br/>
+  <fieldset>
+    <legend>TEST</legend>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>名称</th>
+        <th>CODE</th>
+        <th>IP</th>
+        <th>端口</th>
+        <th>部署时间</th>
+        <th>重启时间</th>
+        <th>服务状态</th>
+        <th>日志</th>
+        <th>管理</th>
+      </tr>
+      </thead>
+      <tbody id="test"></tbody>
+    </table>
+  </fieldset>
+  <br/>
+  <fieldset>
+    <legend>UAT</legend>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>名称</th>
+        <th>CODE</th>
+        <th>IP</th>
+        <th>端口</th>
+        <th>部署时间</th>
+        <th>重启时间</th>
+        <th>服务状态</th>
+        <th>日志</th>
+        <th>管理</th>
+      </tr>
+      </thead>
+      <tbody id="uat"></tbody>
+    </table>
+  </fieldset>
+  <br/>
+  <fieldset>
+    <legend>PRD</legend>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>名称</th>
+        <th>CODE</th>
+        <th>IP</th>
+        <th>端口</th>
+        <th>部署时间</th>
+        <th>重启时间</th>
+        <th>服务状态</th>
+        <th>日志</th>
+        <th>管理</th>
+      </tr>
+      </thead>
+      <tbody id="prd"></tbody>
+    </table>
+  </fieldset>
+  <br/>
+  <div style="text-align:center;">
+    <button class="btn btn-primary" onclick="lock(next,0)">TEST</button>
+    >>>
+    <button class="btn btn-primary" onclick="lock(presynch,1)">synchDB</button>
+    >>>
+    <button class="btn btn-primary" onclick="lock(next,1)">UAT</button>
+    >>>
+    <button class="btn btn-primary" onclick="lock(presynch,2)">synchDB</button>
+    >>>
+    <button class="btn btn-primary" onclick="lock(next,2)">PRD</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    TEST&lt;&lt;&lt;<button class="btn btn-primary" onclick="lock(presynch,91)">synchDB</button>
+    &lt;&lt;&lt;UAT&lt;&lt;&lt;
+    <button class="btn btn-primary" onclick="lock(presynch,92)">synchDB</button>
+    &lt;&lt;&lt;PRD
+  </div>
+  <div id="sql">
+
+  </div>
+</div>
+</body>
+
+<script>
+  var env = {
+    sql: {},
+    group: ["test", "uat", "prd"],
+    state: {},
+    step: 0
+  }
+
+  function refresh() {
+    env.server = {};
+    common.req("view.json", {serviceId:common.param("serviceId").split(",")}, r => {
+      env.instance = r;
+      for (var i in env.group) {
+        var e = r[env.group[i]];
+        var line = "";
+        for (var k in e) {
+          var v = e[k];
+          env.server[v.instanceId] = v;
+          v.deploy = v.deploy == null ? "" : new Date(v.deploy).format("yyyy-MM-dd hh:mm:ss");
+          v.restart = v.restart == null ? "" : new Date(v.restart).format("yyyy-MM-dd hh:mm:ss");
+          v.option = '<a onclick="lock(deploy,{instanceId})">部署</a> <a onclick="lock(restart,{instanceId})">重启</a> <a onclick="lock(stop,{instanceId})">关闭</a>'.format(v);
+          line += "<tr align='center'><td>{name}</td><td>{code}</td><td>{machineHost}</td><td>{port}</td><td id='deploy{instanceId}'>{deploy}</td><td id='restart{instanceId}'>{restart}</td><td id='state{instanceId}'></td><td><a onclick='viewLog({instanceId})'>应用日志</a> <a onclick='viewInfo({instanceId})'>发布日志</a></td><td>{option}</td></tr>".format(v);
+        }
+        $("#" + env.group[i]).html(line);
+      }
+      for (var instId in env.server)
+        env.state[instId] = 1;
+    });
+  }
+
+  function presynch(step) {
+    common.req("presynch.json", {serviceId:common.param("serviceId").split(","), step:step}, r => {
+      var str = "";
+      env.synchKey = r.key;
+      r.list.forEach(function(l) {
+        str += "<div>";
+        str += "<div>表："+l.name+"</div>";
+        l.sqls.forEach(function(k) {
+          str += "<pre id='" + k.id +"' onclick='revSql(" + k.id+")'>"+ k.sql +"</pre>";
+        });
+        str += "</div>";
+      });
+      if (str != "")
+        str += "<button class='btn btn-primary' onclick='lock(synch)'>synch</button>";
+      else
+        str = "没有发现需要同步的内容";
+      $("#sql").html("<br/>" + str);
+    });
+  }
+
+  function revSql(id) {
+    if (env.sql[id] == null || env.sql[id]) {
+      env.sql[id] = false;
+      $("#" + id).css("background-color", "#FAA");
+    } else {
+      env.sql[id] = true;
+      $("#" + id).css("background-color", "#EEE");
+    }
+  }
+
+  function synch() {
+    var skip = [];
+    for (var id in env.sql) {
+      if (!env.sql[id])
+        skip.push(id);
+    }
+    common.req("synch.json", {key:env.synchKey, skip:skip}, r => {
+      var str = "";
+      r.forEach(function(l) {
+        str += "<pre>"+ l +"</pre>";
+      });
+      if (str == "")
+        $("#sql").html("");
+      else
+        $("#sql").html("<br/>未执行的sql语句<div>"+str+"</div>");
+    });
+  }
+
+  function viewLog(instId) {
+    window.open("log.html?instanceId=" + instId, "_blank");
+  }
+
+  function viewInfo(instId) {
+    window.open("info.html?instanceId=" + instId, "_blank");
+  }
+
+  function state(instId) {
+    if (env.state[instId] != null && env.state[instId] > 0) {
+      env.state[instId]--;
+      common.req("state.json", {instanceId: instId}, r => {
+        $("#deploy" + instId).html(r.deploy == null ? "" : new Date(r.deploy).format("yyyy-MM-dd hh:mm:ss"));
+        $("#restart" + instId).html(r.restart == null ? "" : new Date(r.restart).format("yyyy-MM-dd hh:mm:ss"));
+        $("#state" + instId).html(r.state);
+        if (r.state == "success")
+          env.state[instId] = null;
+      });
+    }
+  }
+
+  function lock(func, val) {
+    if (env.sleep)
+      return;
+    env.sleep = true;
+    func(val);
+    setTimeout(() => {
+      env.sleep = null;
+    }, 500);
+  }
+
+  function deploy(instId) {
+    common.req("deploy.json", {instanceId:instId}, r => {
+      $("#state" + instId).html("");
+      env.state[instId] = 1;
+    });
+  }
+
+  function restart(instId) {
+    common.req("restart.json", {instanceId:instId}, r => {
+      $("#state" + instId).html("");
+      env.state[instId] = 30;
+    });
+  }
+
+  function stop(instId) {
+    common.req("stop.json", {instanceId:instId}, r => {
+      $("#state" + instId).html("");
+      env.state[instId] = 10;
+    });
+  }
+
+  function next(step) {
+    if (env.step >= 3)
+      return;
+    if (step != null)
+      env.step = step;
+    var list = env.instance[env.group[step]];
+    for (var k in list) {
+      reploy(list[k].instanceId);
+    }
+  }
+
+  function reploy(instId) {
+    common.req("deploy.json", {instanceId:instId}, r => {
+      restart(instId);
+    });
+  }
+
+  refresh();
+
+  setInterval(() => {
+    for (var instId in env.state) {
+      state(instId);
+    }
+  }, 2000);
+</script>
+</html>
