@@ -24,6 +24,7 @@ public class ServiceMgr
 
     Map<Long, ServicePack> m1;
     Map<Long, ServiceInstance> m2;
+    Map<String, ServicePack> m3;
 
     List<ServicePack> prd;
 
@@ -36,12 +37,14 @@ public class ServiceMgr
 
         m1 = new HashMap<>();
         m2 = new HashMap<>();
+        m3 = new HashMap<>();
 
         prd = serviceDao.loadService();
 
         for (ServicePack sp : prd)
         {
             m1.put(sp.getId(), sp);
+            m3.put(sp.getCode(), sp);
 
             if (sp.getInstance() != null) for (ServiceInstance si : sp.getInstance())
             {
@@ -143,6 +146,11 @@ public class ServiceMgr
     public ServiceInstance getServiceInstance(Long instanceId)
     {
         return m2.get(instanceId);
+    }
+
+    public ServicePack getService(String serviceCode)
+    {
+        return m3.get(serviceCode);
     }
 
 //    public Map<Long, String> refresh()

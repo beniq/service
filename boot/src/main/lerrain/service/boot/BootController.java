@@ -1,11 +1,13 @@
 package lerrain.service.boot;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.service.boot.base.ServiceInstance;
 import lerrain.service.boot.base.ServicePack;
 import lerrain.service.boot.console.DbMgr;
 import lerrain.tool.Disk;
+import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -290,6 +292,8 @@ public class BootController
 					e.printStackTrace();
 				}
 
+				System.out.println("uploading... " + ff);
+
 				for (Machine mach : machineMgr.getAllMachines())
 				{
 					try (InputStream is = new FileInputStream(ff))
@@ -302,7 +306,7 @@ public class BootController
 					}
 					catch (Exception e)
 					{
-						e.printStackTrace();
+						System.out.println("upload " + ff + " to " + mach.getHost() + " failed, cause by " + e.getMessage());
 					}
 				}
 			}
@@ -390,5 +394,50 @@ public class BootController
 		res.put("content", dbMgr.run(json.getJSONArray("skip")));
 
 		return res;
+	}
+
+	@RequestMapping("/filemgr/tree.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject fileTree(@RequestBody JSONObject json)
+	{
+		Machine mach = machineMgr.getMachine(json.getIntValue("index"));
+		json.put("root", mach.getRoot());
+
+		return fileMgr(mach, "tree.json", json);
+	}
+
+	@RequestMapping("/filemgr/list.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject fileList(@RequestBody JSONObject json)
+	{
+		Machine mach = machineMgr.getMachine(json.getIntValue("index"));
+		json.put("root", mach.getRoot());
+
+		return fileMgr(mach, "list.json", json);
+	}
+
+	private JSONObject fileMgr(Machine mach, String action, JSONObject json)
+	{
+		ServicePack sp = serviceMgr.getService("filemgr");
+
+		if (sp != null)
+		{
+			List<ServiceInstance> list = sp.getInstance();
+			if (list != null)
+			{
+				for (ServiceInstance si : list)
+				{
+					if (si.getMachine().equals(mach))
+					{
+						String res = Network.request("http://" + mach.getHost() + ":" + si.getPort() + "/" + action, json.toJSONString());
+						return JSON.parseObject(res);
+					}
+				}
+			}
+		}
+
+		throw new RuntimeException("no filemgr");
 	}
 }

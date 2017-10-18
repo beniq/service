@@ -4,6 +4,7 @@
 * { 
 outline: none !important; 
 border-radius: 0 !important;
+box-sizing: border-box;
 }
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
