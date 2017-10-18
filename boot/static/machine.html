@@ -25,17 +25,23 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a onclick="refresh(0)">机器0</a></li>
-            <li><a onclick="refresh(1)">机器1</a></li>
-            <li><a onclick="refresh(2)">机器2</a></li>
+            <li><a href="boot.html">服务列表</a></li>
+            <li><a href="machine.html">管理机器</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid" style="padding:0; margin:0;">
-      <div id="dir" style="overflow:scroll; margin-left:1%; width:20%; padding-left:20px; height:99%; display:inline-block;"></div>
-      <div id="file" style="overflow:scroll; width:78%; height:99%; display:inline-block;"></div>
+      <div style="text-align:center; height:45px; padding-top:5px; background-color:#CCC;">
+        <button class="btn btn-primary" onclick="refresh(0)">机器0</button>
+        <button class="btn btn-primary" onclick="refresh(1)">机器1</button>
+        <button class="btn btn-primary" onclick="refresh(2)">机器2</button>
+        <button class="btn btn-primary" onclick="initiate()">初始化 >>>></button>
+      </div>
+      <div id="dir" style="overflow:scroll; margin-left:1%; width:20%; padding-left:20px; height:94%; display:inline-block;"></div>
+      <div id="file" style="overflow:scroll; width:78%; height:94%; display:inline-block;"></div>
+      <br/>
     </div>
   </body>
 

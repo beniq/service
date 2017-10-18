@@ -125,6 +125,12 @@ public class ServiceMgr
         serviceDao.saveRestartTime(si);
     }
 
+    public void stop(Long instanceId)
+    {
+        ServiceInstance si = getServiceInstance(instanceId);
+        serviceDao.saveReleaseInfo(si.getId(), "stop", si.stop(), new Date());
+    }
+
     public void deploy(Long instanceId)
     {
         ServiceInstance si = getServiceInstance(instanceId);

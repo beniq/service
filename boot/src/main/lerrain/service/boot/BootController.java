@@ -111,8 +111,7 @@ public class BootController
 	public JSONObject stop(@RequestBody JSONObject json)
 	{
 		Long instanceId = json.getLong("instanceId");
-		ServiceInstance sp = serviceMgr.getServiceInstance(instanceId);
-		sp.stop();
+		serviceMgr.stop(instanceId);
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
