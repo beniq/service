@@ -39,8 +39,8 @@ public class PrinterService
 	@PostConstruct
 	private void init()
 	{
-		TypesetUtil.setResourcePath(Common.pathOf(new String[] {path, "resource/template"}));
-		TypesetUtil.setFontPath(Common.pathOf(new String[] {path, "resource/fonts/"}));
+		TypesetUtil.setResourcePath(Common.pathOf(path, "resource/template"));
+		TypesetUtil.setFontPath(Common.pathOf(path, "resource/fonts/"));
 		TypesetUtil.setTextDimension(new TextDimensionAwt());
 		TypesetUtil.addElementFactory("qrcode", new TypesetQrcode());
 
