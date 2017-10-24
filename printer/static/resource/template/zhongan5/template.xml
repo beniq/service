@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="gbk" ?>
+<proposal>
+    <font_mapping>
+        <font name="hei" value="FONT_HEI"/>
+        <font name="kai" value="FONT_KAI"/>
+        <font name="song" value="FONT_YOU"/>
+    </font_mapping>
+
+    <page_setting>
+        <page name="default" default="yes" size="A4" x="100" y="240" width="1900" height="2540">
+            <template name="header" x="100" y="100" width="1900" height="120">
+                <image x="30" y="0" width="460" height="100" src="'logo.png'" url="'logo.png'"/>
+                <rect x="0" y="110" width="1900" height="3" color="black"/>
+            </template>
+
+            <template name="footer" x="100" y="2800" width="1900" height="90">
+                <rect x="0" y="22" width="1900" height="3" color="black"/>
+                <text x="500" y="40" width="450" height="40" font="hei" font_size="30" color="black" align="right" value="'第' + PAGE.SEQUENCE + '页，'"/>
+                <text x="950" y="40" width="450" height="40" font="hei" font_size="30" color="black" align="left" mode="reset_at_final" value="'共' + PAGE.TOTAL + '页'"/>
+            </template>
+        </page>
+    </page_setting>
+
+    <paragraph>
+        <text x="50" y="0" width="1800" height="80" font="hei" font_size="50" color="black" align="center" value="'批单'"/>
+
+        <reset skip="20"/>
+        <text x="0" y="0" width="1000" height="60" font="kai" font_size="36" color="black" align="left" value="'批单号码：' + endorseNo"/>
+        <text x="1080" y="0" width="800" height="60" font="kai" font_size="36" color="black" align="right" value="'保险单号：' + policyNo"/>
+        <reset/>
+        <text x="0" y="0" width="1000" height="60" font="kai" font_size="36" color="black" align="left" value="'投保人：' + applicantName"/>
+        <text x="1080" y="0" width="800" height="60" font="kai" font_size="36" color="black" align="right" value="'生效日期：' + timestr(time(insureTime), 'yyyy-MM-dd')"/>
+
+        <reset skip="40"/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" value="'批改内容'"/>
+        <reset/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" value="'兹经投保人申请，本公司同意自'+timestr(time(endorseTime), 'yyyy年MM月dd日HH时')+'起，对原保单做如下批改：'"/>
+        <reset/>
+        <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" value="detail"/>
+        <reset/>
+        <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" value="'本保险单所载其他条件不变，特此批注。'"/>
+
+        <reset/>
+        <text x="1200" y="40" width="500" height="80" font="hei" font_size="36" color="black" align="left" value="'保险人（盖章）：'"/>
+        <text x="1300" y="200" width="500" height="80" font="hei" font_size="36" color="black" align="right" value="'年    月    日'"/>
+    </paragraph>
+
+</proposal>

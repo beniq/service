@@ -50,7 +50,16 @@ public class PrinterController
 		return "success";
 	}
 
-	@RequestMapping("/stream.json")
+	@RequestMapping("/reset")
+	@ResponseBody
+	@CrossOrigin
+	public String reset()
+	{
+		printer.reset();
+		return "success";
+	}
+
+	@RequestMapping({"/print.stream", "/stream.json"})
 	public void printStream(@RequestBody JSONObject p, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		String key = p.getString("key");

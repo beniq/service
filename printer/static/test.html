@@ -53,6 +53,11 @@
       }
     });
   }
+  function goPdf2() {
+      common.req("print.stream", {key:clientKey, templateId:env.templateId, outputType:"pdf", content:JSON.parse($("#example").val())}, function(r) {
+          document.location.href = r;
+      });
+  }
   function goPdf() {
     common.req("print.json", {key:clientKey, templateId:env.templateId, outputType:"pdf", content:JSON.parse($("#example").val())}, function(r) {
       document.location.href = r;
