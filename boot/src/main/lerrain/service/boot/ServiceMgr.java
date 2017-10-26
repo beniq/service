@@ -2,6 +2,7 @@ package lerrain.service.boot;
 
 import lerrain.service.boot.base.ServiceInstance;
 import lerrain.service.boot.base.ServicePack;
+import lerrain.tool.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,10 +114,16 @@ public class ServiceMgr
         {
             if (ss[1] != null)
             {
+                Object val;
                 if (ss[1].startsWith("{"))
-                    env.put(ss[0], getParam(si.getEnv(), ss[1].substring(1, ss[1].length() - 1)));
+                    val = getParam(si.getEnv(), ss[1].substring(1, ss[1].length() - 1));
                 else
-                    env.put(ss[0], ss[1]);
+                    val = ss[1];
+
+                if (val instanceof String)
+                    val = ((String)val).replaceAll("[%]ROOT[%]", si.getMachine().getRoot());
+
+                env.put(ss[0], val);
             }
         }
 

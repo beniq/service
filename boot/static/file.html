@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>BOOT</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/boot.css" rel="stylesheet">
+    
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/common.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand">BOOT&nbsp;&nbsp;</a>
+          <a class="navbar-brand" href="boot.html">▌服务</a>
+          <a class="navbar-brand" href="machine.html">▌机器</a>
+          <a class="navbar-brand" href="file.html">▌文件</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                服务器 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" style="width:auto;" id="machines"></ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid" style="margin:0;padding:0;">
+      <div id="dir" class="col-md-3" style="overflow:scroll; height:100%;"></div>
+      <div id="file" class="col-md-9" style="overflow:scroll; height:100%;"></div>
+    </div>
+  </body>
+
+	<script>
+        env.index = 0;
+        env.dir = null;
+        env.fold = ["log", "soft", "static"];
+
+        function init() {
+          common.req("list_machine.json", {}, function(r) {
+            var line="";
+            r.forEach(function(m){
+              line+="<li class='dropdown' onclick='refresh("+m.index+")'><a>"+m.host+" ("+m.name+")"+"</a></li>";
+            });
+            $("#machines").html(line);
+          });
+        }
+
+		function refresh(index) {
+          $("#dir").html("");
+          $("#file").html("");
+          env.index = index;
+          common.req("filemgr/tree.json", {index:env.index}, function(r) {
+		    $("#dir").html(str(r, null, null));
+		  });
+		}
+
+        function history(dir, file) {
+          common.req("filemgr/history.json", {index:env.index, file:dir+"/"+file}, function(r) {
+            console.log(r);
+          });
+        }
+
+        function delFile(dir, file) {
+          common.req("filemgr/delete.json", {index:env.index, file:dir+"/"+file}, function(r) {
+            listFile(dir);
+          });
+        }
+
+        function listFile(dir, pq) {
+          env.dir = dir;
+          var dsp = $("#dir_" + pq).css("display");
+          $("#dir_" + pq).css("display", dsp == "none" ? "table-row" : "none");
+          $("#fold_" + pq).html(dsp == "none" ? "" : "...");
+          common.req("filemgr/list.json", {index:env.index, path:dir}, function(r) {
+            var line = "<table class='table table-striped'>";
+            line += "<thead><tr><th style='width:45%;'>名称</th><th style='width:15%;'>大小</th><th style='width:25%;'>修改时间</th><th style='width:15%;'>操作</th></tr></thead>";
+            line += "<tbody>";
+            for (var f in r) {
+              line += "<tr><td style='margin-left:10px;'>" + r[f].name + "</td>" +
+                      "<td style='text-align:right; margin-right:10px;'>" + r[f].len + "</td>" +
+                      "<td style='text-align:center;'>" + r[f].modifyTime + "</td>" +
+                      "<td style='text-align:center;'><a onclick='history(\""+dir+"\",\""+r[f].name+"\")'>历史</a> <a onclick='delFile(\""+dir+"\",\""+r[f].name+"\")'>删除</a></td>" +
+                      "</tr>";
+            }
+            line += "</tbody></table>";
+            $("#file").html(line);
+          });
+        }
+
+        function str(r, p, q) {
+			var line = "";
+			for (var k in r) {
+              var path = (p==null?"":p+"/")+k;
+              var pq = (q==null?"":q+"_")+k;
+              var fold = env.fold.indexOf(k) >= 0;
+              line += "<table><tr><td colspan='2' style='height:30px;' onclick='listFile(\""+path+"\",\""+pq+"\")'>"+k+"&nbsp;<span style='color:#000' id='fold_"+pq+"'>"+(fold?"...":"")+"</span></td></tr><tr id='dir_"+pq+"' style='display:"+(fold?"none":"table-row")+"'><td style='width:20px;'></td><td>"+str(r[k], path, pq)+"</td></tr></table>";
+			}
+			return line;
+		}
+
+		$(function() {
+          init();
+          refresh(0);
+
+          $(document).on({
+            dragleave:function(e){    //拖离
+              e.preventDefault();
+            },
+            drop:function(e){  //拖后放
+              e.preventDefault();
+            },
+            dragenter:function(e){    //拖进
+              e.preventDefault();
+            },
+            dragover:function(e){    //拖来拖去
+              e.preventDefault();
+            }
+          });
+
+          var box = document.getElementById('file'); //拖拽区域
+          box.addEventListener("drop", function(e){
+            e.preventDefault();
+            var fileList = e.dataTransfer.files;
+            if(fileList.length == 0)
+              return false;
+
+            xhr = new XMLHttpRequest();
+            xhr.open("post", common.url("filemgr/file.do"), true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xhr.onreadystatechange = function() {
+              listFile(env.dir);
+            };
+
+            var fd = new FormData();
+            fd.append("index", env.index);
+            fd.append("path", env.dir);
+            for (var i=0;i<fileList.length;i++)
+              fd.append("file", fileList[i]);
+            xhr.send(fd);
+
+            console.log(xhr.response)
+          }, false);
+        });
+	</script>
+</html>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class FileController
@@ -29,26 +30,13 @@ public class FileController
     public JSONObject tree(@RequestBody JSONObject json)
     {
         String root = json.getString("root");
+        FileSystem fs = new FileSystem(root);
 
         JSONObject res = new JSONObject();
         res.put("result", "success");
-        res.put("content", pathOf(new File(root)));
+        res.put("content", fs.tree());
 
         return res;
-    }
-
-    private JSONObject pathOf(File dir)
-    {
-        JSONObject list = new JSONObject();
-
-        File[] files = dir.listFiles();
-        if (files != null) for (File f : files)
-        {
-            if (f.isDirectory())
-                list.put(f.getName(), pathOf(f));
-        }
-
-        return list;
     }
 
     @RequestMapping("/list.json")
@@ -61,7 +49,8 @@ public class FileController
 
         JSONArray list = new JSONArray();
 
-        File[] files = new File(Common.pathOf(root, path)).listFiles();
+        FileSystem fsys = new FileSystem(root);
+        List<File> files = fsys.list(path);
         if (files != null) for (File f : files)
         {
             if (f.isFile())
@@ -77,6 +66,69 @@ public class FileController
         JSONObject res = new JSONObject();
         res.put("result", "success");
         res.put("content", list);
+
+        return res;
+    }
+
+    @RequestMapping("/history.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject history(@RequestBody JSONObject json)
+    {
+        String root = json.getString("root");
+        String file = json.getString("file");
+
+        FileSystem fs = new FileSystem(root);
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", fs.getHistory(file));
+
+        return res;
+    }
+
+    @RequestMapping("/delete.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject delete(@RequestBody JSONObject json)
+    {
+        String root = json.getString("root");
+        String file = json.getString("file");
+
+        FileSystem fs = new FileSystem(root);
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", fs.delete(file));
+
+        return res;
+    }
+
+    @RequestMapping("/copy.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject copy(@RequestBody JSONObject json)
+    {
+        String root = json.getString("root");
+        JSONArray list = json.getJSONArray("files");
+
+        FileSystem fs = new FileSystem(root);
+
+        JSONObject r = new JSONObject();
+
+        for (int i=0;i<list.size();i++)
+        {
+            JSONArray f = list.getJSONArray(i);
+
+            boolean b = fs.copy(new File(Common.pathOf(root, f.getString(0))), f.getString(1));
+            r.put(f.getString(1), b);
+
+            System.out.println("copy " + f.getString(0) + " to " + f.getString(1) + " " + (b ? "success" : "fail"));
+        }
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", r);
 
         return res;
     }

@@ -1,2 +1,5 @@
 server:
   port: 6001
+
+path:
+  history: f:/3/

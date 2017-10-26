@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class BootController
@@ -41,6 +38,30 @@ public class BootController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
+
+		return res;
+	}
+
+	@RequestMapping("/list_machine.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject listMachine(@RequestBody JSONObject json)
+	{
+		Collection<Machine> coll = machineMgr.getAllMachines();
+
+		JSONArray rl = new JSONArray();
+		for (Machine sp : coll)
+		{
+			JSONObject rs = new JSONObject();
+			rs.put("index", sp.getIndex());
+			rs.put("name", sp.getName());
+			rs.put("host", sp.getHost());
+			rl.add(rs);
+		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", rl);
 
 		return res;
 	}
@@ -73,6 +94,32 @@ public class BootController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", r);
+
+		return res;
+	}
+
+	@RequestMapping("/run.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject run(@RequestBody JSONObject json) throws Exception
+	{
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", machineMgr.runCommand(json.getIntValue("index"), json.getLong("commandId")));
+
+		return res;
+	}
+
+	@RequestMapping("/initiate.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject initiate(@RequestBody JSONObject json) throws Exception
+	{
+		Machine machine = machineMgr.getMachine(json.getIntValue("index"));
+		machine.initiate();
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
 
 		return res;
 	}
@@ -297,7 +344,7 @@ public class BootController
 				{
 					try (InputStream is = new FileInputStream(ff))
 					{
-						String srcFile = mach.upload(is, file.getOriginalFilename(), file.getSize());
+						String srcFile = mach.upload(is, file.getOriginalFilename(), file.getSize(), "temp");
 						cc.put(cs.getId(), file.getOriginalFilename());
 
 						if (!srcFile.equals(cs.getCurrentJar()))
@@ -393,50 +440,5 @@ public class BootController
 		res.put("content", dbMgr.run(json.getJSONArray("skip")));
 
 		return res;
-	}
-
-	@RequestMapping("/filemgr/tree.json")
-	@ResponseBody
-	@CrossOrigin
-	public JSONObject fileTree(@RequestBody JSONObject json)
-	{
-		Machine mach = machineMgr.getMachine(json.getIntValue("index"));
-		json.put("root", mach.getRoot());
-
-		return fileMgr(mach, "tree.json", json);
-	}
-
-	@RequestMapping("/filemgr/list.json")
-	@ResponseBody
-	@CrossOrigin
-	public JSONObject fileList(@RequestBody JSONObject json)
-	{
-		Machine mach = machineMgr.getMachine(json.getIntValue("index"));
-		json.put("root", mach.getRoot());
-
-		return fileMgr(mach, "list.json", json);
-	}
-
-	private JSONObject fileMgr(Machine mach, String action, JSONObject json)
-	{
-		ServicePack sp = serviceMgr.getService("filemgr");
-
-		if (sp != null)
-		{
-			List<ServiceInstance> list = sp.getInstance();
-			if (list != null)
-			{
-				for (ServiceInstance si : list)
-				{
-					if (si.getMachine().equals(mach))
-					{
-						String res = Network.request("http://" + mach.getHost() + ":" + si.getPort() + "/" + action, json.toJSONString());
-						return JSON.parseObject(res);
-					}
-				}
-			}
-		}
-
-		throw new RuntimeException("no filemgr");
 	}
 }

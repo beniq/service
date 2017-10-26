@@ -21,65 +21,62 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="boot.html">BOOT</a>
+          <a class="navbar-brand">BOOT&nbsp;&nbsp;</a>
+          <a class="navbar-brand" href="boot.html">▌服务</a>
+          <a class="navbar-brand" href="machine.html">▌机器</a>
+          <a class="navbar-brand" href="file.html">▌文件</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="boot.html">服务列表</a></li>
-            <li><a href="machine.html">管理机器</a></li>
+            <li><a class="navbar-brand" onclick="initiate()">初始化</a></li>
+            <li class="dropdown">
+              <a href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                服务器 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" style="width:auto;" id="machines"></ul>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <div class="container-fluid" style="padding:0; margin:0;">
-      <div style="text-align:center; height:45px; padding-top:5px; background-color:#CCC;">
-        <button class="btn btn-primary" onclick="refresh(0)">机器0</button>
-        <button class="btn btn-primary" onclick="refresh(1)">机器1</button>
-        <button class="btn btn-primary" onclick="refresh(2)">机器2</button>
-        <button class="btn btn-primary" onclick="initiate()">初始化 >>>></button>
-      </div>
-      <div id="dir" style="overflow:scroll; margin-left:1%; width:20%; padding-left:20px; height:94%; display:inline-block;"></div>
-      <div id="file" style="overflow:scroll; width:78%; height:94%; display:inline-block;"></div>
-      <br/>
+    <div class="container-fluid" style="margin:0;padding:0;">
+      <div id="dir" class="col-md-3" style="overflow:scroll; height:100%;"></div>
+      <div id="file" class="col-md-9" style="overflow:scroll; height:100%;"></div>
     </div>
   </body>
 
 	<script>
         env.index = 0;
+        env.mach;
 
-		function refresh(index) {
-          env.index = index;
-          common.req("filemgr/tree.json", {index:env.index}, function(r) {
-		    $("#dir").html(str(r, null));
-            $("#file").html("");
-		  });
-		}
-
-        function listFile(dir) {
-          common.req("filemgr/list.json", {index:env.index, path:dir}, function(r) {
-            var line = "<table class='table table-striped'>";
-            line += "<thead><tr><th style='width:50%;'>名称</th><th style='width:25%;'>大小</th><th style='width:25%;'>修改时间</th></tr></thead>";
-            line += "<tbody>";
-            for (var f in r) {
-              line += "<tr><td style='margin-left:10px;'>" + r[f].name + "</td><td style='text-align:right; margin-right:10px;'>" + r[f].len + "</td><td style='text-align:center;'>" + r[f].modifyTime + "</td></tr>";
-            }
-            line += "</tbody></table>";
-            $("#file").html(line);
+        function init() {
+          common.req("list_machine.json", {}, function(r) {
+            var line="";
+            env.mach = r;
+            r.forEach(function(m){
+              line+="<li class='dropdown' onclick='refresh("+m.index+")'><a>"+m.host+" ("+m.name+")"+"</a></li>";
+            });
+            $("#machines").html(line);
           });
         }
 
-        function str(r, p) {
-			var line = "";
-			for (var k in r) {
-              var path = (p==null?"":p+"/")+k;
-              line += "<table><tr><td colspan='2' style='height:30px;' onclick='listFile(\""+path+"\")'>"+k+"</td></tr><tr><td style='width:20px;'></td><td>"+str(r[k], path)+"</td></tr></table>";
-			}
-			return line;
+        function initiate() {
+          var res = confirm("是否初始化" + env.mach[env.index].host+" ("+env.mach[env.index].name+")");
+          if (res) {
+            common.req("initiate.json", {index:env.index}, function(r) {
+              alert("success");
+            });
+          }
+        }
+
+		function refresh(index) {
+          env.index = index;
 		}
 
 		$(function() {
-			refresh(0);
-		}); 
+          init();
+          refresh(0);
+        });
 	</script>
 </html>

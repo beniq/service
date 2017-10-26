@@ -11,6 +11,18 @@ body {
   padding-top: 50px;
 }
 
+select
+{
+  font: 12pt 微软雅黑;
+  height: 32px;
+  border: 0;
+  background: url("../images/down.png") no-repeat scroll right center transparent;
+  background-color: #FFF;
+  padding-left: 10px;
+  padding-right: 40px;
+  -webkit-appearance: none;
+}
+
 div,
 h1, 
 h2, 

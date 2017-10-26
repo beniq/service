@@ -157,7 +157,13 @@ public class ServiceInstance
             for (String path : service.getLibs())
                 lib += ":" + machine.getPath("lib/" + path + "/*");
 
-        String command = String.format("cd %s; nohup java %s-cp %s:%s %s --server.port=%d", machine.getServicePath(service.getCode() + "/" + getEnvString()), service.getJvmOption() == null ? "" : service.getJvmOption() + " ", machine.getServicePath(jarFile), lib, service.getStartClass(), port);
+        String javaBin = machine.getJavaBin();
+        if (javaBin == null)
+            javaBin = "";
+        else
+            javaBin = machine.getPath(javaBin);
+
+        String command = String.format("cd %s; nohup %sjava %s-cp %s:%s %s --server.port=%d", machine.getServicePath(service.getCode() + "/" + getEnvString()), javaBin, service.getJvmOption() == null ? "" : service.getJvmOption() + " ", machine.getServicePath(jarFile), lib, service.getStartClass(), port);
 
         Map<String, String> params = BootUtil.convertParams(srvs);
         if (params != null)

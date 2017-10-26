@@ -17,12 +17,21 @@ public class MachineMgr
 
     Map<Integer, Machine> map;
 
+    Map<Long, String> cmds;
+
     public void reset()
     {
         map = new HashMap<>();
 
         for (Machine m : machineDao.loadMachineList())
             map.put(m.getIndex(), m);
+
+        cmds = machineDao.loadAllCommand();
+    }
+
+    public String runCommand(int index, Long commandId) throws Exception
+    {
+        return getMachine(index).run(cmds.get(commandId));
     }
 
     public Machine getMachine(int index)
