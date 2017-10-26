@@ -40,9 +40,23 @@
       </div>
     </nav>
 
-    <div class="container-fluid" style="margin:0;padding:0;">
-      <div id="dir" class="col-md-3" style="overflow:scroll; height:100%;"></div>
-      <div id="file" class="col-md-9" style="overflow:scroll; height:100%;"></div>
+    <div class="container-fluid">
+      <br/>
+      <table class="table table-striped" id="table">
+        <thead>
+        <tr>
+          <th>PID</th>
+          <th>CPU</th>
+          <th>内存</th>
+          <th>命令行</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="content"></tbody>
+      </table>
+      <br/>
+      <button class="btn btn-primary" onclick="refresh(env.index)">刷新 >>>></button>
+      <span id="totalMem"></span>
     </div>
   </body>
 
@@ -51,7 +65,7 @@
         env.mach;
 
         function init() {
-          common.req("list_machine.json", {}, function(r) {
+          common.req("machine/list.json", {}, function(r) {
             var line="";
             env.mach = r;
             r.forEach(function(m){
@@ -64,19 +78,41 @@
         function initiate() {
           var res = confirm("是否初始化" + env.mach[env.index].host+" ("+env.mach[env.index].name+")");
           if (res) {
-            common.req("initiate.json", {index:env.index}, function(r) {
+            common.req("machine/initiate.json", {index:env.index}, function(r) {
               alert("success");
             });
           }
         }
 
-		function refresh(index) {
+        function kill(pid) {
+          var res = confirm("是否终止" + pid);
+          if (res) {
+            common.req("machine/kill_process.json", {index: env.index, pid: pid}, function (r) {
+              refresh(env.index);
+            });
+          }
+        }
+
+        function refresh(index) {
           env.index = index;
+          common.req("machine/process.json", {index:env.index}, function(r) {
+            var line = "";
+            var total = 0;
+            for (var k in r.list) {
+              var v = r.list[k];
+              v.memkb = Math.round(Number(v.memkb)/1000);
+              v.option = '<a onclick="kill({pid})">终止</a>'.format(v);
+              line += "<tr align='center'><td>{pid}</td><td>{cpu}%</td><td style=''>{mem}% / {memkb}M</td><td style='text-align:left;'><div style='width:1000px; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;'>{cmd}</div></td><td>{option}</td></tr>".format(v);
+              total += Number(v.mem);
+            }
+            $("#content").html(line);
+            $("#totalMem").html("&nbsp; JAVA总内存占用: " + total + "%");
+          });
 		}
 
 		$(function() {
           init();
-          refresh(0);
+          refresh(env.index);
         });
 	</script>
 </html>

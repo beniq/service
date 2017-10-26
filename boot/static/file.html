@@ -51,7 +51,7 @@
         env.fold = ["log", "soft", "static"];
 
         function init() {
-          common.req("list_machine.json", {}, function(r) {
+          common.req("machine/list.json", {}, function(r) {
             var line="";
             r.forEach(function(m){
               line+="<li class='dropdown' onclick='refresh("+m.index+")'><a>"+m.host+" ("+m.name+")"+"</a></li>";

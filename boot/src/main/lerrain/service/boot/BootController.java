@@ -42,30 +42,6 @@ public class BootController
 		return res;
 	}
 
-	@RequestMapping("/list_machine.json")
-	@ResponseBody
-	@CrossOrigin
-	public JSONObject listMachine(@RequestBody JSONObject json)
-	{
-		Collection<Machine> coll = machineMgr.getAllMachines();
-
-		JSONArray rl = new JSONArray();
-		for (Machine sp : coll)
-		{
-			JSONObject rs = new JSONObject();
-			rs.put("index", sp.getIndex());
-			rs.put("name", sp.getName());
-			rs.put("host", sp.getHost());
-			rl.add(rs);
-		}
-
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
-		res.put("content", rl);
-
-		return res;
-	}
-
 	@RequestMapping("/list.json")
 	@ResponseBody
 	@CrossOrigin
@@ -94,32 +70,6 @@ public class BootController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", r);
-
-		return res;
-	}
-
-	@RequestMapping("/run.json")
-	@ResponseBody
-	@CrossOrigin
-	public JSONObject run(@RequestBody JSONObject json) throws Exception
-	{
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
-		res.put("content", machineMgr.runCommand(json.getIntValue("index"), json.getLong("commandId")));
-
-		return res;
-	}
-
-	@RequestMapping("/initiate.json")
-	@ResponseBody
-	@CrossOrigin
-	public JSONObject initiate(@RequestBody JSONObject json) throws Exception
-	{
-		Machine machine = machineMgr.getMachine(json.getIntValue("index"));
-		machine.initiate();
-
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
 
 		return res;
 	}
