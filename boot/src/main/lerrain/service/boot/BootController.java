@@ -29,17 +29,13 @@ public class BootController
 	@Autowired
 	MachineMgr machineMgr;
 
-	@RequestMapping("/reset.do")
+	@RequestMapping("/reset")
 	@ResponseBody
 	@CrossOrigin
-	public JSONObject reset()
+	public String reset()
 	{
 		serviceMgr.reset();
-
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
-
-		return res;
+		return "success";
 	}
 
 	@RequestMapping("/list.json")
@@ -132,6 +128,21 @@ public class BootController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", r);
+
+		return res;
+	}
+
+	@RequestMapping("/reset.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject reset(@RequestBody JSONObject json)
+	{
+		Long instanceId = json.getLong("instanceId");
+		ServiceInstance sp = serviceMgr.getServiceInstance(instanceId);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", sp.reset());
 
 		return res;
 	}

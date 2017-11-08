@@ -49,7 +49,7 @@ public class ServiceMgr
 
             if (sp.getInstance() != null) for (ServiceInstance si : sp.getInstance())
             {
-                si.reset(machineMgr);
+                si.refresh(machineMgr);
                 m2.put(si.getId(), si);
             }
         }

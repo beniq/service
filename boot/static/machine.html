@@ -28,6 +28,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a class="navbar-brand" onclick="synchJar()">同步jar</a></li>
             <li><a class="navbar-brand" onclick="initiate()">初始化</a></li>
             <li class="dropdown">
               <a href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -84,6 +85,12 @@
           }
         }
 
+        function synchJar() {
+          common.req("filemgr/compare_jar.json", {index:env.index}, function(r) {
+            alert(r);
+          });
+        }
+
         function kill(pid) {
           var res = confirm("是否终止" + pid);
           if (res) {
@@ -106,7 +113,7 @@
               total += Number(v.mem);
             }
             $("#content").html(line);
-            $("#totalMem").html("&nbsp; JAVA总内存占用: " + total + "%");
+            $("#totalMem").html("&nbsp; JAVA总内存占用: " + Math.round(total) + "%");
           });
 		}
 

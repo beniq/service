@@ -62,6 +62,72 @@ public class FileController
 		return fileMgr("delete.json", json);
 	}
 
+	@RequestMapping("/filemgr/compare_jar.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject compare(@RequestBody JSONObject json)
+	{
+		JSONObject files = scan(new File("./file/lib"), "lib", new JSONObject());
+		json.put("files", files);
+		json.put("path", "lib");
+
+		JSONObject res = fileMgr("compare.json", json);
+		JSONObject opt = res.getJSONObject("content");
+
+		int index = json.getIntValue("index");
+
+		for (Map.Entry<String, Object> f : opt.entrySet())
+		{
+			if ("DELETE".equalsIgnoreCase(f.getValue().toString()))
+			{
+				JSONObject req = new JSONObject();
+				req.put("index", index);
+				req.put("file", f.getKey());
+
+				fileMgr("delete.json", req);
+			}
+			else if ("UPLOAD".equalsIgnoreCase(f.getValue().toString()))
+			{
+				String fileName = f.getKey();
+				int pos = Math.max(fileName.lastIndexOf("/"), fileName.lastIndexOf("\\"));
+
+				try (InputStream is = new FileInputStream(Common.pathOf("./file", fileName)))
+				{
+					String path = pos >= 0 ? fileName.substring(0, pos) : "";
+					String name = pos >= 0 ? fileName.substring(pos + 1) : fileName;
+					Long len = files.getLong(fileName);
+
+					Machine mach = machineMgr.getMachine(index);
+					mach.run("mkdir -p " + mach.getPath(path));
+					mach.upload(is, name, len, path);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return res;
+	}
+
+	public JSONObject scan(File dir, String path, JSONObject r)
+	{
+		if (dir.isDirectory())
+		{
+			File[] ff = dir.listFiles();
+			if (ff != null) for (File f : ff)
+			{
+				if (f.isDirectory())
+					scan(f, path + "/" + f.getName(), r);
+				else
+					r.put(path + "/" + f.getName(), f.length());
+			}
+		}
+
+		return r;
+	}
+
 	@RequestMapping("/filemgr/file.do")
 	@ResponseBody
 	@CrossOrigin

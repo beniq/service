@@ -28,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@ControllerAdvice
 public class PrinterController
 {
 	@Autowired
@@ -50,6 +51,17 @@ public class PrinterController
 		return "success";
 	}
 
+	@ExceptionHandler(Exception.class)
+	@ResponseBody
+	public JSONObject exc(Exception e)
+	{
+		JSONObject res = new JSONObject();
+		res.put("result", "fail");
+		res.put("reason", e.getMessage());
+
+		return res;
+	}
+
 	@RequestMapping("/reset")
 	@ResponseBody
 	@CrossOrigin
@@ -70,6 +82,8 @@ public class PrinterController
 			outputType = "pdf";
 
 		TypesetTemplate typesetTemplate = getTemplate(p);
+		if (typesetTemplate == null)
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "no template");
 
 		long t = System.currentTimeMillis();
 
@@ -90,7 +104,7 @@ public class PrinterController
 		}
 		catch (Exception e)
 		{
-			throw e;
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		}
 
 		System.out.println("stream in " + (System.currentTimeMillis() - t) + "ms");
@@ -109,6 +123,9 @@ public class PrinterController
 			outputType = "pdf";
 
 		TypesetTemplate typesetTemplate = getTemplate(p);
+
+		if (typesetTemplate == null)
+			throw new RuntimeException("no template");
 
 		JSONObject res = new JSONObject();
 		res.put("result", "fail");
@@ -166,8 +183,6 @@ public class PrinterController
 		{
 			throw e;
 		}
-
-		System.out.println("print in " + (System.currentTimeMillis() - t) + "ms");
 
 		return res;
 	}

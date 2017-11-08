@@ -24,7 +24,7 @@ public class FileSystem
 
     public Map tree()
     {
-        return treeOf(new File(root), ",history,temp,");
+        return treeOf(new File(root), ",arcturus,history,temp,");
     }
 
     private Map treeOf(File dir, String exclude)
@@ -35,7 +35,7 @@ public class FileSystem
         if (files != null) for (File f : files)
         {
             if (f.isDirectory() && (exclude == null || exclude.indexOf(","+f.getName()+",") < 0))
-                list.put(f.getName(), treeOf(f, null));
+                list.put(f.getName(), treeOf(f, exclude));
         }
 
         return list;
@@ -120,5 +120,43 @@ public class FileSystem
     public void rollback(String dest)
     {
 
+    }
+
+    public Map<String, String> compare(String path, Map files)
+    {
+        Map<String, String> res = new HashMap<>();
+
+        List<File> allFile = new ArrayList<>();
+
+        for (Map.Entry m : (Set<Map.Entry>)files.entrySet())
+        {
+            File f = new File(Common.pathOf(root, m.getKey().toString()));
+            if (!f.isFile() || f.length() != Common.toLong(m.getValue()))
+            {
+                res.put(m.getKey().toString(), "UPLOAD");
+            }
+
+            allFile.add(f);
+        }
+
+        File dir = new File(Common.pathOf(root, path));
+        find(dir, path, allFile, res);
+
+        return res;
+    }
+
+    private void find(File dir, String path, List<File> srcList, Map<String, String> res)
+    {
+        if (dir.isDirectory())
+        {
+            File[] ff = dir.listFiles();
+            if (ff != null) for (File f : ff)
+            {
+                if (f.isDirectory())
+                    find(f, path + "/" + f.getName(), srcList, res);
+                else if (srcList.indexOf(f) < 0)
+                    res.put(path + "/" + f.getName(), "DELETE");
+            }
+        }
     }
 }

@@ -73,6 +73,7 @@
 				var line = "";
 				for (var k in r.list) {
 					var v = r.list[k];
+					if (v.group == null) v.group = "公共";
 					v.state = v.state == null ? "stop" : v.state;
 					v.restart = v.restartTime == null ? "" : v.restartTime.format("yyyy-MM-dd hh:mm:ss");
 					v.option = '<a onclick="packSvn({id})">打包</a> <a onclick="manage({id})">详情</a>'.format(v);

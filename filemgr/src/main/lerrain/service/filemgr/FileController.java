@@ -16,14 +16,6 @@ import java.util.List;
 @Controller
 public class FileController
 {
-    @RequestMapping("/health")
-    @ResponseBody
-    @CrossOrigin
-    public String health()
-    {
-        return "success";
-    }
-
     @RequestMapping("/tree.json")
     @ResponseBody
     @CrossOrigin
@@ -83,6 +75,25 @@ public class FileController
         JSONObject res = new JSONObject();
         res.put("result", "success");
         res.put("content", fs.getHistory(file));
+
+        return res;
+    }
+
+    @RequestMapping("/compare.json")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject compare(@RequestBody JSONObject json)
+    {
+        String root = json.getString("root");
+        String path = json.getString("path");
+
+        JSONObject files = json.getJSONObject("files");
+
+        FileSystem fs = new FileSystem(root);
+
+        JSONObject res = new JSONObject();
+        res.put("result", "success");
+        res.put("content", fs.compare(path, files));
 
         return res;
     }

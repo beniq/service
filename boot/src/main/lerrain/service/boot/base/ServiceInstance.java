@@ -3,6 +3,7 @@ package lerrain.service.boot.base;
 import lerrain.service.boot.BootUtil;
 import lerrain.service.boot.Machine;
 import lerrain.service.boot.MachineMgr;
+import lerrain.service.boot.ServiceMgr;
 import lerrain.tool.Network;
 
 import java.util.Date;
@@ -98,7 +99,7 @@ public class ServiceInstance
         this.port = port;
     }
 
-    public void reset(MachineMgr machineMgr)
+    public void refresh(MachineMgr machineMgr)
     {
         machine = machineMgr.getMachine(mac);
 
@@ -153,9 +154,10 @@ public class ServiceInstance
     public String start(Map<String, Object> srvs)
     {
         String lib = machine.getServicePath("lib/*") + ":" + machine.getPath("lib/*");
+
         if (service.getLibs() != null)
             for (String path : service.getLibs())
-                lib += ":" + machine.getPath("lib/" + path + "/*");
+                lib += ":" + machine.getPath("lib/" + path);
 
         String javaBin = machine.getJavaBin();
         if (javaBin == null)
@@ -206,6 +208,12 @@ public class ServiceInstance
     public String state()
     {
         String loc = "http://" + machine.getHost() + ":" + port + "/health";
+        return Network.request(loc, 300);
+    }
+
+    public String reset()
+    {
+        String loc = "http://" + machine.getHost() + ":" + port + "/reset";
         return Network.request(loc, 300);
     }
 
