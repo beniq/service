@@ -6,9 +6,9 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @ImportResource("classpath:spring.xml")
-public class PrinterApplication 
+public class PrinterApplication
 {
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         SpringApplication.run(PrinterApplication.class, args);
     }

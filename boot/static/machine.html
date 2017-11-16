@@ -86,8 +86,8 @@
         }
 
         function synchJar() {
-          common.req("filemgr/compare_jar.json", {index:env.index}, function(r) {
-            alert(r);
+          common.req("filemgr/compare_jar.json", {}, function(r) {
+            alert(JSON.stringify(r));
           });
         }
 

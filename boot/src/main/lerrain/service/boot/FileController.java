@@ -71,42 +71,53 @@ public class FileController
 		json.put("files", files);
 		json.put("path", "lib");
 
-		JSONObject res = fileMgr("compare.json", json);
-		JSONObject opt = res.getJSONObject("content");
-
-		int index = json.getIntValue("index");
-
-		for (Map.Entry<String, Object> f : opt.entrySet())
+		JSONArray list = new JSONArray();
+		for (Machine mach : machineMgr.getAllMachines())
 		{
-			if ("DELETE".equalsIgnoreCase(f.getValue().toString()))
+			int index = mach.getIndex();
+			json.put("index", index);
+
+			JSONObject res = fileMgr("compare.json", json);
+			JSONObject opt = res.getJSONObject("content");
+
+			for (Map.Entry<String, Object> f : opt.entrySet())
 			{
-				JSONObject req = new JSONObject();
-				req.put("index", index);
-				req.put("file", f.getKey());
-
-				fileMgr("delete.json", req);
-			}
-			else if ("UPLOAD".equalsIgnoreCase(f.getValue().toString()))
-			{
-				String fileName = f.getKey();
-				int pos = Math.max(fileName.lastIndexOf("/"), fileName.lastIndexOf("\\"));
-
-				try (InputStream is = new FileInputStream(Common.pathOf("./file", fileName)))
+				if ("DELETE".equalsIgnoreCase(f.getValue().toString()))
 				{
-					String path = pos >= 0 ? fileName.substring(0, pos) : "";
-					String name = pos >= 0 ? fileName.substring(pos + 1) : fileName;
-					Long len = files.getLong(fileName);
+					JSONObject req = new JSONObject();
+					req.put("index", index);
+					req.put("file", f.getKey());
 
-					Machine mach = machineMgr.getMachine(index);
-					mach.run("mkdir -p " + mach.getPath(path));
-					mach.upload(is, name, len, path);
+					fileMgr("delete.json", req);
 				}
-				catch (Exception e)
+				else if ("UPLOAD".equalsIgnoreCase(f.getValue().toString()))
 				{
-					e.printStackTrace();
+					String fileName = f.getKey();
+					int pos = Math.max(fileName.lastIndexOf("/"), fileName.lastIndexOf("\\"));
+
+					try (InputStream is = new FileInputStream(Common.pathOf("./file", fileName)))
+					{
+						String path = pos >= 0 ? fileName.substring(0, pos) : "";
+						String name = pos >= 0 ? fileName.substring(pos + 1) : fileName;
+						Long len = files.getLong(fileName);
+
+//						Machine mach = machineMgr.getMachine(index);
+						mach.run("mkdir -p " + mach.getPath(path));
+						mach.upload(is, name, len, path);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
+
+			list.add(res);
 		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", list);
 
 		return res;
 	}

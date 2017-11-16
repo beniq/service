@@ -392,6 +392,8 @@ public class BootController
 	@CrossOrigin
 	public JSONObject synch(@RequestBody JSONObject json)
 	{
+		System.out.println(json);
+
 		String uuid = json.getString("key");
 		if (dbMgr == null || !dbMgr.isInst(uuid))
 			throw new RuntimeException("脚本对象不匹配，有其他人在同时操作");

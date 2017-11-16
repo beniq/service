@@ -93,13 +93,13 @@
             var x = [0,400,800,950,1250,1550];
             var head = ["保险名称","保险责任","免赔额","有社保赔付比例","无社保赔付比例","保险金额(人民币:元)"];
             var body = new list();
-            if (insureBenefits.insureBenefitVo != null) {
+            if (insureBenefits != null and insureBenefits.insureBenefitVo != null) {
                 for (var xy : insureBenefits.insureBenefitVo) {
                     body += [xy.planName,xy.responsibility,xy.deductible,xy.hasClaimRate,xy.claimRate,xy.premium];
                 }
             }
             var spec = "";
-            if (specials.specialAgreement != null) {
+            if (specials != null and specials.specialAgreement != null) {
                 for (var xy : specials.specialAgreement) {
                     spec += xy.content + "\n";
                 }
@@ -131,7 +131,7 @@
         <reset/>
         <text x="0" y="0" width="1900" height="80" font="hei" font_size="36" color="black" align="left" border_color="black" border="1" value="' 适用条款'"/>
         <reset/>
-        <loop name="j" value="productClauses.productClause">
+        <loop name="j" value="try(productClauses.productClause, null)">
             <text x="0" y="0" width="1900" height="80" font="song" font_size="32" color="black" align="left" border_color="black" border="1" value="j.clauseName"/>
             <reset/>
         </loop>

@@ -58,7 +58,7 @@ public class DbMgr
             }
         }
 
-        for (int i=0;i<skip.size();i++)
+        if (skip != null) for (int i=0;i<skip.size();i++)
         {
             Integer id = skip.getInteger(i);
             res.add(sqls.remove(id));
@@ -127,6 +127,9 @@ public class DbMgr
         String tableName = table.getString("name");
         JSONArray keys = table.getJSONArray("key");
         String condition = table.getString("condition");
+        String excludeStr = table.getString("exclude");
+
+        String[] exclude = Common.isEmpty(excludeStr) ? null : excludeStr.split(",");
 
         if (Common.isEmpty(condition))
             condition = "1=1";
@@ -148,10 +151,10 @@ public class DbMgr
         }
 
         return query(db.getString("url"), db.getString("username"), db.getString("password"), sql1,
-                db2.getString("url"), db2.getString("username"), db2.getString("password"), sql2.toString(), tableName, keys);
+                db2.getString("url"), db2.getString("username"), db2.getString("password"), sql2.toString(), tableName, keys, exclude);
     }
 
-    private List<String> query(String url1, String user1, String pwd1, String sql1, String url2, String user2, String pwd2, String sql2, String tabName, JSONArray keys)
+    private List<String> query(String url1, String user1, String pwd1, String sql1, String url2, String user2, String pwd2, String sql2, String tabName, JSONArray keys, String[] exclude)
     {
         List<String> sqls = new ArrayList<>();
 
@@ -182,6 +185,17 @@ public class DbMgr
 
                     for (Map.Entry<String, Object> e : src.entrySet())
                     {
+                        boolean pass = false;
+                        if (exclude != null)
+                            for (String col : exclude)
+                                if (col.equalsIgnoreCase(e.getKey()))
+                                {
+                                    pass = true;
+                                    break;
+                                }
+
+                        if (pass) continue;
+
                         Object val = dst.get(e.getKey());
                         if (!((val == null && e.getValue() == null) || (val != null && val.equals(e.getValue()))))
                         {
@@ -219,12 +233,12 @@ public class DbMgr
                     {
                         if (kk1 == null)
                         {
-                            kk1 = e.getKey();
+                            kk1 = "`" + e.getKey() + "`";
                             kk2 = strOf(e.getValue());
                         }
                         else
                         {
-                            kk1 += ", " + e.getKey();
+                            kk1 += ", " + "`" + e.getKey() + "`";
                             kk2 += ", " + strOf(e.getValue());
                         }
                     }
@@ -239,11 +253,11 @@ public class DbMgr
                     {
                         if (kk1 == null)
                         {
-                            kk1 = e.getKey() + " = " + strOf(e.getValue());
+                            kk1 = "`" + e.getKey() + "`" + " = " + strOf(e.getValue());
                         }
                         else
                         {
-                            kk1 += ", " + e.getKey() + " = " + strOf(e.getValue());
+                            kk1 += ", " + "`" + e.getKey() + "`" + " = " + strOf(e.getValue());
                         }
                     }
 
@@ -251,11 +265,11 @@ public class DbMgr
                     {
                         if (kk2 == null)
                         {
-                            kk2 = keys.get(i) + " = " + params[i];
+                            kk2 = "`" + keys.get(i) + "`" + " = " + params[i];
                         }
                         else
                         {
-                            kk2 += " and " + keys.get(i) + " = " + params[i];
+                            kk2 += " and " + "`" + keys.get(i) + "`" + " = " + params[i];
                         }
                     }
                     sqls.add(String.format("update %s set %s where %s", tabName, kk1, kk2));

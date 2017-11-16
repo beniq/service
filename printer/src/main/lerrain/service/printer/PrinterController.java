@@ -104,6 +104,7 @@ public class PrinterController
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		}
 
@@ -181,6 +182,7 @@ public class PrinterController
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			throw e;
 		}
 

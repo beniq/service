@@ -1,0 +1,111 @@
+{
+  "content": {
+    "basePolicyInfo": {
+      "currency": "RMB",
+      "currentDate": "20171107",
+      "data": "",
+      "disputeWay": "诉讼",
+      "effDate": "20171108",
+      "expDate": "20181107",
+      "insuredPeriod": "自2017年11月08日零时起至2018年11月07日二十四时止",
+      "issueDate": "2017年11月07日",
+      "policyNo": "88B687000029735052",
+      "policyPremium": "365.00",
+      "premiumCN": "叁佰陆拾伍圆整",
+      "productName": "365综合意外险"
+    },
+    "insurant": {
+      "benefitMan": "法定受益人",
+      "birthday": "1982-05-01",
+      "certificateNo": "110101198205010055",
+      "certificateType": "身份证",
+      "gender": "男",
+      "name": "神先",
+      "relation": "本人",
+      "userId": "I5011181598"
+    },
+    "insureBenefits": {
+      "insureBenefitVo": [
+        {
+          "flag": "1",
+          "planName": "个人意外伤害保险（2017版）",
+          "premium": "150000",
+          "responsibility": "人身意外伤害-身故、残疾"
+        },
+        {
+          "flag": "1",
+          "planName": "附加意外伤害医疗费用保险（B款）",
+          "premium": "10000",
+          "responsibility": "意外医疗费用"
+        },
+        {
+          "flag": "1",
+          "planName": "营运交通工具乘客意外伤害保险（2017版）",
+          "premium": "500000",
+          "responsibility": "航空意外伤害身故、残疾"
+        },
+        {
+          "flag": "1",
+          "planName": "营运交通工具乘客意外伤害保险（2017版）",
+          "premium": "300000",
+          "responsibility": "火车（含地铁、轻轨）意外伤害身故、残疾"
+        },
+        {
+          "flag": "1",
+          "planName": "营运交通工具乘客意外伤害保险（2017版）",
+          "premium": "100000",
+          "responsibility": "汽车（含电车、有轨电车）意外伤害身故、残疾"
+        },
+        {
+          "flag": "1",
+          "planName": "驾乘人员意外伤害保险",
+          "premium": "50000",
+          "responsibility": "人身意外伤害-身故、残疾"
+        }
+      ]
+    },
+    "policyHolder": {
+      "birthday": "1982-05-01",
+      "certificateNo": "110101198205010055",
+      "certificateType": "身份证",
+      "gender": "男",
+      "name": "神先",
+      "phoneNo": "18518678163",
+      "userId": "I5011181598"
+    },
+    "productClauses": {
+      "productClause": [
+        {
+          "clauseName": "《众安在线财产保险股份有限公司个人意外伤害保险条款（2017版）》 (众安在线)(备-普通意外保险)【2017】(主)010号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_72Y.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司附加意外伤害医疗费用保险条款（B款）》 众安备-意外伤害【2014】附6号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_792.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司营运交通工具乘客意外伤害保险条款（2017版）》",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_72Z.pdf"
+        },
+        {
+          "clauseName": "《众安在线财产保险股份有限公司驾乘人员意外伤害保险条款》 众安备-意外【2015】主23号",
+          "flag": "1",
+          "linkUrl": "http://static.zhongan.com/website/group/document/clause/clause_779.pdf"
+        }
+      ]
+    },
+    "specials": {
+      "specialAgreement": {
+        "content": "特别约定：\n    1. 本产品《众安在线财产保险股份有限公司驾乘人员意外伤害保险条款》只承担约定的保险责任中的A类和B类责任。\n    2. 本产品只承保被保险人职业属于《众安保险职业类别表》中的1类人员。\n    3. 本产品承保的意外医疗费用指的是国家卫生部医院等级分类中的二级或二级以上公立医院发生的合理医疗费用，北京市平谷区、密云县、怀柔区所有医院除外。\n    4. 保单生效48小时后不得退保。\n",
+        "flag": "1"
+      }
+    },
+    "voName": "GenBasePolicyVo_flag"
+  },
+  "key": "736b37e5118b51e2b8f6de00392ad1a7",
+  "outputType": "pdf",
+  "templateId": 7
+}
