@@ -117,7 +117,7 @@
               $("#totalMem").html("&nbsp; JAVA总内存占用: " + Math.round(total) + "%");
           });
           common.req("machine/disk_space.json", {index:env.index}, function(r) {
-              $("#diskSpace").html("&nbsp; 磁盘空间: " + r.proportion + "(剩余："+r.avail+")");
+              $("#diskSpace").html("&nbsp; 磁盘空间: 已使用" + r.proportion + " | 剩余："+r.avail+"");
           });
 		}
 
