@@ -58,6 +58,7 @@
       <br/>
       <button class="btn btn-primary" onclick="refresh(env.index)">刷新 >>>></button>
       <span id="totalMem"></span>
+      <span id="diskSpace"></span>
     </div>
   </body>
 
@@ -103,17 +104,20 @@
         function refresh(index) {
           env.index = index;
           common.req("machine/process.json", {index:env.index}, function(r) {
-            var line = "";
-            var total = 0;
-            for (var k in r.list) {
-              var v = r.list[k];
-              v.memkb = Math.round(Number(v.memkb)/1000);
-              v.option = '<a onclick="kill({pid})">终止</a>'.format(v);
-              line += "<tr align='center'><td>{pid}</td><td>{cpu}%</td><td style=''>{mem}% / {memkb}M</td><td style='text-align:left;'><div style='width:1000px; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;'>{cmd}</div></td><td>{option}</td></tr>".format(v);
-              total += Number(v.mem);
-            }
-            $("#content").html(line);
-            $("#totalMem").html("&nbsp; JAVA总内存占用: " + Math.round(total) + "%");
+              var line = "";
+              var total = 0;
+              for (var k in r.list) {
+                  var v = r.list[k];
+                  v.memkb = Math.round(Number(v.memkb)/1000);
+                  v.option = '<a onclick="kill({pid})">终止</a>'.format(v);
+                  line += "<tr align='center'><td>{pid}</td><td>{cpu}%</td><td style=''>{mem}% / {memkb}M</td><td style='text-align:left;'><div style='width:1000px; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;'>{cmd}</div></td><td>{option}</td></tr>".format(v);
+                  total += Number(v.mem);
+              }
+              $("#content").html(line);
+              $("#totalMem").html("&nbsp; JAVA总内存占用: " + Math.round(total) + "%");
+          });
+          common.req("machine/disk_space.json", {index:env.index}, function(r) {
+              $("#diskSpace").html("&nbsp; 磁盘空间: " + r.proportion + "(剩余："+r.avail+")");
           });
 		}
 

@@ -102,6 +102,61 @@ public class MachineController
 		return res;
 	}
 
+	@RequestMapping("/machine/disk_space.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject diskSpace(@RequestBody JSONObject json) throws Exception
+	{
+		Machine machine = machineMgr.getMachine(json.getIntValue("index"));
+		String cmd = String.format("df %s -h", machine.getRoot());
+
+		String str = machine.run(cmd);
+
+		JSONObject ja = new JSONObject();
+		String[] strcc = str.split("\n");
+		int sizeIdx = 0;	// 总空间
+		int usedIdx = 0;	// 已使用
+		int availIdx = 0;	// 剩余
+		int proIdx = 0;		// 占比
+		for (int m = 1; m < strcc.length; m++)
+		{
+			String cc = strcc[m];
+			cc = cc.trim();
+			for (int i=0;i<30;i++)
+				cc = cc.replaceAll("  ", " ");
+
+			if(m == 1){
+				String[] c = cc.split(" ");
+				for (int i=0;i<c.length;i++)
+				{
+					if("size".equalsIgnoreCase(c[i])){
+						sizeIdx = i;
+					}else if("used".equalsIgnoreCase(c[i])){
+						usedIdx = i;
+					}else if("avail".equalsIgnoreCase(c[i])){
+						availIdx = i;
+					}else if("use%".equalsIgnoreCase(c[i])){
+						proIdx = i;
+					}
+				}
+				continue;
+			}
+
+			String[] c = cc.split(" ");
+			ja.put("total", c[sizeIdx]);
+			ja.put("used", c[usedIdx]);
+			ja.put("avail", c[availIdx]);
+			ja.put("proportion", c[proIdx]);
+			break;
+		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", ja);
+
+		return res;
+	}
+
 	@RequestMapping("/machine/run.json")
 	@ResponseBody
 	@CrossOrigin
