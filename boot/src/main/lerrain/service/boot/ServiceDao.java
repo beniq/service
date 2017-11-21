@@ -61,6 +61,12 @@ public class ServiceDao
                     srv.setConfig(conf);
                 }
 
+                String deployScript = m.getString("deploy_script");
+                if(!Common.isEmpty(deployScript))
+                {
+                    srv.setDeployScript(JSONObject.parseObject(deployScript));
+                }
+
                 srv.setInstance(jdbc.query("select * from s_service_instance where service_id = ?", new Object[] {srv.getId()}, new RowMapper<ServiceInstance>()
                 {
                     @Override

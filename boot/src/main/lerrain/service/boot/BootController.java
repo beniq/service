@@ -84,6 +84,24 @@ public class BootController
 		return res;
 	}
 
+	/**
+	 * 静态资源部署
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping("/deploy_static.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject deployStatic(@RequestBody JSONObject json) throws Exception {
+		Long instanceId = json.getLong("instanceId");
+		serviceMgr.deployStatic(instanceId);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+
+		return res;
+	}
+
 	@RequestMapping("/restart.json")
 	@ResponseBody
 	@CrossOrigin

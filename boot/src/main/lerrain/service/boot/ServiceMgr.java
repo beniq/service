@@ -1,5 +1,6 @@
 package lerrain.service.boot;
 
+import com.alibaba.fastjson.JSONObject;
 import lerrain.service.boot.base.ServiceInstance;
 import lerrain.service.boot.base.ServicePack;
 import lerrain.tool.Common;
@@ -144,6 +145,29 @@ public class ServiceMgr
 
         serviceDao.saveReleaseInfo(si.getId(), "deploy", si.copyJar(), new Date());
         serviceDao.saveDeployTime(si);
+    }
+
+    public void deployStatic(Long instanceId) throws Exception {
+        ServiceInstance si = getServiceInstance(instanceId);
+
+        ServicePack sp = si.getService();
+        Machine m = si.getMachine();
+        JSONObject ds = sp.getDeployScript();
+        if(ds == null || ds.isEmpty())
+        {
+            return;
+        }
+        String deployScript = ds.getString("static");
+        if(Common.isEmpty(deployScript))
+        {
+            return;
+        }
+
+        String root = m.getRoot();
+        String env = si.getEnvString();
+        deployScript = deployScript.replaceAll("#ROOT#", root).replaceAll("#ENV#", env);
+
+        m.run(deployScript);
     }
 
     public List<String[]> viewReleaseInfo(Long instanceId)
