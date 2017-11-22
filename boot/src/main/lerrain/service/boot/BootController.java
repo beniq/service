@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import lerrain.service.boot.base.ServiceInstance;
 import lerrain.service.boot.base.ServicePack;
 import lerrain.service.boot.console.DbMgr;
+import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,6 +242,12 @@ public class BootController
 		{
 			Long srvId = all.getLong(i);
 			ServicePack sp = serviceMgr.getService(srvId);
+			String hasStatic = "N";
+			if(sp.getDeployScript() != null){
+				if(!Common.isEmpty(sp.getDeployScript().getString("static"))){
+					hasStatic = "Y";
+				}
+			}
 
 			for (ServiceInstance si : sp.getInstance())
 			{
@@ -254,6 +261,7 @@ public class BootController
 				s.put("port", si.getPort());
 				s.put("deploy", si.getDeployTime());
 				s.put("restart", si.getRestartTime());
+				s.put("hasStatic", hasStatic);
 
 				l[si.getEnv()].add(s);
 			}
