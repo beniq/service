@@ -133,7 +133,7 @@
           env.server[v.instanceId] = v;
           v.deploy = v.deploy == null ? "" : new Date(v.deploy).format("yyyy-MM-dd hh:mm:ss");
           v.restart = v.restart == null ? "" : new Date(v.restart).format("yyyy-MM-dd hh:mm:ss");
-          v.option = '<a onclick="lock(resetSrv,{instanceId})">重置</a> <a onclick="lock(deploy,{instanceId})">部署</a> '+(v.hasStatic == "Y" ? '<a onclick="lock(deployStatic, {instanceId})">部署静态资源</a> ' : '')+'<a onclick="lock(restart,{instanceId})">重启</a> <a onclick="lock(stop,{instanceId})">关闭</a>'.format(v);
+          v.option = ('<a onclick="lock(resetSrv,{instanceId})">重置</a> <a onclick="lock(deploy,{instanceId})">部署</a> '+(v.hasStatic == "Y" ? '<a onclick="lock(deployStatic,{instanceId})">部署静态资源</a> ' : '')+'<a onclick="lock(restart,{instanceId})">重启</a> <a onclick="lock(stop,{instanceId})">关闭</a>').format(v);
           line += "<tr align='center'><td>{name}</td><td>{code}</td><td>{machineHost}</td><td>{port}</td><td id='deploy{instanceId}'>{deploy}</td><td id='restart{instanceId}'>{restart}</td><td id='state{instanceId}'></td><td><a onclick='viewLog({instanceId})'>应用日志</a> <a onclick='viewInfo({instanceId})'>发布日志</a></td><td>{option}</td></tr>".format(v);
         }
         $("#" + env.group[i]).html(line);
