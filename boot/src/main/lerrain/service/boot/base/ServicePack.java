@@ -32,6 +32,7 @@ public class ServicePack
     List<String[]> config;
 
     JSONObject dbRule;
+    JSONObject deployScript;
 
     public List<String[]> getConfig()
     {
@@ -97,6 +98,14 @@ public class ServicePack
     public void setDbRule(JSONObject dbRule)
     {
         this.dbRule = dbRule;
+    }
+
+    public JSONObject getDeployScript() {
+        return deployScript;
+    }
+
+    public void setDeployScript(JSONObject deployScript) {
+        this.deployScript = deployScript;
     }
 
     public void setInstance(List<ServiceInstance> instance)
