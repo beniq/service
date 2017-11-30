@@ -1,6 +1,10 @@
 package lerrain.service.printer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.signatures.PdfPKCS7;
+import com.itextpdf.signatures.SignatureUtil;
 import lerrain.tool.Common;
 import lerrain.tool.document.LexDocument;
 import lerrain.tool.document.export.Painter;
@@ -11,12 +15,15 @@ import lerrain.tool.document.typeset.TypesetDocument;
 import lerrain.tool.document.typeset.TypesetQrcode;
 import lerrain.tool.document.typeset.TypesetUtil;
 import lerrain.tool.document.typeset.environment.TextDimensionAwt;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.security.Security;
 import java.util.*;
 
 @Service
@@ -39,6 +46,9 @@ public class PrinterService
 	@PostConstruct
 	private void init()
 	{
+		BouncyCastleProvider provider = new BouncyCastleProvider();
+		Security.addProvider(provider);
+
 		TypesetUtil.setResourcePath(Common.pathOf(path, "resource/template"));
 		TypesetUtil.setFontPath(Common.pathOf(path, "resource/fonts/"));
 		TypesetUtil.setTextDimension(new TextDimensionAwt());
@@ -50,6 +60,26 @@ public class PrinterService
 		pdfPainters.put(0L, new PdfPainterNDF());
 
 		reset();
+	}
+
+	public boolean verify(byte[] pdf) throws Exception
+	{
+		boolean result = true;
+
+		PdfReader pdfReader = new PdfReader(new ByteArrayInputStream(pdf));
+		PdfDocument pdfDocument = new PdfDocument(pdfReader);
+		SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+		List<String> signedNames = signatureUtil.getSignatureNames();
+
+		System.out.println(signedNames);
+
+		for (String signedName : signedNames)
+		{
+			PdfPKCS7 rs = signatureUtil.verifySignature(signedName, "BC");
+			result = result && rs.verify();
+		}
+
+		return result;
 	}
 
 	public void reset()

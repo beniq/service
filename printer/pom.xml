@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>document</artifactId>
-			<version>4.0.5</version>
+			<version>4.0.7</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -72,6 +72,11 @@
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-asian</artifactId>
 			<version>5.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>sign</artifactId>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>

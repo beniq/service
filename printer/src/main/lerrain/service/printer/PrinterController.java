@@ -8,6 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.itextpdf.io.source.RASInputStream;
+import com.itextpdf.io.source.RandomAccessFileOrArray;
+import com.itextpdf.io.source.RandomAccessSourceFactory;
+import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.signatures.PdfSignature;
+import com.itextpdf.signatures.SignatureUtil;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.document.LexDocument;
@@ -200,6 +206,29 @@ public class PrinterController
 
 		os.flush();
 		os.close();
+	}
+
+	@RequestMapping("/verify.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject verify(HttpServletRequest request)
+	{
+		JSONObject r = new JSONObject();
+
+		try (InputStream is = request.getInputStream())
+		{
+			if (printer.verify(Common.byteOf(is)))
+				r.put("result", "success");
+			else
+				r.put("result", "fail");
+		}
+		catch (Exception e)
+		{
+			r.put("result", "fail");
+			r.put("reason", e.getMessage());
+		}
+
+		return r;
 	}
 
 	@RequestMapping("/list.json")

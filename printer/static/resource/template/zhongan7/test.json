@@ -1,0 +1,33 @@
+{
+    "BAR_CODE": "iVBORw0KGgoAAAANSUhEUgAAAG8AAAAyCAIAAADdtxIeAAAAjUlEQVR42u3QMQ7AIAgFUO9/6ZrYDgjY0ek5KX4geePZz1jnvcRKfJ7qqbHNp8YYTsU2X1fX+XVs+o0T2l0/+dPAL0aTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSvKw5AUssRoqaxefeAAAAAElFTkSuQmCC",
+    "GENE": {
+      "ENDURANCE_B": "GG",
+      "ENDURANCE_A2": "AT",
+      "ENDURANCE_A1": "CC",
+      "ENDURANCE_EVALUATE": "正常",
+      "FORCE_AG": "TT",
+      "FORCE_AC": "TT",
+      "MUSIC_TYPE_G": "AG",
+      "ENDURANCE_P": "CT",
+      "SPACE_TYPE_C": "CC",
+      "SPACE_TYPE_A": "AC",
+      "MUSIC_TYPE_P": "GG",
+      "SPACE_EVALUATE": "优秀",
+      "FORCE_EVALUATE": "优秀",
+      "MUSIC_EVALUATE": "良好"
+    },
+    "USER": {
+      "NO": "176855422434",
+      "PROJECT": " 童安保·儿童兴趣潜力基因检测",
+      "GENDER": " 男",
+      "METHOD": " 口腔拭子（口腔刮棒）",
+      "BIRTHDAY": "2015-03-31",
+      "NAME": " 林  腾"
+    },
+    "RESULT": {
+      "DATE": "2017-11-06",
+      "PROJECT": " 儿童兴趣潜力基因检测",
+      "BINDDATE": "2015-03-31",
+      "RECEIVEDATE": "2017-11-06"
+    }
+}
