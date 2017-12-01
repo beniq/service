@@ -1,0 +1,32 @@
+{
+  "CODE": "173418793128",
+  "BAR_CODE": "iVBORw0KGgoAAAANSUhEUgAAAG8AAAAyCAIAAADdtxIeAAAAjUlEQVR42u3QQQ6AMAgEwP7/0zZR0yCg3nqanoBuSTPjeJ5xnquIk9i+zdPDVcdYatvlNZyWx7bd/Pu3FKiZ9vYjcMdo0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmjRp0qRJkyZNmps1JwSjRopXuYnLAAAAAElFTkSuQmCC",
+  "GENE": {
+    "KNOWLEDGE_TYPE": "TT",
+    "MATHEMATICAL_EVALUATE": "良好",
+    "OPERATIONAL_EVALUATE": "良好",
+    "SAWY_EVALUATE": "优秀",
+    "KNOWLEDGE_EVALUATE": "优秀",
+    "MEMORY_TYPE": "GG",
+    "OPERATIONAL_TYPE_RS7": "GA",
+    "OPERATIONAL_TYPE_RS6": "CC",
+    "SAWY_TYPE": "GG",
+    "MATHEMATICAL_TYPE": "CC",
+    "READ_TYPE": "TT",
+    "READ_EVALUATE": "正常"
+  },
+  "USER": {
+    "NO": "173418793128",
+    "PROJECT": "儿童安全用药基因检测",
+    "GENDER": "男",
+    "METHOD": "口腔拭子（口腔刮棒）",
+    "BIRTHDAY": "2016-06-06",
+    "NAME": "黄子轩"
+  },
+  "RESULT": {
+    "DATE": "2017-11-23",
+    "PROJECT": "儿童安全用药基因检测",
+    "BINDDATE": "2017-11-22",
+    "RECEIVEDATE": "2017-11-08"
+  }
+}

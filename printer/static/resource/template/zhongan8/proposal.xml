@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<proposal>
+	<font_mapping>
+		<font name="pingfang_normal" value="'pingfang_normal.ttf'"/>
+		<font name="pingfang_bold" value="'pingfang_bold.ttf'"/>
+	</font_mapping>
+	
+	<page_setting>
+	<page name="default" default="yes" size="A4" x="0" y="0" width="2100" height="2970">
+		</page>
+	</page_setting>
+
+	<paragraph visible="USER != null">
+		<image x="0" y="0" width="2100" height="2970" src="'page_01.png'" url="'page_01.png'"/>
+		<text x="1320" y="2110" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.NAME+' '"/>
+		<text x="1320" y="2281" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.PROJECT+' '"/>
+		<image x="1320" y="2433" width="210" height="91"  base64="BAR_CODE"/>
+		<text x="1320" y="2528" width="210" height="21" font="pingfang_normal" font_size="21" color="#221814" align="center" value="CODE+' '"/>
+	</paragraph>
+	<paragraph  visible="USER != null">
+		<image x="0" y="0" width="2100" height="2970" src="'page_safe_02.png'" url="'page_safe_02.png'"/>
+		<text x="193" y="399" width="777" height="70" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'用户信息'"/>
+		
+		<text x="193" y="480" width="336" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'姓名'"/>
+		<text x="540" y="480" width="431" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="USER.NAME+' '"/>
+		<text x="193" y="544" width="336" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'性别'"/>
+		<text x="540" y="544" width="431" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="USER.GENDER+' '"/>
+		<text x="193" y="608" width="336" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'出生日期'"/>
+		<text x="540" y="608" width="431" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="USER.BIRTHDAY+' '"/>
+		<text x="193" y="672" width="336" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'样本类型'"/>
+		<text x="540" y="672" width="431" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="USER.METHOD+' '"/>
+		<text x="193" y="736" width="336" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'样本编码'"/>
+		<text x="540" y="736" width="431" height="53" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="USER.NO+' '"/>
+		
+		<text x="1106" y="399" width="777" height="70" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'检测信息'"/>
+		
+		<text x="1106" y="480" width="336" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'检测项目'"/>
+		<text x="1453" y="480" width="431" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.PROJECT+' '"/>
+		<text x="1106" y="558" width="336" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'样本绑定日期'"/>
+		<text x="1453" y="558" width="431" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.BINDDATE+' '"/>
+		<text x="1106" y="636" width="336" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'样本收到日期'"/>
+		<text x="1453" y="636" width="431" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.RECEIVEDATE+' '"/>
+		<text x="1106" y="714" width="336" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'报告日期'"/>
+		<text x="1453" y="714" width="431" height="67" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.DATE+' '"/>
+		
+		<text x="193" y="914" width="210" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'科室'"/>
+		<text x="414" y="914" width="210" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'药物功能'"/>
+		<text x="632" y="914" width="210" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'药物化学名1'"/>
+		<text x="856" y="914" width="210" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'基因2'"/>
+		<text x="1077" y="914" width="158" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'基因型3'"/>
+		<text x="1246" y="914" width="210" height="109" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'用药建议\n (尊医嘱的前提下)'"/>
+		<text x="1246" y="1033" width="63" height="109" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'增\n量'"/>
+		<text x="1320" y="1033" width="63" height="109" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'正\n常'"/>
+		<text x="1394" y="1033" width="63" height="109" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'减\n量'"/>
+		<text x="1467" y="914" width="427" height="228" font="pingfang_bold" font_size="26" color="white" bgcolor="#e66260" align="center" value="'常见药物举例'"/>
+		
+		
+		<text x="193" y="1153" width="210" height="467" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'内科'"/>
+		
+		<text x="414" y="1153" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'感冒药'"/>
+		<text x="414" y="1272" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'OTC解暑药'"/>
+		<text x="414" y="1392" width="210" height="228" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'解热镇痛药'"/>
+		
+		<text x="632" y="1153" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'咖啡因类药物'"/>
+		<text x="632" y="1272" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'乙醛类药物'"/>
+		<text x="632" y="1392" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'阿司匹林'"/>
+		<text x="632" y="1511" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'塞来昔布'"/>
+		
+		<text x="856" y="1153" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP1A2 '"/>
+		<text x="856" y="1272" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'ALDH2 '"/>
+		<text x="856" y="1392" width="210" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'rs2965667 '"/>
+		<text x="856" y="1451" width="210" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'rs16973225 '"/>
+		<text x="856" y="1511" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		
+		<text x="1077" y="1153" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.INTERNAL_TYPE_CA+' '"/>
+		<text x="1077" y="1272" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.INTERNAL_TYPE_ALD+' '"/>
+		<text x="1077" y="1392" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.INTERNAL_TYPE_RS2+' '"/>
+		<text x="1077" y="1451" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.INTERNAL_TYPE_RS1+' '"/>
+		<text x="1077" y="1511" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.INTERNAL_TYPE_CY+' '"/>
+
+		<rect x="1246" y="1153" width="63" height="108" color="#f2f2f1"/>
+		<rect x="1246" y="1272" width="63" height="108" color="#f2f2f1"/>
+		<text x="1246" y="1392" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1246" y="1511" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1153" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1272" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1392" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1511" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1153" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1272" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1392" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1511" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+
+		<if condition="GENE.INTERNAL_SUGGEST_C==0">
+			<image x="1264" y="1191" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_A==0">
+			<image x="1264" y="1310" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_RS==0">
+			<image x="1264" y="1430" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_CY==0">
+			<image x="1264" y="1549" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_C==1">
+			<image x="1338" y="1191" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_A==1">
+			<image x="1338" y="1310" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_RS==1">
+			<image x="1338" y="1430" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_CY==1">
+			<image x="1338" y="1549" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_C==2">
+			<image x="1412" y="1191" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_A==2">
+			<image x="1412" y="1310" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_RS==2">
+			<image x="1412" y="1430" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.INTERNAL_SUGGEST_CY==2">
+			<image x="1412" y="1549" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+
+		<text x="1467" y="1153" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'小儿快克、护彤、好娃娃、优卡丹氨酚烷胺颗粒'"/>
+		<text x="1467" y="1272" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'藿香正气、十滴水、含乙醛注射液'"/>
+		<text x="1467" y="1392" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'阿司匹林肠溶片、阿司匹林泡腾片'"/>
+		<text x="1467" y="1511" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'西乐葆、塞来昔布胶囊'"/>
+
+		
+		<text x="193" y="1631" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'消化科'"/>
+		<text x="414" y="1631" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'胃酸抑制剂'"/>
+		<text x="632" y="1631" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'质子泵抑制剂'"/>
+		<text x="856" y="1631" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C19 '"/>
+		<text x="1077" y="1631" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.GASTROENTEROLOGY_TYPE+' '"/>
+		
+		<text x="1246" y="1631" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1631" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1631" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<!--18,38-->
+		<if condition="GENE.GASTROENTEROLOGY_SUGGEST==0">
+			<image x="1264" y="1669" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.GASTROENTEROLOGY_SUGGEST==1">
+			<image x="1338" y="1669" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.GASTROENTEROLOGY_SUGGEST==2">
+			<image x="1412" y="1669" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		
+		<text x="1467" y="1631" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'奥美拉唑、兰索拉唑、泮托拉唑钠、雷贝拉唑'"/>
+		
+		
+		<text x="193" y="1750" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'内分泌科'"/>
+		<text x="414" y="1750" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'降血糖药'"/>
+		<text x="632" y="1750" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'磺酰脲类药物'"/>
+		<text x="856" y="1750" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		<text x="1077" y="1750" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.ENDOCRINOLOGY_TYPE_1+' '"/>
+		<text x="1077" y="1809" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.ENDOCRINOLOGY_TYPE_2+' '"/>
+		
+		<text x="1246" y="1750" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1750" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1750" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<if condition="GENE.ENDOCRINOLOGY_SUGGEST==0">
+			<image x="1264" y="1788" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.ENDOCRINOLOGY_SUGGEST==1">
+			<image x="1338" y="1788" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.ENDOCRINOLOGY_SUGGEST==2">
+			<image x="1412" y="1788" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		
+		<text x="1467" y="1750" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'甲糖宁、格列吡嗪片、格列齐特片、优降糖'"/>
+		
+		<text x="193" y="1869" width="210" height="228" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'心血管科'"/>
+		
+		<text x="414" y="1869" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'抗凝血药'"/>
+		<text x="632" y="1869" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'华法林'"/>
+		<text x="856" y="1869" width="210" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		<text x="856" y="1908" width="210" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'VKORC1 '"/>
+		<text x="856" y="1947" width="210" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		<text x="1077" y="1869" width="158" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.CARDIOVASCULAR_TYPE_C1+' '"/>
+		<text x="1077" y="1908" width="158" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.CARDIOVASCULAR_TYPE_V+' '"/>
+		<text x="1077" y="1947" width="158" height="28" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.CARDIOVASCULAR_TYPE_C2+' '"/>
+		
+		<text x="414" y="1988" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'降压药'"/>
+		<text x="632" y="1988" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'美托洛尔'"/>
+		<text x="856" y="1988" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2D6 '"/>
+		<text x="1077" y="1988" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.CARDIOVASCULAR_TYPE_M+' '"/>
+		
+		<text x="1246" y="1869" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1869" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1869" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1246" y="1988" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="1988" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="1988" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_H==0">
+			<image x="1264" y="1907" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_H==1">
+			<image x="1338" y="1907" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_H==2">
+			<image x="1412" y="1907" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_M==0">
+			<image x="1264" y="2026" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_M==1">
+			<image x="1338" y="2026" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.CARDIOVASCULAR_SUGGEST_M==2">
+			<image x="1412" y="2026" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		
+		<text x="1467" y="1869" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'华法林片、华法林钠片'"/>
+		<text x="1467" y="1988" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'酒石酸美托洛尔片、酒石酸美托洛尔控释片、倍他乐克'"/>
+		
+		<text x="193" y="2108" width="210" height="228" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'神经内科'"/>
+		
+		<text x="414" y="2108" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'抗癫痫药'"/>
+		<text x="632" y="2108" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'苯妥英钠'"/>
+		<text x="856" y="2108" width="210" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		<text x="856" y="2167" width="210" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2C9 '"/>
+		<text x="1077" y="2108" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.NEUROLOGY_TYPE_D1+' '"/>
+		<text x="1077" y="2167" width="158" height="48" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.NEUROLOGY_TYPE_D2+' '"/>
+		<text x="414" y="2227" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'抗抑郁药'"/>
+		<text x="632" y="2227" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'去甲替林'"/>
+		<text x="856" y="2227" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CYP2D6 '"/>
+		<text x="1077" y="2227" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.NEUROLOGY_TYPE_Y+' '"/>
+		
+		<text x="1246" y="2108" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="2108" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="2108" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1246" y="2227" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="2227" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="2227" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<if condition="GENE.NEUROLOGY_SUGGEST_H==0">
+			<image x="1264" y="2146" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.NEUROLOGY_SUGGEST_H==1">
+			<image x="1338" y="2146" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.NEUROLOGY_SUGGEST_H==2">
+			<image x="1412" y="2146" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.NEUROLOGY_SUGGEST_Y==0">
+			<image x="1264" y="2265" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.NEUROLOGY_SUGGEST_Y==1">
+			<image x="1338" y="2265" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.NEUROLOGY_SUGGEST_Y==2">
+			<image x="1412" y="2265" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		
+		<text x="1467" y="2108" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'苯妥英钠片、大伦丁'"/>
+		<text x="1467" y="2227" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'去甲阿米替林片、盐酸去甲替林片'"/>
+		
+		<text x="193" y="2347" width="210" height="228" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'呼吸科'"/>
+		
+		<text x="414" y="2466" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'抗囊性纤维化药'"/>
+		<text x="632" y="2466" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'依伐卡托'"/>
+		<text x="856" y="2466" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'CFTR '"/>
+		<text x="1077" y="2466" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.PNEUMOLOGY_TYPE_C+' '"/>
+		<text x="414" y="2347" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'哮喘'"/>
+		<text x="632" y="2347" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'布地奈德'"/>
+		<text x="856" y="2347" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'TBX21 '"/>
+		<text x="1077" y="2347" width="158" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.PNEUMOLOGY_TYPE_T+' '"/>
+		
+		<text x="1246" y="2347" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1320" y="2347" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1394" y="2347" width="63" height="108" font="pingfang_normal" font_size="26" color="red" align="center" bgcolor="#f2f2f1" value="''"/>
+		<text x="1246" y="2466" width="210" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="GENE.PNEUMOLOGY_TYPE_V+' '"/>
+		
+		<if condition="GENE.PNEUMOLOGY_SUGGEST_T==0">
+			<image x="1264" y="2385" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.PNEUMOLOGY_SUGGEST_T==1">
+			<image x="1338" y="2385" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		<if condition="GENE.PNEUMOLOGY_SUGGEST_T==2">
+			<image x="1412" y="2385" width="27" height="33" src="'gou.png'" url="'gou.png'"/>
+		</if>
+		
+		<text x="1467" y="2466" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'Ivacaftor（进口药品）'"/>
+		<text x="1467" y="2347" width="427" height="108" font="pingfang_normal" font_size="26" color="black" align="center" bgcolor="#f2f2f1" value="'泼米考特得宝、普米克令舒、英福美'"/>
+		
+	</paragraph>
+</proposal>

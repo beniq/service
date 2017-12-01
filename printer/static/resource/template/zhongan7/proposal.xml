@@ -14,18 +14,13 @@
 		<image x="0" y="0" width="2100" height="2970" src="'page_01.png'" url="'page_01.png'"/>
 		<text x="1320" y="2110" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.NAME+' '"/>
 		<text x="1320" y="2281" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.PROJECT+' '"/>
-		<image x="1365" y="2433" width="210" height="91"  base64="BAR_CODE"/>
-		<text x="1365" y="2528" width="210" height="21" font="pingfang_normal" font_size="21" color="#221814" align="center" value="CODE+' '"/>
-	</paragraph>
-	
-	<paragraph visible="USER != null">
-		<image x="0" y="0" width="2100" height="2970" src="'page_02.png'" url="'page_02.png'"/>
-		<text x="260" y="826" width="1000" height="60" font="pingfang_bold" font_size="45" color="black" value="'尊敬的'+USER.NAME+': '"/>
+		<image x="1320" y="2433" width="210" height="91"  base64="BAR_CODE"/>
+		<text x="1320" y="2528" width="210" height="21" font="pingfang_normal" font_size="21" color="#221814" align="center" value="CODE+' '"/>
 	</paragraph>
 	<paragraph  visible="USER != null">
 		<image x="0" y="0" width="2100" height="2970" src="'page_03.png'" url="'page_03.png'"/>
-		<text x="193" y="767" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'用户信息'"/>
-		<text x="1106" y="767" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'检测结果'"/>
+		<text x="193" y="767" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'用户信息'"/>
+		<text x="1106" y="767" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'检测信息'"/>
 		
 		<text x="193" y="848" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'姓名'"/>
 		<text x="540" y="848" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.NAME+' '"/>
@@ -47,11 +42,11 @@
 		<text x="1106" y="1082" width="336" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'报告日期'"/>
 		<text x="1453" y="1082" width="431" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.DATE+' '"/>
 		
-		<text x="193" y="1275" width="291" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'检测项目'"/>
-		<text x="495" y="1275" width="749" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'代表职业'"/>
-		<text x="1255" y="1275" width="210" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'基因'"/>
-		<text x="1476" y="1275" width="210" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'基因型'"/>
-		<text x="1697" y="1275" width="186" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#8ed1e4" align="center" value="'评估'"/>
+		<text x="193" y="1275" width="291" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'检测项目'"/>
+		<text x="495" y="1275" width="749" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'代表职业'"/>
+		<text x="1255" y="1275" width="210" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'基因'"/>
+		<text x="1476" y="1275" width="210" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'基因型'"/>
+		<text x="1697" y="1275" width="186" height="74" font="pingfang_bold" font_size="35" color="white" bgcolor="#18A8C4" align="center" value="'评估'"/>
 		
 		<text x="193" y="1360" width="291" height="105" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'空间定位能力'"/>
 		<text x="495" y="1360" width="749" height="105" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'画家、飞行员'"/>
