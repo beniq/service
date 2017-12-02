@@ -21,6 +21,16 @@ public class ServiceDao
     @Autowired
     JdbcTemplate jdbc;
 
+    public void saveService(Long serviceId, int env, int port, List<Integer> machine)
+    {
+        String delSQL = "delete from s_service_instance where service_id = ? and env = ?";
+        jdbc.update(delSQL, serviceId, env);
+
+        String insert = "insert into s_service_instance(service_id, env, port, machine) values(?, ?, ?, ?)";
+        for (int m : machine)
+            jdbc.update(insert, serviceId, env, port, m);
+    }
+
     public List<ServicePack> loadService()
     {
         return jdbc.query("select * from s_service order by workspace, id", new RowMapper<ServicePack>()

@@ -13,7 +13,7 @@ common.link = function(link) {
 
 common.post = function(url, val, callback, failback, type) {
 	if (type == null) type = "json"
-	$.ajax({url:url, type:"POST", data:JSON.stringify(val), contentType:'application/'+type+';charset=UTF-8', success: callback, fail: failback, dataType:type});
+	$.ajax({url:url, type:"POST", data:type=="json"?JSON.stringify(val):val, contentType:'application/'+type+';charset=UTF-8', success: callback, fail: failback, dataType:type});
 }
 
 common.req = function(url, val, callback, failback) {

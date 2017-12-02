@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<proposal>
+	<font_mapping>
+		<font name="pingfang_normal" value="'pingfang_normal.ttf'"/>
+		<font name="pingfang_bold" value="'pingfang_bold.ttf'"/>
+	</font_mapping>
+
+	
+	<page_setting>
+	<page name="default" default="yes" size="A4" x="0" y="0" width="2100" height="2970">
+		</page>
+	</page_setting>
+
+	<paragraph visible="USER != null">
+		<image x="0" y="0" width="2100" height="2970" src="'page_01.png'" url="'page_01.png'"/>
+		<text x="1320" y="2110" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.NAME+' '"/>
+		<text x="1320" y="2281" width="1500" height="100" font="pingfang_normal" font_size="42" color="#707171" value="USER.PROJECT+' '"/>
+		<image x="1320" y="2433" width="210" height="91"  base64="BAR_CODE"/>
+		<text x="1320" y="2528" width="210" height="21" font="pingfang_normal" font_size="21" color="#221814" align="center" value="CODE+' '"/>
+	</paragraph>
+	<paragraph  visible="USER != null">
+		<image x="0" y="0" width="2100" height="2970" src="'page_study_02.png'" url="'page_study_02.png'"/>
+		<text x="130" y="788" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'用户信息'"/>
+		
+		<text x="130" y="869" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'姓名'"/>
+		<text x="477" y="869" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.NAME+' '"/>
+		<text x="130" y="933" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'性别'"/>
+		<text x="477" y="933" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.GENDER+' '"/>
+		<text x="130" y="997" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'出生日期'"/>
+		<text x="477" y="997" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.BIRTHDAY+' '"/>
+		<text x="130" y="1061" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'样本类型'"/>
+		<text x="477" y="1061" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.METHOD+' '"/>
+		<text x="130" y="1125" width="336" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'样本编码'"/>
+		<text x="477" y="1125" width="431" height="53" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="USER.NO+' '"/>
+		
+		<text x="130" y="1367" width="777" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'检测信息'"/>
+		
+		<text x="130" y="1448" width="336" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'检测项目'"/>
+		<text x="477" y="1448" width="431" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.PROJECT+' '"/>
+		<text x="130" y="1526" width="336" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'样本绑定日期'"/>
+		<text x="477" y="1526" width="431" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.BINDDATE+' '"/>
+		<text x="130" y="1604" width="336" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'样本收到日期'"/>
+		<text x="477" y="1604" width="431" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.RECEIVEDATE+' '"/>
+		<text x="130" y="1682" width="336" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'报告日期'"/>
+		<text x="477" y="1682" width="431" height="67" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="RESULT.DATE+' '"/>
+		
+		
+		<text x="1009" y="788" width="329" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'检测项目'"/>
+		<text x="1349" y="788" width="196" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'基因'"/>
+		<text x="1556" y="788" width="196" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'基因型'"/>
+		<text x="1763" y="788" width="196" height="70" font="pingfang_bold" font_size="35" color="white" bgcolor="#ed9912" align="center" value="'评估'"/>
+		
+		<text x="1009" y="869" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'理解能力'"/>
+		<text x="1349" y="869" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'SNAP25 '"/>
+		<text x="1556" y="869" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.SAWY_TYPE+' '"/>
+		<text x="1763" y="869" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.SAWY_EVALUATE+' '"/>
+		
+		<text x="1009" y="1017" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'数学计算能力'"/>
+		<text x="1349" y="1017" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'MY018B '"/>
+		<text x="1556" y="1017" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.MATHEMATICAL_TYPE+' '"/>
+		<text x="1763" y="1017" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.MATHEMATICAL_EVALUATE+' '"/>
+		
+		<text x="1009" y="1165" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'记忆力'"/>
+		<text x="1349" y="1165" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'WWC1 '"/>
+		<text x="1556" y="1165" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.MEMORY_TYPE+' '"/>
+		<text x="1763" y="1165" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.MEMORY_EVALUATE+' '"/>
+		
+		<text x="1009" y="1313" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'求知欲'"/>
+		<text x="1349" y="1313" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'DRD4 '"/>
+		<text x="1556" y="1313" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.KNOWLEDGE_TYPE+' '"/>
+		<text x="1763" y="1313" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.KNOWLEDGE_EVALUATE+' '"/>
+		
+		<text x="1009" y="1461" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'动手能力'"/>
+		<text x="1349" y="1461" width="196" height="63" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'rs7883190 '"/>
+		<text x="1349" y="1535" width="196" height="63" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'rs6040449 '"/>
+		<text x="1556" y="1461" width="196" height="63" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.OPERATIONAL_TYPE_RS7+' '"/>
+		<text x="1556" y="1535" width="196" height="63" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.OPERATIONAL_TYPE_RS6+' '"/>
+		<text x="1763" y="1461" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.OPERATIONAL_EVALUATE+' '"/>
+		
+		<text x="1009" y="1609" width="329" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'阅读能力'"/>
+		<text x="1349" y="1609" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="'KIAA0319 '"/>
+		<text x="1556" y="1609" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.READ_TYPE+' '"/>
+		<text x="1763" y="1609" width="196" height="137" font="pingfang_normal" font_size="35" color="black" align="center" bgcolor="#f2f2f1" value="GENE.READ_EVALUATE+' '"/>
+		
+	</paragraph>
+</proposal>

@@ -56,6 +56,11 @@ public class ServiceMgr
         }
     }
 
+    public void saveService(Long serviceId, int env, int port, List<Integer> machine)
+    {
+        serviceDao.saveService(serviceId, env, port, machine);
+    }
+
     public Object getParam(int env, String name)
     {
         return getParam(this.env.get(env), name);

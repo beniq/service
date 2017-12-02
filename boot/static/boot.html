@@ -51,6 +51,36 @@
 		<button class="btn btn-primary" onclick="reset()">重置 >>>></button>
     	<button class="btn btn-primary" onclick="start()">发布 >>>></button>
     </div>
+
+	<div class="modal fade" id="srvMach" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form">
+						<input type="hidden" id="serviceId"/>
+						<input type="hidden" id="serviceEnv"/>
+						<span id="serviceDesc"></span>
+						<br/>
+						<table class="table table-striped">
+							<tbody id="machines"></tbody>
+						</table>
+						端口后三位：<input type="text" id="servicePort"/>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onClick="saveSrvMach()">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
   </body>
 
 	<script>
@@ -63,25 +93,74 @@
 		var xhr;
 
 		function reset() {
-			common.req("reset.do", null, r => {
-				refresh();
-			});
+            common.post(common.url("reset"), null, function(r) {
+                refresh();
+            }, function(r) {
+                alert(r);
+            }, "text");
 		}
 
 		function refresh() {
 			common.req("list.json", env, r => {
+                env.srv = {};
 				var line = "";
 				for (var k in r.list) {
 					var v = r.list[k];
+					env.srv[v.id] = v;
 					if (v.group == null) v.group = "公共";
 					v.state = v.state == null ? "stop" : v.state;
 					v.restart = v.restartTime == null ? "" : v.restartTime.format("yyyy-MM-dd hh:mm:ss");
 					v.option = '<a onclick="packSvn({id})">打包</a> <a onclick="manage({id})">详情</a>'.format(v);
-					line += "<tr align='center'><td><input type='checkbox' id='check{id}'/></td><td>{name}</td><td>{code}</td><td>{group}</td><td id='file{id}'>{jar}</td><td id='test{id}'></td><td id='uat{id}'></td><td id='prd{id}'></td><td>{option}</td></tr>".format(v);
+					line += ("<tr align='center'>" +
+						"<td><input type='checkbox' id='check{id}'/></td>" +
+						"<td>{name}</td><td>{code}</td>" +
+						"<td>{group}</td><td id='file{id}'>{jar}</td>" +
+						"<td id='test{id}' onclick='setMach(\"test\",{id})' data-toggle=\"modal\" data-target=\"#srvMach\"></td>" +
+						"<td id='uat{id}' onclick='setMach(\"uat\",{id})' data-toggle=\"modal\" data-target=\"#srvMach\"></td>" +
+						"<td id='prd{id}' onclick='setMach(\"prd\",{id})' data-toggle=\"modal\" data-target=\"#srvMach\"></td>" +
+						"<td>{option}</td></tr>").format(v);
 					health(v.id);
 				}
 				$("#content").html(line);
 			});
+            common.req("machine/list.json", {}, function(r) {
+                var line="";
+                env.mach = r;
+                r.forEach(function(m){
+                    line+="<tr><td><input type='checkbox' id='mach"+m.index+"' value='"+m.index+"'/> "+m.host+" ("+m.name+")</td></tr>";
+                });
+                line+="";
+                $("#machines").html(line);
+            });
+		}
+
+		function saveSrvMach() {
+		    var param = {
+		        serviceId: $("#serviceId").val(),
+                port: $("#servicePort").val(),
+				test: {}, uat: {}, prd: {}
+		    };
+		    var se = $("#serviceEnv").val();
+            env.mach.forEach(function(m) {
+				param[se][m.index] = $("#mach"+m.index).prop("checked");
+            });
+            var perform = (se == "prd" ? confirm("操作生产环境会导致被取消的服务中断") : true);
+            if (perform) common.req("save_service.json", param, r => {
+                reset();
+                alert("success");
+        	});
+		}
+
+		function setMach(e, srvId) {
+		    $("#serviceId").val(srvId);
+            $("#serviceEnv").val(e);
+            $("#serviceDesc").html(e + " / " + env.srv[srvId].code);
+            $("#servicePort").val(env.srv[srvId].port);
+            common.req("service.json", {serviceId:srvId}, r => {
+                for (var i in r[e]) {
+				   $("#mach"+i).prop("checked", r[e][i]);
+				}
+        	});
 		}
 
 		function packSvn(serviceId) {

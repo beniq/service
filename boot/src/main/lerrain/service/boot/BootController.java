@@ -58,6 +58,8 @@ public class BootController
 				rs.put("name", sp.getName());
 				rs.put("group", sp.getGroup());
 				rs.put("jar", sp.getCurrentJar());
+				if (sp.getInstance() != null && sp.getInstance().size() > 0)
+					rs.put("port", sp.getInstance().get(0).getPort() % 1000);
 				rl.add(rs);
 			}
 			r.put("list", rl);
@@ -191,6 +193,87 @@ public class BootController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", r);
+
+		return res;
+	}
+
+	@RequestMapping("/service.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject service(@RequestBody JSONObject json)
+	{
+		Long serviceId = json.getLong("serviceId");
+		ServicePack sp = serviceMgr.getService(serviceId);
+
+		boolean[] tst = new boolean[machineMgr.getAllMachines().size()];
+		boolean[] uat = new boolean[machineMgr.getAllMachines().size()];
+		boolean[] prd = new boolean[machineMgr.getAllMachines().size()];
+
+		for (ServiceInstance si : sp.getInstance())
+		{
+			if (si.getEnv() == ServicePack.TEST)
+				tst[si.getMacIndex()] = true;
+			else if (si.getEnv() == ServicePack.UAT)
+				uat[si.getMacIndex()] = true;
+			else if (si.getEnv() == ServicePack.PRD)
+				prd[si.getMacIndex()] = true;
+		}
+
+		JSONObject r = new JSONObject();
+		r.put("test", tst);
+		r.put("uat", uat);
+		r.put("prd", prd);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", r);
+
+		return res;
+	}
+
+	@RequestMapping("/save_service.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject saveService(@RequestBody JSONObject json)
+	{
+		Long serviceId = json.getLong("serviceId");
+		ServicePack sp = serviceMgr.getService(serviceId);
+
+		int port = json.getInteger("port");
+		if (port <= 0 || port >= 1000)
+			throw new RuntimeException("port无效");
+
+		String[] strs = new String[] {"test", "uat", "prd"};
+		int[] envs = new int[] {ServicePack.TEST, ServicePack.UAT, ServicePack.PRD};
+		int[] ports = new int[] {8000, 9000, 10000};
+
+		for (int i=0;i<3;i++)
+		{
+			JSONObject l = json.getJSONObject(strs[i]);
+			List<Integer> list = new ArrayList<>();
+
+			for (String key : l.keySet())
+			{
+				boolean b = l.getBoolean(key);
+				int index = Integer.parseInt(key);
+				if (b)
+				{
+					list.add(index);
+				}
+				else
+				{
+					for (ServiceInstance si : sp.getInstance())
+						if (si.getMacIndex() == index && si.getEnv() == envs[i])
+							si.stop();
+				}
+			}
+
+			if (l.size() == machineMgr.getAllMachines().size())
+				serviceMgr.saveService(serviceId, envs[i], ports[i] + port, list);
+		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
 
 		return res;
 	}
