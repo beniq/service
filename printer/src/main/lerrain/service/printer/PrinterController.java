@@ -217,10 +217,8 @@ public class PrinterController
 
 		try (InputStream is = request.getInputStream())
 		{
-			if (printer.verify(Common.byteOf(is)))
-				r.put("result", "success");
-			else
-				r.put("result", "fail");
+			r.put("result", "success");
+			r.put("content", printer.verify(is));
 		}
 		catch (Exception e)
 		{

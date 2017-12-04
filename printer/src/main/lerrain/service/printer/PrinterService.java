@@ -23,7 +23,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.security.Security;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.*;
+import java.security.cert.Certificate;
 import java.util.*;
 
 @Service
@@ -40,7 +43,7 @@ public class PrinterService
 	@Value("${path.temp}")
 	String tempPath;
 
-	Map<Long, Sign> signs;
+	Map<String, Sign> signs;
 	Map<Long, Painter> pdfPainters;
 
 	@PostConstruct
@@ -54,32 +57,34 @@ public class PrinterService
 		TypesetUtil.setTextDimension(new TextDimensionAwt());
 		TypesetUtil.addElementFactory("qrcode", new TypesetQrcode());
 
-		signs = printerDao.loadAllSign();
-
-		pdfPainters = buildPdfPainters();
-		pdfPainters.put(0L, new PdfPainterNDF());
+		buildPdfPainters();
 
 		reset();
 	}
 
-	public boolean verify(byte[] pdf) throws Exception
+	public Long verify(InputStream is) throws Exception
 	{
-		boolean result = true;
-
-		PdfReader pdfReader = new PdfReader(new ByteArrayInputStream(pdf));
+		PdfReader pdfReader = new PdfReader(is);
 		PdfDocument pdfDocument = new PdfDocument(pdfReader);
 		SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
 		List<String> signedNames = signatureUtil.getSignatureNames();
 
-		System.out.println(signedNames);
-
 		for (String signedName : signedNames)
 		{
 			PdfPKCS7 rs = signatureUtil.verifySignature(signedName, "BC");
-			result = result && rs.verify();
+
+			if (!rs.verify())
+				throw new RuntimeException(signedName + " not match");
+
+			for (Certificate cert : rs.getCertificates())
+			{
+				String publicKey = Common.encodeBase64(cert.getPublicKey().getEncoded());
+				if (signs.containsKey(publicKey))
+					return signs.get(publicKey).getId();
+			}
 		}
 
-		return result;
+		throw new RuntimeException("PDF验签通过，但签名不再签名库中");
 	}
 
 	public void reset()
@@ -212,17 +217,31 @@ public class PrinterService
 		}
 	}
 
-	private Map<Long, Painter> buildPdfPainters()
+	private void buildPdfPainters()
 	{
-		Map<Long, Painter> pdfPainters = new HashMap<>();
+		pdfPainters = new HashMap<>();
+		pdfPainters.put(0L, new PdfPainterNDF());
 
-		for (Sign sign : signs.values())
+		signs = new HashMap<>();
+
+		for (Sign sign : printerDao.loadAllSign())
 		{
-			try
-			{
-				String keystore = getPath("resource/sign/") + sign.getKeystore();
-				pdfPainters.put(sign.getId(), new PdfPainterSign(keystore, sign.getPassword(), sign.getScope(), sign.getReason(), sign.getLocation(), tempPath));
+			String keystore = getPath("resource/sign/") + sign.getKeystore();
+			char[] pwd = sign.getPassword().toCharArray();
 
+			try (InputStream keyIs = new FileInputStream(keystore))
+			{
+				KeyStore ks = KeyStore.getInstance("PKCS12");
+				ks.load(keyIs, pwd);
+				String alias = ks.aliases().nextElement();
+				PrivateKey key = (PrivateKey)ks.getKey(alias, pwd);
+				Certificate[] chain = ks.getCertificateChain(alias);
+
+				PublicKey pb = ks.getCertificate(alias).getPublicKey();
+				signs.put(Common.encodeBase64(pb.getEncoded()), sign);
+
+				//pdfPainters.put(sign.getId(), new PdfPainterSign2(key, chain, sign.getScope(), sign.getReason(), sign.getLocation(), tempPath));
+				pdfPainters.put(sign.getId(), new PdfPainterSign(keystore, sign.getPassword(), sign.getScope(), sign.getReason(), sign.getLocation(), tempPath));
 				System.out.println(sign.getScope() + "/" + sign.getKeystore() + " - load success");
 			}
 			catch (Exception e)
@@ -230,8 +249,6 @@ public class PrinterService
 				e.printStackTrace();
 			}
 		}
-
-		return pdfPainters;
 	}
 
 	public Long match(String key)

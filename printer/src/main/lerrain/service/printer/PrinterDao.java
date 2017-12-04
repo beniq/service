@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class
-		PrinterDao
+public class PrinterDao
 {
 	@Autowired
 	JdbcTemplate jdbc;
@@ -49,14 +48,12 @@ public class
 		return res;
 	}
 
-	public Map<Long, Sign> loadAllSign()
+	public List<Sign> loadAllSign()
 	{
-		final Map<Long, Sign> signs = new HashMap();
-
-		jdbc.query("select * from t_printer_sign", new RowCallbackHandler()
+		return jdbc.query("select * from t_printer_sign", new RowMapper<Sign>()
 		{
 			@Override
-			public void processRow(ResultSet rs) throws SQLException
+			public Sign mapRow(ResultSet rs, int rowNum) throws SQLException
 			{
 				Sign s = new Sign();
 				s.setId(rs.getLong("id"));
@@ -66,12 +63,9 @@ public class
 				s.setReason(rs.getString("reason"));
 				s.setLocation(rs.getString("location"));
 
-				signs.put(s.getId(), s);
+				return s;
 			}
-
 		});
-
-		return signs;
 	}
 
 	public void log(String client, Long templateId, String fileType, int outType, int result, String ip, int time1, int time2, Date operateTime, int pages)
