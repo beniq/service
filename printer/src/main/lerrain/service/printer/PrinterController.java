@@ -148,7 +148,13 @@ public class PrinterController
 			if ("pdf".equalsIgnoreCase(outputType))
 			{
 				String fileName = Common.nextId() + ".pdf";
-				File file = new File(Common.pathOf(tempPath, fileName));
+				String today = Common.getString(new Date());
+
+				File dir = new File(Common.pathOf(tempPath, today));
+				if (!dir.exists())
+					dir.mkdirs();
+
+				File file = new File(Common.pathOf(tempPath, today, fileName));
 				try (FileOutputStream fos = new FileOutputStream(file))
 				{
 					doc.export(printer.getPdfSignPainter(typesetTemplate), fos, Painter.STREAM);
@@ -164,7 +170,7 @@ public class PrinterController
 				}
 				else
 				{
-					res.put("content", urlPrefix + "/" + fileName);
+					res.put("content", urlPrefix + "/" + today + "/" + fileName);
 				}
 
 				res.put("result", "success");
