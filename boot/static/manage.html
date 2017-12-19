@@ -144,20 +144,20 @@
   }
 
   function presynch(step) {
-    common.req("presynch.json", {serviceId:common.param("serviceId").split(","), step:step}, r => {
+    common.req("presynch.json", {serviceId:common.param("serviceId").split(","), step:step}, function(res) {
       var str = "";
-      env.synchKey = r.key;
-      r.list.forEach(function(l) {
-        str += "<div>";
-        str += "<div>表："+l.name+"</div>";
-        l.sqls.forEach(function(k) {
-          str += "<pre id='" + k.id +"' onclick='revSql(" + k.id+")'>"+ k.sql +"</pre>";
-        });
-        str += "</div>";
+      res.forEach(function(r) {
+          r.list.forEach(function (l) {
+              str += "<div>";
+              str += "<div>表：" + l.name + "</div>";
+              l.sqls.forEach(function (k) {
+                  str += "<pre id='" + k.id + "' onclick='revSql(" + k.id + ")'>" + k.sql + "</pre>";
+              });
+              str += "</div>";
+          });
+          str += "<button class='btn btn-primary' onclick='lock(synch, \"" + r.key + "\")'>synch</button>";
       });
-      if (str != "")
-        str += "<button class='btn btn-primary' onclick='lock(synch)'>synch</button>";
-      else
+      if (str == "")
         str = "没有发现需要同步的内容";
       $("#sql").html("<br/>" + str);
     });
@@ -173,13 +173,13 @@
     }
   }
 
-  function synch() {
+  function synch(synchKey) {
     var skip = [];
     for (var id in env.sql) {
       if (!env.sql[id])
         skip.push(id);
     }
-    common.req("synch.json", {key:env.synchKey, skip:skip}, r => {
+    common.req("synch.json", {key:synchKey, skip:skip}, r => {
       var str = "";
       r.forEach(function(l) {
         str += "<pre>"+ l +"</pre>";

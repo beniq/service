@@ -442,56 +442,63 @@ public class BootController
 	{
 		JSONArray all = json.getJSONArray("serviceId");
 
-		Long serviceId = all.getLong(0);
-		ServicePack sp = serviceMgr.getService(serviceId);
-
 		int step = json.getInteger("step");
 
-		JSONObject res = new JSONObject();
-		res.put("result", "fail");
+		JSONArray ja = new JSONArray();
 
-		if (sp.getDbRule() != null)
+		for (int i = 0; i < all.size(); i++)
 		{
-			int src = -1;
-			int dst = -1;
+			Long serviceId = all.getLong(i);
+			ServicePack sp = serviceMgr.getService(serviceId);
 
-			if (step == 1)
+			if (sp.getDbRule() != null)
 			{
-				src = ServicePack.TEST;
-				dst = ServicePack.UAT;
-			}
-			else if (step == 2)
-			{
-				src = ServicePack.UAT;
-				dst = ServicePack.PRD;
-			}
-			else if (step == 91)
-			{
-				src = ServicePack.UAT;
-				dst = ServicePack.TEST;
-			}
-			else if (step == 92)
-			{
-				src = ServicePack.PRD;
-				dst = ServicePack.UAT;
-			}
+				int src = -1;
+				int dst = -1;
 
-			if (src >= 0)
-			{
-				String dbName = sp.getDbRule().getString("db");
-				JSONObject db1 = (JSONObject) serviceMgr.getParam(src, "db." + dbName);
-				JSONObject db2 = (JSONObject) serviceMgr.getParam(dst, "db." + dbName);
+				if (step == 1)
+				{
+					src = ServicePack.TEST;
+					dst = ServicePack.UAT;
+				}
+				else if (step == 2)
+				{
+					src = ServicePack.UAT;
+					dst = ServicePack.PRD;
+				}
+				else if (step == 91)
+				{
+					src = ServicePack.UAT;
+					dst = ServicePack.TEST;
+				}
+				else if (step == 92)
+				{
+					src = ServicePack.PRD;
+					dst = ServicePack.UAT;
+				}
 
-				dbMgr = new DbMgr(sp.getDbRule(), db1, db2);
+				if (src >= 0)
+				{
+					String dbName = sp.getDbRule().getString("db");
+					JSONObject db1 = (JSONObject) serviceMgr.getParam(src, "db." + dbName);
+					JSONObject db2 = (JSONObject) serviceMgr.getParam(dst, "db." + dbName);
 
-				JSONObject rr = new JSONObject();
-				rr.put("key", dbMgr.getId());
-				rr.put("list", dbMgr.pretreat());
-
-				res.put("result", "success");
-				res.put("content", rr);
+					dbMgr = new DbMgr(sp.getDbRule(), db1, db2);
+					List list = dbMgr.pretreat();
+					if (list != null && !list.isEmpty())
+					{
+						JSONObject rr = new JSONObject();
+						rr.put("key", dbMgr.getId());
+						rr.put("list", list);
+						ja.add(rr);
+					}
+				}
 			}
 		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", ja);
 
 		return res;
 	}

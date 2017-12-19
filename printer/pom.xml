@@ -20,12 +20,12 @@
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>formula</artifactId>
-			<version>5.0.2</version>
+			<version>6.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>lerrain</groupId>
 			<artifactId>document</artifactId>
-			<version>4.0.8</version>
+			<version>4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
