@@ -95,7 +95,8 @@ public class BootController
 	@RequestMapping("/deploy_static.json")
 	@ResponseBody
 	@CrossOrigin
-	public JSONObject deployStatic(@RequestBody JSONObject json) throws Exception {
+	public JSONObject deployStatic(@RequestBody JSONObject json) throws Exception
+	{
 		Long instanceId = json.getLong("instanceId");
 		serviceMgr.deployStatic(instanceId);
 
@@ -304,6 +305,18 @@ public class BootController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", serviceMgr.viewReleaseInfo(instanceId));
+
+		return res;
+	}
+
+	@RequestMapping("/reset_addr.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject resetAddr(@RequestBody JSONObject json)
+	{
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", serviceMgr.resetAddress(json.getIntValue("env")));
 
 		return res;
 	}

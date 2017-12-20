@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lerrain.service.boot.base.ServiceInstance;
 import lerrain.service.boot.base.ServicePack;
 import lerrain.tool.Common;
+import lerrain.tool.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,6 +194,41 @@ public class ServiceMgr
     public ServicePack getService(String serviceCode)
     {
         return m3.get(serviceCode);
+    }
+
+    public Map<String, String> resetAddress(int env)
+    {
+        Map<String, String> r = new HashMap<String, String>();
+
+        for (ServicePack sp : prd)
+        {
+            if (sp.getInstance() != null) for (ServiceInstance si : sp.getInstance())
+            {
+                if (env < 0 || env == si.getEnv())
+                {
+                    String key = sp.getCode() + "@" + si.getEnvString() + "/" + si.getMachine().getHost() + ":" + si.getPort();
+
+                    try
+                    {
+                        r.put(key, resetAddress(si));
+                    }
+                    catch (Exception e)
+                    {
+                        r.put(key, e.toString());
+                    }
+                }
+            }
+        }
+
+        return r;
+    }
+
+    public String resetAddress(ServiceInstance si)
+    {
+        Map<String, String> addr = this.getAllServiceAddress(si.getEnv(), si.getService().getGroup());
+        String resetAddr = "http://" + si.getMachine().getHost() + ":" + si.getPort() + "/admin/address";
+
+        return Network.request(resetAddr, JSONObject.toJSONString(addr), 2000);
     }
 
 //    public Map<Long, String> refresh()

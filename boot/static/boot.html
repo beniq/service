@@ -48,8 +48,12 @@
     		<tbody id="content"></tbody>
     	</table>
     	<br/>
-		<button class="btn btn-primary" onclick="reset()">重置 >>>></button>
-    	<button class="btn btn-primary" onclick="start()">发布 >>>></button>
+		<button class="btn btn-primary" onclick="reset()">刷新配置 >>>></button>
+    	<button class="btn btn-primary" onclick="start()">服务发布 >>>></button>
+		&nbsp;&nbsp;&nbsp;&nbsp; 刷新地址 >>>> &nbsp;
+		<button class="btn btn-primary" onclick="resetAddr(1)">TEST</button>
+		<button class="btn btn-primary" onclick="resetAddr(2)">UAT</button>
+		<button class="btn btn-primary" onclick="resetAddr(3)">PRD</button>
     </div>
 
 	<div class="modal fade" id="srvMach" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -96,9 +100,18 @@
             common.post(common.url("reset"), null, function(r) {
                 refresh();
             }, function(r) {
-                alert(r);
+                alert(JSON.stringify(r));
             }, "text");
 		}
+
+        function resetAddr(se) {
+            common.post(common.url("reset_addr.json"), {env: se}, function(r) {
+                console.log(r);
+                alert(JSON.stringify(r));
+            }, function(r) {
+                alert(JSON.stringify(r));
+            });
+        }
 
 		function refresh() {
 			common.req("list.json", env, r => {

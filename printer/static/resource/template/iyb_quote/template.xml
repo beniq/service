@@ -170,7 +170,7 @@
 			<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 保障详情：'+PLAN.NAME"/>
 			<reset/>
 			<if condition="PLAN.TYPE == 1">
-				<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'RMB：'+PLAN.PRICE+'/人/年，职业类别：'+(PLAN.OCCUPATION_LEVEL=='3'?'1-3':'4')+'类，'+(PLAN.SOCIAL_INS=='Y'?'有医保':'无医保')+'   '"/>
+				<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'RMB：'+PLAN.PRICE+'/人/年，职业类别：'+(PLAN.OCCUPATION_LEVEL=='3'?'1-3':(PLAN.OCCUPATION_LEVEL=='4'?'4':'5-6'))+'类，'+(PLAN.SOCIAL_INS=='Y'?'有医保':'无医保')+'   '"/>
 			</if>
 			<if condition="PLAN.TYPE != 1">
 				<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'RMB：'+PLAN.PRICE+'/人/年'"/>
@@ -183,29 +183,31 @@
 			</loop>
 		</loop>
 		<reset/>
-		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 承保规则与特别约定'"/>
+		<text x="0" y="50" width="1760" height="50" font="hei" font_size="40" align="left" color="black" value="'▼ 投保须知与特别约定'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 承保规则'"/>
+		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 投保须知'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 本计划适用于3-300人投保的中小型企业。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 主被保险人为公司16-65周岁的投保人在职职工 (可包括临时工及实习生）;连带配偶被保险人年龄范围均为16-65周岁；连带子女被保险人需要为主被保险人18周岁以下(全日制学生可拓展至23周岁)、未参加工作的未婚子女，其中新生婴儿要求健康出院，并自其出生之日起满30天。'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 投保保险期间为1年。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 保险期限1年。'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 主被保险人为公司16-60周岁的投保人在职职工 (可包括临时工及实习生）；连带子女被保险人需要为主被保险人18周岁以下(全日制学生可拓展至23周岁)、未参加工作的未婚子女，其中新生婴儿要求健康出院，并自其出生之日起30天起保。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 本计划适用于3-300人投保的中小型企业，如仅投保意外险类责任，则投保人数最高500人。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'4. 包含以下关键字的单位不适用此方案：“钢丝绳、钢铁、家具、危险品、石油、脚手架、幕墙”。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'5. 部分行业和工种不适用该保险计划，详见《众安职业分类表2017版》。'"/>
+		<reset/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'6. 投保时需对照职业分类表列明被保险人所对应的工种名称，如一人涉及多个岗位，则以职业类别最高的岗位对应选择工种即可。'"/>
 		<reset/>
 		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 一般特别约定'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 转（续）保人员无等待期，后续加保新入职员工或其连带被保险人的疾病身故、重大疾病设30天等待期外，其他各险种均不设任何形式的等待期。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'1. 在合同有效期间内，新增被保险人保险责任起期不得早于被保险人实际入职当日零时，减少被保险人责任终期不得早于其离职当日二十四时，且新增被保险人责任起期或减少被保险人责任终期不得早于投保单位提交新增或减少被保险人书面申请之日前30个自然日。对新增被保险人于其保险责任起期至投保单位提交该保全申请当日零时期间发生的意外事故，理赔时在保险合同条款中约定的申请资料寄出上，还需补充提供被保险人劳动时手册（或者劳动合同）及社保缴费记录清单，如投保单位在新员工入职后30个自然日内没有以书面形式通知我司做新增人员操作，则我司不再提供新增被保险人的保全追溯，保险责任起期为我司收到投保单位新增被保险人的书面保全申请次日零时。'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 在合同有效期间内，新增被保险人保险责任起期不得早于被保险人实际入职当日零时，减少被保险人责任终期不得早于其离职当日二十四时，且新增被保险人责任起期或减少被保险人责任终期不得早于投保单位提交新增或减少被保险人书面申请之日前30个自然日。对新增被保险人于其保险责任起期至投保单位提交该保全申请当日零时期间发生的意外事故，理赔时在保险合同条款中约定的申请资料寄出上，还需补充提供被保险人劳动时手册（或者劳动合同）及社保缴费记录清单，如投保单位在新员工入职后30个自然日内没有以书面形式通知我司做新增人员操作，则我司不再提供新增被保险人的保全追溯，保险责任起期为我司收到投保单位新增被保险人的书面保全申请次日零时。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'2. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人意外伤害、疾病身故、重大疾病以及公共交通发生理赔后减保，未满期保费为0元。'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人意外伤害、疾病身故、重大疾病以及公共交通发生理赔后减保，未满期保费为0元。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'3. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人综合医疗（含意外医疗）、女性生育、住院津贴（含意外住院津贴）以及公共保额发生理赔后减保，按天退回未满期保费。'"/>
 		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'4. 在保单有效期内，被保险人保全加减人免手续费，保费按天计算；被保险人综合医疗（含意外医疗）、女性生育、住院津贴（含意外住院津贴）以及公共保额发生理赔后减保，按天退回未满期保费。'"/>
-		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'5. 意外医疗指定医院：应在二级或二级以上的公立医院就诊；如因意外导致的急诊可放宽至任意公立医院就诊，待病情稳定后需转入指定医院治疗。'"/>
-		<reset/>
-		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'6. 综合医疗指定医院：如按有社保人员投保应在居住或工作所在城市社会基本医疗保险指定的二级或二级以上的公立医院持本人医保卡就诊；此外，急诊可放宽至任意一家一级或以上公立医院就诊，待病情稳定后需转入二级或二级以上的公立医院治疗；被保险人休假期间，可在当地社保范围内二级或二级以上的公立医院就诊。被保险人因公出差期间，急诊可放宽至任意一家一级或以上公立医院就诊，待病情稳定后需转入二级或二级以上的公立医院治疗。在北京工作且参加北京医保的指定医院范围为医疗蓝本上的四家指定医院、19家北京市基本医疗保险A类定点医疗机构、专科医院和中医医院。 对于武汉大学中南医院、湖北省人民医院、武汉大学人民医院、武汉大学口腔医院、湖北省妇幼保健院、华中科技大学同济医学院附属协和医院、华中科技大学同济医学院附属同济医院门诊无须使用社保卡，住院需要经过医保结算；无社保投保人员指定就诊医院同上但无需使用社保卡就医。'"/>
+		<text x="0" y="30" width="1800" height="40" font="kai" font_size="36" align="left" color="black" value="'4. 转（续）保人员无等待期，后续加保新入职员工或其连带被保险人的疾病身故、重大疾病设30天等待期外，其他各险种均不设任何形式的等待期。'"/>
 		<reset/>
 		<text x="0" y="30" width="1800" height="40" font="hei" font_size="36" align="left" color="black" value="'• 其他特别约定'"/>
 		<script>
