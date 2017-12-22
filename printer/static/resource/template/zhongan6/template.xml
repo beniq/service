@@ -131,7 +131,8 @@
         <text x="0" y="0" width="1900" height="50" font="hei" font_size="32" color="black" align="left" value="'ÊÊÓÃÌõ¿î'"/>
         <reset/>
         <loop name="j" value="try(productClauses.productClause, null)">
-            <text x="0" y="0" width="1900" height="50" font="song" font_size="32" color="black" align="left" value="j.clauseName"/>
+            <text x="0" y="0" width="1800" height="50" font="song" font_size="32" color="black" align="left" value="j.clauseName" link="j.linkUrl"/>
+            <image x="1850" y="0" width="50" height="50" font="song" font_size="32" color="black" align="left" src="'download.jpg'" link="j.linkUrl"/>
             <reset/>
         </loop>
         <reset/>
