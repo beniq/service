@@ -54,7 +54,7 @@
             <text font="song" font_size="40" color="black" value="verifyCode"/>
         </layout>
 
-        <qrcode x="100" y="0" width="260" height="260" value="qrcode"/>
+        <qrcode x="100" y="0" width="260" height="260" value="qrcode" link="qrcode"/>
         <text x="20" y="250" width="500" height="60" font="song" font_size="40" color="black" value="'机器编号：'+machineCode"/>
 
         <image x="2390/2+15-162" y="100" width="324" height="213" src="'2.png'" url="'2.png'"/>

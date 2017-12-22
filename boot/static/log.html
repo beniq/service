@@ -18,7 +18,7 @@
   </body>
 
 	<script>
-      common.req("log.json", {instanceId:common.param("instanceId"), line:1000}, r => {
+      common.req("log.json", {instanceId:common.param("instanceId"), line:500}, r => {
         $("#log").html(r);
       });
 	</script>

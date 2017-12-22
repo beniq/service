@@ -3,7 +3,6 @@ package lerrain.service.filemgr;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.service.common.Log;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

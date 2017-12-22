@@ -55,7 +55,7 @@ public class PrinterService
 		TypesetUtil.setResourcePath(Common.pathOf(path, "resource/template"));
 		TypesetUtil.setFontPath(Common.pathOf(path, "resource/fonts/"));
 		TypesetUtil.setTextDimension(new TextDimensionAwt());
-		TypesetUtil.addElementFactory("qrcode", new TypesetQrcode());
+//		TypesetUtil.addElementFactory("qrcode", new TypesetQrcode());
 
 		buildPdfPainters();
 

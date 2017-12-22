@@ -175,7 +175,7 @@ public class FileMgr
                 return "LENGTH";
 
             long time = System.currentTimeMillis() - f2.lastModified();
-            if (f1.length() < ALWAYS_COMPARE || time < 3600000L / 12)
+            if (f1.length() < ALWAYS_COMPARE || str.indexOf("WangJing/2017") >= 0)
             {
                 byte[] b1 = md5Of(f1);
                 byte[] b2 = md5Of(f2);

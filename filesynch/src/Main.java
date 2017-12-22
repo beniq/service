@@ -22,13 +22,13 @@ public class Main
         dir2 = "G:/record";
         dir3 = "G:/backup/record";
 
-//        dir1 = "Z:/game/CALLUS/VO";
-//        dir2 = "G:/数据/V";
-//        dir3 = "G:/备份/Material";
+        dir1 = "Z:/game/CALLUS/VO";
+        dir2 = "G:/data/material";
+        dir3 = "G:/backup/data/material";
 
-        dir1 = "Z:/lex/好友";
-        dir2 = "G:/file/memory";
-        dir3 = "G:/backup/file/memory";
+//        dir1 = "Z:/lex/好友";
+//        dir2 = "G:/file/memory";
+//        dir3 = "G:/backup/file/memory";
 
         FileMgr fm = new FileMgr(dir1, dir2, dir3);
         if (!fm.compare())
