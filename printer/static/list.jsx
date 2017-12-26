@@ -1,3 +1,9 @@
+var env = {
+    search: null,
+    from: 0,
+    number: 20
+}
+
 var List = React.createClass({
     getInitialState() {
         return {content:{list:[], total:0}};
@@ -6,7 +12,6 @@ var List = React.createClass({
         this.refresh();
     },
     page(i) {
-        let env = this.props.env;
         env.from = i * env.number;
         if (env.from < 0)
             env.from = 0;
@@ -16,16 +21,15 @@ var List = React.createClass({
     },
     buildPageComponent() {
         let page = [];
-        let env = this.props.env;
         env.total = this.state.content.total;
-        for (var i=0;i<env.total/10;i++) {
-            page.push(<button type="button" className="btn btn-primary" onClick={this.page.bind(this, i)}>{i+1}</button>);
+        for (var i = 0; i < env.total / env.number; i++) {
+            page.push(<a key={i} onClick={this.page.bind(this, i)}>&nbsp;{i+1}&nbsp;</a>);
         }
         return (
             <div className="bottom">
-                <button type="button" className="btn btn-primary" onClick={this.page.bind(this, env.from / env.number - 1)}>&lt;&lt;</button>
+                <a onClick={this.page.bind(this, env.from / env.number - 1)}>上一页&nbsp;&nbsp;</a>
                 {page}
-                <button type="button" className="btn btn-primary" onClick={this.page.bind(this, env.from / env.number + 1)}>&gt;&gt;</button>
+                <a onClick={this.page.bind(this, env.from / env.number + 1)}>&nbsp;&nbsp;下一页</a>
             </div>
         );
     },
@@ -33,17 +37,15 @@ var List = React.createClass({
         return (
             <div className="list">
                 <br/>
-                <div className="container-fluid">
-                    { this.buildConsole() }
-                </div>
-                <br/>
-                <table className="bordered">
+                { this.buildConsole() }
+                <table>
                     <thead>{ this.buildTableTitle() }</thead>
                     <tbody>{ this.state.content.list.map(v => this.buildTableLine(v)) }</tbody>
                 </table>
                 <br/>
                 { this.buildPageComponent() }
                 <CreateWin ref="win" parent={this}/>
+                <ExportWin ref="expWin"/>
             </div>
         );
     }
@@ -52,26 +54,46 @@ var List = React.createClass({
 class TemplateList extends List {
     create() {
     }
+    import() {
+    }
     test(templateId) {
         document.location.href = "test.html?templateId=" + templateId;
     }
     edit(templateId) {
         document.location.href = "edit.html?templateId=" + templateId;
     }
+    export(templateId) {
+        this.refs.expWin.setState({text: ""});
+        common.req("export.json", {templateId:templateId}, r => {
+            this.refs.expWin.setState({text: JSON.stringify(r)});
+        });
+    }
+    synch(templateId) {
+        common.req("export.json", {templateId:templateId}, r => {
+            common.post("https://sv-uat.iyb.tm/printer/save.json", r, r1 => {
+                alert("success");
+            });
+        });
+    }
     refresh() {
-        common.req("list.json", {}, r => {
+        common.req("list.json", env, r => {
             this.setState({content:r});
         });
     }
     buildConsole() {
         return (
-            <div className="container-fluid">
-                <div className="collapse navbar-collapse">
-                    <div className="nav navbar-nav navbar-right">
-                        <a className="btn btn-primary" data-toggle="modal" data-target="#createWin" onClick={this.create}>＋ 新的模板</a>
+            <nav className="navbar navbar-default">
+                <div className="container-fluid">
+                    <div className="collapse navbar-collapse">
+                        <ul className="nav navbar-nav">
+                        </ul>
+                        <ul className="nav navbar-nav navbar-right">
+                            <li><a data-toggle="modal" data-target="#createWin" onClick={this.create}>新的模板</a></li>
+                            <li><a data-toggle="modal" data-target="#createWin" onClick={this.import}>导入模板</a></li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </nav>
         );
     }
     buildTableTitle() {
@@ -90,10 +112,12 @@ class TemplateList extends List {
                 <td>{v.id}</td>
                 <td>{v.code}</td>
                 <td>{v.name}</td>
-                <td>
+                <td width="15%">
                     <button type="button" className="btn btn-primary" onClick={this.edit.bind(this, v.id)}>编辑</button>
                     &nbsp;&nbsp;
                     <button type="button" className="btn btn-primary" onClick={this.test.bind(this, v.id)}>测试</button>
+                    &nbsp;&nbsp;
+                    <button type="button" className="btn btn-primary" onClick={this.synch.bind(this, v.id)}>同步</button>
                 </td>
             </tr>
         );
@@ -135,8 +159,38 @@ var CreateWin = React.createClass({
     }
 });
 
+var ExportWin = React.createClass({
+    getInitialState() {
+        return {text: ""};
+    },
+    render() {
+        return (
+            <div className="modal fade" id="exportWin" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 className="modal-title" id="myModalLabel">
+                                JSON
+                            </h4>
+                        </div>
+                        <div className="modal-body">
+                            <textarea ref="templateName" className="form-control" style={{height:"400px"}} value={this.state.text}></textarea>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
 $(document).ready( function() {
     ReactDOM.render(
-        <TemplateList env={env}/>, document.getElementById("content")
+        <TemplateList/>, document.getElementById("content")
     );
 });

@@ -12,7 +12,6 @@ import lerrain.tool.document.export.PdfPainterNDF;
 import lerrain.tool.document.export.PdfPainterSign;
 import lerrain.tool.document.typeset.Typeset;
 import lerrain.tool.document.typeset.TypesetDocument;
-import lerrain.tool.document.typeset.TypesetQrcode;
 import lerrain.tool.document.typeset.TypesetUtil;
 import lerrain.tool.document.typeset.environment.TextDimensionAwt;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -32,7 +30,9 @@ import java.util.*;
 @Service
 public class PrinterService
 {
-	Map<Object, TypesetTemplate> map;
+	List<TypesetTemplate> list = new ArrayList<>();
+	Map<Long, TypesetTemplate> map1 = new HashMap<>();
+	Map<String, TypesetTemplate> map2 = new HashMap<>();
 
 	@Autowired
 	PrinterDao printerDao;
@@ -89,15 +89,21 @@ public class PrinterService
 
 	public void reset()
 	{
-		map = new HashMap<>();
-
-		List<TypesetTemplate> list = printerDao.loadAll();
-		if (list != null) for (TypesetTemplate tt : list)
+		synchronized (map1)
 		{
-			tt.refresh();
+			map1.clear();
+			map2.clear();
 
-			map.put(tt.getId(), tt);
-			map.put(tt.getCode(), tt);
+			list = printerDao.loadAll();
+			if (list != null) for (TypesetTemplate tt : list)
+			{
+				tt.refresh();
+
+				map1.put(tt.getId(), tt);
+
+				if (!Common.isEmpty(tt.getCode()))
+					map2.put(tt.getCode(), tt);
+			}
 		}
 	}
 
@@ -106,7 +112,7 @@ public class PrinterService
 		if (code == null)
 			return false;
 
-		return map.containsKey(code);
+		return map2.containsKey(code);
 	}
 
 	public Long create(String code, String name)
@@ -115,34 +121,46 @@ public class PrinterService
 
 		new File(Common.pathOf(TypesetUtil.getResourcePath(), tt.getWorkDir())).mkdirs();
 
-		synchronized (map)
-		{
-			map.put(tt.getId(), tt);
-
-			if (!Common.isEmpty(tt.getCode()))
-				map.put(tt.getCode(), tt);
-		}
+		addTypeset(tt);
 
 		return tt.getId();
 	}
 
 	public void resetCode(TypesetTemplate tt, String code)
 	{
-		synchronized (map)
+		synchronized (map2)
 		{
 			if (!Common.isEmpty(tt.getCode()))
-				map.remove(tt.getCode());
+				map2.remove(tt.getCode());
 
 			if (!Common.isEmpty(code))
 			{
 				tt.setCode(code);
-				map.put(tt.getCode(), tt);
+				map2.put(tt.getCode(), tt);
 			}
 		}
 	}
 
 	public void save(TypesetTemplate tt)
 	{
+		synchronized (map1)
+		{
+			if (!map1.containsKey(tt.getId()))
+				map1.put(tt.getId(), tt);
+		}
+
+		synchronized (map2)
+		{
+			if (!map2.containsKey(tt.getCode()))
+				map2.put(tt.getCode(), tt);
+		}
+
+		synchronized (list)
+		{
+			if (list.indexOf(tt) < 0)
+				list.add(tt);
+		}
+
 		tt.refresh();
 
 		printerDao.save(tt);
@@ -153,37 +171,41 @@ public class PrinterService
 	return Common.pathOf(path, dir);
 	}
 
-	public Collection<TypesetTemplate> list()
+	public List<TypesetTemplate> list(int from, int number)
 	{
-		return map.values();
+		List<TypesetTemplate> r = new ArrayList<>();
+		for (int i = 0; i < number; i++)
+			if (i + from < list.size())
+				r.add(list.get(i + from));
+
+		return r;
 	}
 
-	public TypesetTemplate getTypesetTemplate(Object code)
+	public TypesetTemplate getTypesetTemplate(Long templateId)
 	{
-		synchronized (map)
+		return map1.get(templateId);
+	}
+
+	public TypesetTemplate getTypesetTemplate(String templateCode)
+	{
+		return map2.get(templateCode);
+	}
+
+//	public boolean isEmpty()
+//	{
+//		return map1.isEmpty();
+//	}
+
+	public void addTypeset(TypesetTemplate tt)
+	{
+		synchronized (map1)
 		{
-			return map.get(code);
-		}
-	}
+			list.add(tt);
 
-	public boolean isEmpty()
-	{
-		return map.isEmpty();
-	}
+			map1.put(tt.getId(), tt);
 
-	public void addTypeset(TypesetTemplate typesetTemplate)
-	{
-		synchronized (map)
-		{
-			map.put(typesetTemplate.getCode(), typesetTemplate);
-		}
-	}
-
-	public void clear()
-	{
-		synchronized (map)
-		{
-			map.clear();
+			if (!Common.isEmpty(tt.getCode()))
+				map2.put(tt.getCode(), tt);
 		}
 	}
 
@@ -198,7 +220,7 @@ public class PrinterService
 		param.put("FONT_YOU", "simyou.ttf");
 		param.put("FONT_CONSOLA", "consola.ttf");
 		param.put("FONT_COURIER", "courier.ttf");
-		param.put("RESOURCE_PATH", TypesetUtil.getResourcePath() + File.separator + template.getCode() + File.separator);
+		param.put("RESOURCE_PATH", TypesetUtil.getResourcePath() + File.separator + template.getWorkDir() + File.separator);
 
 		doc.build(param);
 
@@ -249,11 +271,6 @@ public class PrinterService
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public Long match(String key)
-	{
-		return null;
 	}
 
 	public void log(String key, Long templateId, String fileType, int outType, int result, String ip, int buildTime, int exportTime, int pages)

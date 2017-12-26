@@ -110,7 +110,8 @@ public class PrinterDao
 
 	public void save(TypesetTemplate tt)
 	{
-		jdbc.update("update t_printer_template set code = ?, name = ?, template_file = ?, test_file = ?, sign = ? where id = ?", tt.getCode(), tt.getName(), tt.getTemplateFile(), tt.getTestFile(), tt.getSignId(), tt.getId());
+		jdbc.update("replace into t_printer_template (id, code) values(?, ?)", tt.getId(), tt.getCode());
+		jdbc.update("update t_printer_template set code = ?, name = ?, work_dir = ?, template_file = ?, test_file = ?, sign = ? where id = ?", tt.getCode(), tt.getName(), tt.getWorkDir(), tt.getTemplateFile(), tt.getTestFile(), tt.getSignId(), tt.getId());
 	}
 
 }

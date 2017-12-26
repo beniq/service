@@ -312,17 +312,38 @@ table tbody td{
 
 .list
 {
-  height: 16px;
-  line-height: 16px;
+    font-size: 14px;
+    color: #666;
 }
 
 .list .bottom
 {
-  font-size: 20px;
-  text-align: center;
+    font-size: 14px;
+    text-align: center;
 }
 
-.list .bottom button
+.list table
 {
-  margin: 0 5px 0 5px;
+    border-width: 1px;
+    border-style: solid;
+    border: 1px solid #DDD;
+}
+
+.list table td
+{
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid #DDD;
+}
+
+.list table th
+{
+    padding: 5px 10px;
+    font-size: 15px;
+    color: #666;
+    height: 42px;
+    background: #EEE;
+    border: 1px solid #DDD;
 }

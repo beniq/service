@@ -1,19 +1,8 @@
 package lerrain.service.printer;
 
-import java.io.*;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.itextpdf.io.source.RASInputStream;
-import com.itextpdf.io.source.RandomAccessFileOrArray;
-import com.itextpdf.io.source.RandomAccessSourceFactory;
-import com.itextpdf.kernel.pdf.*;
-import com.itextpdf.signatures.PdfSignature;
-import com.itextpdf.signatures.SignatureUtil;
+import com.alibaba.fastjson.JSONObject;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.document.LexDocument;
@@ -21,17 +10,22 @@ import lerrain.tool.document.export.ObjectPainter;
 import lerrain.tool.document.export.Painter;
 import lerrain.tool.document.export.PdfPainterNDF;
 import lerrain.tool.document.export.PngPainter;
-import lerrain.tool.document.typeset.Typeset;
-import lerrain.tool.document.typeset.TypesetDocument;
-
 import lerrain.tool.document.typeset.TypesetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @ControllerAdvice
@@ -240,7 +234,11 @@ public class PrinterController
 	@CrossOrigin
 	public JSONObject list(@RequestBody JSONObject json) throws Exception
 	{
-		Collection<TypesetTemplate> list = printer.list();
+		int from = json.getIntValue("from");
+		int number = json.getIntValue("number");
+
+		List<TypesetTemplate> list = printer.list(from, number);
+
 		JSONArray ja = new JSONArray();
 		for (TypesetTemplate tt : list)
 		{
@@ -253,7 +251,7 @@ public class PrinterController
 
 		JSONObject r = new JSONObject();
 		r.put("list", ja);
-		r.put("total", ja.size());
+		r.put("total", printer.list.size());
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
@@ -361,11 +359,14 @@ public class PrinterController
 		TypesetTemplate template = getTemplate(json);
 
 		JSONArray fs = new JSONArray();
-		File dir = new File(Common.pathOf(TypesetUtil.getResourcePath(), template.getWorkDir()));
-		File[] files = dir.listFiles();
-		if (files != null) for (File f : files)
+		if (!Common.isEmpty(template.getWorkDir()))
 		{
-			fs.add(f.getName());
+			File dir = new File(Common.pathOf(TypesetUtil.getResourcePath(), template.getWorkDir()));
+			File[] files = dir.listFiles();
+			if (files != null) for (File f : files)
+			{
+				fs.add(f.getName());
+			}
 		}
 
 		JSONObject r = new JSONObject();
@@ -386,10 +387,14 @@ public class PrinterController
 	private TypesetTemplate getTemplate(JSONObject p)
 	{
 		Long templateId = p.getLong("templateId");
-		String templateCode = p.getString("templateCode");
-		Object template = templateId != null ? templateId : templateCode;
+		if (templateId != null)
+			return printer.getTypesetTemplate(templateId);
 
-		return printer.getTypesetTemplate(template);
+		String templateCode = p.getString("templateCode");
+		if (templateCode != null)
+			return printer.getTypesetTemplate(templateCode);
+
+		return null;
 	}
 
 	private String getIpAddr(HttpServletRequest request)
@@ -457,6 +462,38 @@ public class PrinterController
 		return res;
 	}
 
+	@RequestMapping("/export.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject export(@RequestBody JSONObject json) throws Exception
+	{
+		TypesetTemplate template = getTemplate(json);
+
+		JSONObject fs = new JSONObject();
+		File dir = new File(Common.pathOf(TypesetUtil.getResourcePath(), template.getWorkDir()));
+		for (File f : dir.listFiles())
+		{
+			byte[] fb = Disk.load(f);
+			fs.put(f.getName(), Common.encodeBase64(fb));
+		}
+
+		JSONObject m = new JSONObject();
+		m.put("templateId", template.getId());
+		m.put("code", template.getCode());
+		m.put("name", template.getName());
+		m.put("templateFile", template.getTemplateFile());
+		m.put("workDir", template.getWorkDir());
+		m.put("testFile", template.getTestFile());
+		m.put("signId", template.getSignId());
+		m.put("files", fs);
+
+		JSONObject res = new JSONObject();
+		res.put("content", m);
+		res.put("result", "success");
+
+		return res;
+	}
+
 	@RequestMapping("/delete.json")
 	@ResponseBody
 	@CrossOrigin
@@ -504,11 +541,19 @@ public class PrinterController
 	@CrossOrigin
 	public JSONObject save(@RequestBody JSONObject json) throws Exception
 	{
+		Long templateId = json.getLong("templateId");
+
 		String code = json.getString("code");
 		if (Common.isEmpty(code))
 			code = null;
 
-		TypesetTemplate template = getTemplate(json);
+		TypesetTemplate template = printer.getTypesetTemplate(templateId);
+		if (template == null)
+		{
+			template = new TypesetTemplate();
+			template.setId(templateId);
+		}
+
 		if ((code == null && template.getCode() != null) || !code.equals(template.getCode()))
 		{
 			if (printer.exists(code))
@@ -517,8 +562,14 @@ public class PrinterController
 			printer.resetCode(template, code);
 		}
 
-		template.setName(json.getString("name"));
-		template.setSignId(json.getLong("signId"));
+		if (json.containsKey("name"))
+			template.setName(json.getString("name"));
+		if (json.containsKey("templateFile"))
+			template.setTemplateFile(json.getString("templateFile"));
+		if (json.containsKey("workDir"))
+			template.setWorkDir(json.getString("workDir"));
+		if (json.containsKey("signId"))
+			template.setSignId(json.getLong("signId"));
 
 		String testStr = json.getString("test");
 		if (!Common.isEmpty(testStr))
@@ -537,7 +588,26 @@ public class PrinterController
 		}
 		else
 		{
-			template.setTestFile(null);
+			template.setTestFile(json.getString("testFile"));
+		}
+
+		if (json.containsKey("files"))
+		{
+			if (Common.isEmpty(template.getWorkDir()))
+				throw new RuntimeException("work dir is null");
+
+			File dir = new File(Common.pathOf(TypesetUtil.getResourcePath(), template.getWorkDir()));
+			dir.mkdirs();
+
+			JSONObject fs = json.getJSONObject("files");
+			for (String fileName : fs.keySet())
+			{
+				byte[] b = Common.decodeBase64ToByte(fs.getString(fileName));
+				try (FileOutputStream fos = new FileOutputStream(new File(Common.pathOf(TypesetUtil.getResourcePath(), template.getWorkDir(), fileName))))
+				{
+					fos.write(b);
+				}
+			}
 		}
 
 		printer.save(template);

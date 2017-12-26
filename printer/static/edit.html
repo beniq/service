@@ -30,14 +30,21 @@
   <div class="container-fluid" id="content">
     <br/>
     <input id="templateId" type="hidden"/>
-    模板代码：<input id="code" class="form-control"/>
+    <div>
+      模板代码：<input id="code" class="form-control"/>
+    </div>
     <br/>
-    模板名称：<input id="name" class="form-control"/>
+    <div>
+      模板名称：<input id="name" class="form-control"/>
+    </div>
     <br/>
-    相关附件：<div id="files"></div>
+    <div id="fileArea">
+      相关附件：<div id="files"></div>
+    </div>
     <br/>
-    测试脚本：
-    <textarea id="example" class="form-control" style="height:300px"></textarea>
+    <div>
+      测试脚本：<textarea id="example" class="form-control" style="height:300px"></textarea>
+    </div>
     <br/>
     <button class="btn btn-primary btn-lg" onClick="printer.scale(10)">+</button>
     <button class="btn btn-primary btn-lg" onClick="preview()">PREVIEW</button>
@@ -105,7 +112,7 @@
       }
     });
 
-    var box = document.getElementById('files'); //拖拽区域
+    var box = document.getElementById('fileArea'); //拖拽区域
     box.addEventListener("drop", function(e){
       e.preventDefault();
       var fileList = e.dataTransfer.files;
