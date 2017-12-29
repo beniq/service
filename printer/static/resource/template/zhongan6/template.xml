@@ -128,7 +128,7 @@
         <reset/>
 
         <rect x="0" y="0" width="1900" height="1" color="black"/>
-        <text x="0" y="0" width="1900" height="50" font="hei" font_size="32" color="black" align="left" value="'适用条款'"/>
+        <text x="0" y="0" width="1900" height="50" font="hei" font_size="32" color="black" align="left" value="'适用条款：'"/>
         <reset/>
         <loop name="j" value="try(productClauses.productClause, null)">
             <text x="0" y="0" width="1800" height="50" font="song" font_size="32" color="black" align="left" value="j.clauseName" link="j.linkUrl"/>

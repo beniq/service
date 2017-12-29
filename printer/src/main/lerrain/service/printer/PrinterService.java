@@ -5,7 +5,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.signatures.PdfPKCS7;
 import com.itextpdf.signatures.SignatureUtil;
-import lerrain.tool.Common;
+import lerrain.service.printer.util.Common;
 import lerrain.tool.document.LexDocument;
 import lerrain.tool.document.export.Painter;
 import lerrain.tool.document.export.PdfPainterNDF;
@@ -23,7 +23,10 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.*;
 
@@ -216,7 +219,7 @@ public class PrinterService
 
 		param.put("FONT_HEI", "simhei.ttf");
 		param.put("FONT_KAI", "simkai.ttf");
-		param.put("FONT_SONG", "stsong.ttf");
+		param.put("FONT_SONG", "fzltksjw.ttf");
 		param.put("FONT_YOU", "simyou.ttf");
 		param.put("FONT_CONSOLA", "consola.ttf");
 		param.put("FONT_COURIER", "courier.ttf");

@@ -1,11 +1,10 @@
 package lerrain.service.printer;
 
-import lerrain.tool.Common;
+import lerrain.service.printer.util.Common;
 import lerrain.tool.document.typeset.Typeset;
 import lerrain.tool.document.typeset.TypesetUtil;
 
 import java.io.File;
-import java.util.Map;
 
 /**
  * Created by lerrain on 2017/4/23.
