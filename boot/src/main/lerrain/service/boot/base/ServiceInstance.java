@@ -4,6 +4,7 @@ import lerrain.service.boot.BootUtil;
 import lerrain.service.boot.Machine;
 import lerrain.service.boot.MachineMgr;
 import lerrain.service.boot.ServiceMgr;
+import lerrain.tool.Common;
 import lerrain.tool.Network;
 
 import java.util.Date;
@@ -178,7 +179,8 @@ public class ServiceInstance
             command += sb.toString();
         }
 
-        command += " >> " + machine.getServicePath(logFile) + " 2>&1 &";
+        String logPath = machine.getLogPath(service.getCode() + "-" + this.getEnvString() + ".log");
+        command += " >> " + logPath + " 2>&1 &";
 
         try
         {
@@ -226,7 +228,8 @@ public class ServiceInstance
     {
         try
         {
-            String cmd = String.format("tail -%d %s", line, machine.getServicePath(logFile));
+            String logPath = machine.getLogPath(service.getCode() + "-" + this.getEnvString() + ".log");
+            String cmd = String.format("tail -%d %s", line, logPath);
             return machine.run(cmd);
         }
         catch (Exception e)

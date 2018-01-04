@@ -10,6 +10,7 @@ public class Machine
 {
     String root = "./webapp/";
     String javaBin;
+    String logPath;
 
     String name;
     String host;
@@ -23,6 +24,19 @@ public class Machine
         this.host = host;
         this.user = user;
         this.pwd = pwd;
+    }
+
+    public String getLogPath(String logFile)
+    {
+        if (logPath == null)
+            return root + "log/" + logFile;
+
+        return root + logPath + logFile;
+    }
+
+    public void setLogPath(String logPath)
+    {
+        this.logPath = logPath;
     }
 
     public String getJavaBin()
@@ -184,6 +198,7 @@ public class Machine
         StringBuffer s = new StringBuffer();
         s.append("mkdir -p " + getPath("temp") + ";");
         s.append("mkdir -p " + getPath("data") + ";");
+        s.append("mkdir -p " + getPath("log") + ";");
         s.append("chmod 777 " + getPath("soft/jdk1.8.0_151/bin/java") + ";");
         run(s.toString());
     }

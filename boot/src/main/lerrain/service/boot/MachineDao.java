@@ -33,6 +33,7 @@ public class MachineDao
                 srv.setIndex(m.getInt("index"));
                 srv.setRoot(m.getString("root"));
                 srv.setJavaBin(m.getString("java_bin"));
+                srv.setLogPath(m.getString("log"));
 
                 return srv;
             }
