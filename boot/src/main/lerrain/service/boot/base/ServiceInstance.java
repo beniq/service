@@ -8,6 +8,7 @@ import lerrain.tool.Common;
 import lerrain.tool.Network;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ServiceInstance
@@ -30,6 +31,8 @@ public class ServiceInstance
 
     Date restartTime, deployTime;
 
+    Map param;
+
     public ServiceInstance(ServicePack service)
     {
         this.service = service;
@@ -43,6 +46,16 @@ public class ServiceInstance
     public void setService(ServicePack service)
     {
         this.service = service;
+    }
+
+    public Map getParam()
+    {
+        return param;
+    }
+
+    public void setParam(Map param)
+    {
+        this.param = param;
     }
 
     public int getEnv()
@@ -168,16 +181,24 @@ public class ServiceInstance
 
         String command = String.format("cd %s; nohup %sjava %s-cp %s:%s %s --server.port=%d", machine.getServicePath(service.getCode() + "/" + getEnvString()), javaBin, service.getJvmOption() == null ? "" : service.getJvmOption() + " ", machine.getServicePath(jarFile), lib, service.getStartClass(), port);
 
-        Map<String, String> params = BootUtil.convertParams(srvs);
-        if (params != null)
-        {
-            StringBuffer sb = new StringBuffer();
-            for (Map.Entry<String, String> entry : params.entrySet())
-                sb.append(" --" + entry.getKey() + "=\"" + entry.getValue() + "\"");
+        Map<String, String> params = new HashMap<>();
 
-            sb.append(" --env=" + getEnvString());
-            command += sb.toString();
-        }
+        Map<String, String> p = BootUtil.convertParams(srvs);
+        if (p != null)
+            params.putAll(p);
+
+        p = BootUtil.convertParams(this.getParam());
+        if (p != null)
+            params.putAll(p);
+
+        StringBuffer sb = new StringBuffer();
+        for (Map.Entry<String, String> entry : params.entrySet())
+            sb.append(" --" + entry.getKey() + "=\"" + entry.getValue() + "\"");
+
+        sb.append(" --env=" + getEnvString());
+        sb.append(" --instanceId=" + this.getId());
+
+        command += sb.toString();
 
         String logPath = machine.getLogPath(service.getCode() + "-" + this.getEnvString() + ".log");
         command += " >> " + logPath + " 2>&1 &";

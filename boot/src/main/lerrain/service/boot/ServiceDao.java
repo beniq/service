@@ -23,7 +23,7 @@ public class ServiceDao
 
     public void saveService(Long serviceId, int env, int port, List<Integer> machine)
     {
-        String delSQL = "delete from s_service_instance where service_id = ? and env = ?";
+        String delSQL = "delete from s_service_instance where service_id = ? and env = ? and param is null";
         jdbc.update(delSQL, serviceId, env);
 
         String insert = "insert into s_service_instance(service_id, env, port, machine) values(?, ?, ?, ?)";
@@ -89,6 +89,10 @@ public class ServiceDao
                         inst.setMacIndex(m.getInt("machine"));
                         inst.setDeployTime(m.getTimestamp("deploy_time"));
                         inst.setRestartTime(m.getTimestamp("restart_time"));
+
+                        String paramStr = m.getString("param");
+                        if (!Common.isEmpty(paramStr))
+                            inst.setParam(JSON.parseObject(paramStr));
 
                         return inst;
                     }

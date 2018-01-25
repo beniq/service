@@ -533,4 +533,31 @@ public class BootController
 
 		return res;
 	}
+
+	/**
+	 * 重启一个service的步骤
+	 * 1 向所有服务广播service地址（第一个instance的地址，其他的全部屏蔽）
+	 * 2 等待10秒，其他instance的工作全部结束
+	 * 3 重启除第一个instance以外的所有instance
+	 * 4 全部发布成功后，向所有服务广播service地址（第二个instance的地址，其他的全部屏蔽）
+	 * 5 等待10秒，待第一个instance的工作全部结束
+	 * 6 重启第一个instance
+	 * 7 成功后，广播新地址
+	 */
+
+	@RequestMapping("/active.json")
+	@ResponseBody
+	@CrossOrigin
+	public JSONObject redirect(@RequestBody JSONObject json)
+	{
+		Long instanceId = json.getLong("instanceId");
+		ServiceInstance si = serviceMgr.getServiceInstance(instanceId);
+		si.getService().active(instanceId);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", serviceMgr.resetAddress(ServicePack.PRD));
+
+		return res;
+	}
 }

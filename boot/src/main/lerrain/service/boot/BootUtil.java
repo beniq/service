@@ -33,7 +33,7 @@ public class BootUtil
                 for (Map.Entry<String, String> c : map.entrySet())
                     r.put(key + c.getKey(), c.getValue());
             }
-            else if (!Common.isEmpty(key))
+            else if (key != null)
             {
                 r.put(key, val.toString());
             }

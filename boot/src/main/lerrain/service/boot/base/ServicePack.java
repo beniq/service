@@ -34,6 +34,20 @@ public class ServicePack
     JSONObject dbRule;
     JSONObject deployScript;
 
+    public void active(Long instId)
+    {
+        for (int i = 0; i < instance.size(); i++)
+        {
+            ServiceInstance ins = instance.get(i);
+            if (ins.getId().equals(instId))
+            {
+                instance.remove(i);
+                instance.add(0, ins);
+                return;
+            }
+        }
+    }
+
     public List<String[]> getConfig()
     {
         return config;
