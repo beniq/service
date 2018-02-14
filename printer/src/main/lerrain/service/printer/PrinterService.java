@@ -217,10 +217,12 @@ public class PrinterService
 		Typeset typeset = template.getTypeset();
 		TypesetDocument doc = new TypesetDocument(typeset);
 
-		param.put("FONT_HEI", "simhei.ttf");
-		param.put("FONT_KAI", "simkai.ttf");
-		param.put("FONT_SONG", "fzltksjw.ttf");
-		param.put("FONT_YOU", "simyou.ttf");
+		param.put("FONT_HEI", "FZHTJW.TTF");
+		param.put("FONT_KAI", "FZKTJW.TTF");
+		param.put("FONT_SONG", "FZSSJW.TTF");
+		param.put("FONT_FANG", "FZFSJW.TTF");
+		param.put("FONT_BOLDSONG", "FZHTJW.TTF");
+		param.put("FONT_YOU", "FZSSJW.TTF");
 		param.put("FONT_CONSOLA", "consola.ttf");
 		param.put("FONT_COURIER", "courier.ttf");
 		param.put("RESOURCE_PATH", TypesetUtil.getResourcePath() + File.separator + template.getWorkDir() + File.separator);

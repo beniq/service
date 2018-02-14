@@ -2,7 +2,7 @@ server:
   port: 7500
 
 datasource:
-  url: jdbc:mysql://120.27.167.233:2892/vie_sys
+  url: jdbc:mysql://10.253.110.144:2202/vie_sys
   username: iyb_life
-  password: Test1234
+  password: Iyblife2018!
 

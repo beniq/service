@@ -26,9 +26,9 @@ public class Main
         dir2 = "G:/data/material";
         dir3 = "G:/backup/data/material";
 
-//        dir1 = "Z:/lex/好友";
-//        dir2 = "G:/file/memory";
-//        dir3 = "G:/backup/file/memory";
+        dir1 = "Z:/lex/好友";
+        dir2 = "G:/file/memory";
+        dir3 = "G:/backup/file/memory";
 
         FileMgr fm = new FileMgr(dir1, dir2, dir3);
         if (!fm.compare())

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="gbk" ?>
+<proposal>
+    <font_mapping>
+        <font name="hei" value="FONT_HEI"/>
+        <font name="kai" value="FONT_KAI"/>
+        <font name="song" value="FONT_SONG"/>
+    </font_mapping>
+
+    <page_setting>
+        <page name="default" default="yes" size="A4" x="100" y="0" width="1900" height="2970">
+        </page>
+    </page_setting>
+
+    <paragraph>
+        <image x="0" y="50" width="368" height="116" src="'logo.png'" url="'logo.png'"/>
+        <text x="50" y="150" width="1800" height="70" font="hei" font_size="60" color="black" align="center" value="title"/>
+
+        <reset/>
+        <text x="1200" y="10" width="200" height="60" font="hei" font_size="32" color="black" align="left" value="'确认码：'"/>
+        <text x="1400" y="10" width="500" height="60" font="song" font_size="32" color="black" align="left" value="confNo"/>
+        <reset/>
+        <text x="1200" y="10" width="200" height="60" font="hei" font_size="32" color="black" align="left" value="'保单验真码：'"/>
+        <text x="1400" y="10" width="500" height="60" font="song" font_size="32" color="black" align="left" value="testNo"/>
+        <reset/>
+        <text x="0" y="10" width="200" height="60" font="hei" font_size="32" color="black" align="left" value="'行驶证车主：'"/>
+        <text x="200" y="10" width="500" height="60" font="song" font_size="32" color="black" align="left" value="drivingLicenseName"/>
+        <text x="1200" y="10" width="200" height="60" font="hei" font_size="32" color="black" align="left" value="'保单号码：'"/>
+        <text x="1400" y="10" width="500" height="60" font="song" font_size="32" color="black" align="left" value="policyNo"/>
+
+        <reset/>
+        <text x="0" y="0" width="1860" height="60" font="song" font_size="28" color="black" align="left" value="'根鉴于投保人已向联合保险人提交投保申请，并同意按约定支付保险费，联合保险人按照承保险种及其对应条款和特别约定承担赔偿责任。'"/>
+
+        <reset/>
+        <text x="0" y="0" width="100" height="250" font="hei" border="1" border_color="black" font_size="32" color="black" align="center" value="'被保\n险人\n信息'"/>
+        <text x="100" y="0" width="1760" height="50" font="hei" border="1" border_color="black" font_size="24" color="black" align="left" value="'以下信息来源于您的投保申请，是为您提供理赔及售后服务的重要依据，请务必仔细核对。如果有错误或遗漏请立即拨打1010-9955、95511进行修改。'"/>
+        <text x="100" y="50" width="1760" height="200" border="1" font="hei" border_color="black" value="''"/>
+        <text x="110" y="70" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'姓名：'"/>
+        <text x="290" y="70" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.name"/>
+        <text x="640" y="70" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'证件类型：'"/>
+        <text x="820" y="70" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.certType"/>
+        <text x="1320" y="70" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'证件号码：'"/>
+        <text x="1500" y="70" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.certNo"/>
+        <text x="110" y="130" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'出生日期：'"/>
+        <text x="290" y="130" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.birthday"/>
+        <text x="640" y="130" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'性别：'"/>
+        <text x="820" y="130" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.gender"/>
+        <text x="1320" y="130" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'手机号码：'"/>
+        <text x="1500" y="130" width="350" height="50" font="song" font_size="32" color="black" align="left" value="insurant.mobile"/>
+        <text x="110" y="190" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'通讯地址：'"/>
+        <text x="290" y="190" width="800" height="50" font="song" font_size="32" color="black" align="left" value="insurant.gender"/>
+        <text x="1320" y="190" width="180" height="50" font="hei" font_size="32" color="black" align="left" value="'E-Mail：'"/>
+
+        <reset skip="50"/>
+        <script>
+            var bx = [100, 300, 650, 850, 1200, 1400, 1860];
+            var x = [
+                ["号牌号码", vehicle.plateNo, "发动机号码", vehicle.engineNo, "车架号", vehicle.frameNo],
+                ["核定载客", vehicle.b1, "初登日期", vehicle.b2, "厂牌型号", vehicle.b3],
+                ["核定载质量", vehicle.b4, "使用性质", vehicle.b5, "机动车种类", vehicle.b6]
+            ];
+        </script>
+        <text x="0" y="0" width="100" height="180" font="hei" border="1" border_color="black" font_size="32" color="black" align="center" value="'车辆\n信息'"/>
+        <loop name="j" value="x">
+            <loop from="0" to="5" name="i">
+                <text x="bx[i]" y="0" width="bx[i+1]-bx[i]" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="j[i]"/>
+            </loop>
+            <reset/>
+        </loop>
+
+        <reset/>
+        <text x="0" y="0" width="300" height="60" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'争议解决方式'"/>
+        <text x="300" y="0" width="1560" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="dispute"/>
+        <reset/>
+        <text x="0" y="0" width="300" height="60" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'保险期间'"/>
+        <text x="300" y="0" width="1560" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="insurePeriod"/>
+
+        <reset/>
+        <script>
+            bx = [0, 500, 800, 1100, 1400, 1860];
+            x = @[["承保险种", "保险金额/责任限额", "保险费（元）", "是否投保不计免赔", "保险费小计（元）"]];
+            for (var y : plan) {
+                x += [y.name, y.amount, y.premium, y.deductible, y.premiumTotal];
+            }
+        </script>
+        <loop name="j" value="x">
+            <loop from="0" to="4" name="i">
+                <text x="bx[i]" y="0" width="bx[i+1]-bx[i]" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="j[i]"/>
+            </loop>
+            <reset/>
+        </loop>
+
+        <reset/>
+        <text x="0" y="0" width="100" height="200" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'特别\n约定'"/>
+        <text x="100" y="0" width="1760" height="200" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="'1）尊敬的客户：投保次日起，承保及理赔等信息您可通过联合保险人任意一方的网站www.zhongan.com、www.pingan.com，客服热线400-999-9595、95511，平安保险门店核实信息。弱队查询结果有异议，请登录网站留言或拨打服务热线。2）收到本保单请立即核对，如无疑义，即视为同意合同条款及约定的全部内容。本保险使用机动车综合商业保险条款，并已附条款一份。3）无其它特别约定。'"/>
+
+        <reset/>
+        <text x="0" y="0" width="300" height="60" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'银行流水号'"/>
+        <text x="300" y="0" width="1560" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="bankTranNo"/>
+        <reset/>
+        <text x="0" y="0" width="300" height="60" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'收费确认时间'"/>
+        <text x="300" y="0" width="1560" height="60" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="bankConfDate"/>
+
+        <reset/>
+        <text x="0" y="0" width="100" height="300" font="hei" font_size="32" border="1" border_color="black" color="black" align="left" value="'重要\n提示'"/>
+        <text x="100" y="0" width="1760" height="300" font="song" font_size="32" border="1" border_color="black" color="black" align="left" value="'1.本保险合同由保险条款、投保单、保险单、批单和特别约定组成。\n
+2.收到本保险单、承保险种对应的保险条款后，请立即核对，如有不符或疏漏，请及时通知联合保险人任意一方并办理变更或补充手续。\n
+3.请详细阅读承保险种对应的保险条款，特别是责任免除和赔偿处理。\n
+4.被保险机动车因改装、加装、改变使用性质等导致危险程度显著增加以及转卖、转让、赠送他人的，应通知联合保险人任意一方。\n
+5.被保险人应当在保险事故发生后及时通知联合保险人任意一方。'"/>
+
+        <reset/>
+        <script>
+            var bx = [0, 400, 1100, 1860];
+            var x = [
+            ["联合保险人", "众安在线财产保险股份有限公司", "中国平安财产保险股份有限公司黑龙江分公司新渠道业务部"],
+            ["公司地址及邮政编码", "上海市黄浦区圆明园路169号协进大楼4楼、200002", "哈尔滨市南岗区平安大厦、150036"],
+            ["报案及服务电话", "1010-9955", "95511"],
+            ["网址", "www.zhongan.com", "www.pingan.com"],
+            ["签单日期：（保险人签章）", insureDate, insureDate]
+            ];
+        </script>
+        <loop name="j" value="x">
+            <loop from="0" to="2" name="i">
+                <text x="bx[i]" y="0" width="bx[i+1]-bx[i]" height="60" font="song" font_size="28" border="1" border_color="black" color="black" align="left" value="j[i]"/>
+            </loop>
+            <reset/>
+        </loop>
+
+        <reset/>
+        <text x="0" y="0" width="150" height="60" font="hei" font_size="32" color="black" align="left" value="'核保'"/>
+        <text x="150" y="0" width="450" height="60" font="song" font_size="32" color="black" align="left" value="underwrite"/>
+        <text x="600" y="0" width="150" height="60" font="hei" font_size="32" color="black" align="left" value="'制单'"/>
+        <text x="750" y="0" width="450" height="60" font="song" font_size="32" color="black" align="left" value="make"/>
+        <text x="1200" y="0" width="150" height="60" font="hei" font_size="32" color="black" align="left" value="'经办'"/>
+        <text x="1350" y="0" width="450" height="60" font="song" font_size="32" color="black" align="left" value="handle"/>
+
+        <reset/>
+        <text x="0" y="0" width="200" height="60" font="hei" font_size="32" color="black" align="left" value="'温馨提示：'"/>
+        <text x="200" y="0" width="1660" height="60" font="song" font_size="32" color="black" align="left" value="'您可登录众安保险网站（www.zhongan.com/bjdzbd）、中国平安网站（www.pingan.con），通过右上角的“保险单号”及“验真码”查验保单真伪。'"/>
+
+        <reset/>
+        <text x="0" y="0" width="1860" height="60" font="song" font_size="32" color="black" align="left" value="'注：本抄件为原始合同影像内容，只做为信息展示，不作为保单批改、理赔依据。'"/>
+        <image x="1500" y="-200" width="360" height="366" src="'sign.png'" url="'sign.png'"/>
+
+    </paragraph>
+</proposal>
