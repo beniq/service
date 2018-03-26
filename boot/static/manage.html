@@ -152,15 +152,23 @@
               str += "<div>表：" + l.name + "</div>";
               l.sqls.forEach(function (k) {
                   str += "<pre id='" + k.id + "' onclick='revSql(" + k.id + ")'>" + k.sql + "</pre>";
+                  env.sql[k.id] = true;
               });
               str += "</div>";
           });
           str += "<button class='btn btn-primary' onclick='lock(synch, \"" + r.key + "\")'>synch</button>";
+          str += "&nbsp;&nbsp;<button class='btn btn-primary' onclick='lock(revSqlAll)'>反选全部</button>";
       });
       if (str == "")
         str = "没有发现需要同步的内容";
       $("#sql").html("<br/>" + str);
     });
+  }
+
+  function revSqlAll() {
+      for (var id in env.sql) {
+          revSql(id);
+      }
   }
 
   function revSql(id) {

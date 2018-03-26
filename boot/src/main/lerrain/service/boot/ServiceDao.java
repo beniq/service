@@ -33,7 +33,7 @@ public class ServiceDao
 
     public List<ServicePack> loadService()
     {
-        return jdbc.query("select * from s_service order by workspace, id", new RowMapper<ServicePack>()
+        return jdbc.query("select * from s_service where valid is null order by workspace, id", new RowMapper<ServicePack>()
         {
             @Override
             public ServicePack mapRow(ResultSet m, int arg1) throws SQLException
