@@ -216,6 +216,17 @@ public class ServiceInstance
 
     public String stop()
     {
+        String loc = "http://" + machine.getHost() + ":" + port + "/admin/onclose";
+        try
+        {
+            String res = Network.request(loc, 5000);
+            System.out.println(loc + " => " + res);
+        }
+        catch (Exception e)
+        {
+            System.out.println(loc + " => " + e.getMessage());
+        }
+
         try
         {
             String cmd = String.format("ps -ef | grep \"java %s-cp %s\" | grep -v grep | awk '{print $2}' | xargs kill -9", service.getJvmOption() == null ? "" : service.getJvmOption() + " ", machine.getServicePath(jarFile));

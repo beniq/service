@@ -162,6 +162,7 @@
       if (str == "")
         str = "没有发现需要同步的内容";
       $("#sql").html("<br/>" + str);
+      revSqlAll();
     });
   }
 
@@ -264,6 +265,10 @@
   }
 
   function next(step) {
+      if (env.step == 2) {
+          if (!confirm("确定要发生产吗？"))
+              return;
+      }
     if (env.step >= 3)
       return;
     if (step != null)
