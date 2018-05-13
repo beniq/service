@@ -1,0 +1,267 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>ACTIVITY</title>
+
+		<link href="./css/bootstrap.min.css" rel="stylesheet">
+		<link href="./css/web.css" rel="stylesheet">
+
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/common.js"></script>
+
+		<script src="./js/react.js"></script>
+		<script src="./js/react-dom.js"></script>
+		<script src="./js/browser.min.js"></script>
+	</head>
+
+	<body>
+		<div id="content"></div>
+
+		<script type="text/babel">
+			var ENV = {
+			    W: 750,
+				H: 1200,
+				index: 0,
+				images: {},
+				imagesOnload: {}
+            };
+
+            ENV.getImage = function(url) {
+                let img = ENV.images[url];
+                if (img == null) {
+                    img = new Image();
+                    img.src = "http://localhost:7555/" + url;
+                    img.onload = function() {
+                        let listeners = ENV.imagesOnload[url];
+                        listeners.map(l => { l() });
+					}
+                    ENV.imagesOnload[url] = [];
+                    ENV.images[url] = img;
+                }
+                return img;
+            }
+
+            ENV.drawImage = function(c, src, x, y, w, h) {
+                let img = ENV.getImage(src);
+                if (img.complete) {
+                    c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
+                } else {
+                    let ll = ENV.imagesOnload[src];
+                    ll.push(function() {
+                        c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
+                    });
+                }
+            }
+
+            ENV.draw = function() {
+                let canvas = document.getElementById("canvas");
+                let c = canvas.getContext("2d");
+                c.fillStyle = "black";
+                c.fillRect(0, 0, ENV.W, ENV.H);
+                let page = ENV.doc.pages[ENV.index];
+                if (page.background != null)
+                    ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
+                page.elements.map(e => {
+                    if (e.image != null) {
+                        ENV.drawImage(c, e.image, e.x, e.y, e.w, e.h);
+                    }
+                })
+                if (ENV.selected) {
+                    c.fillStyle = "rgba(100%,60%,60%,0.5)";
+                    c.fillRect(ENV.selected.x, ENV.selected.y, ENV.selected.w, ENV.selected.h);
+                }
+            }
+
+            var Main = React.createClass({
+                getInitialState() {
+                    return {w:90, h:160};
+                },
+                componentDidMount() {
+					if (ENV.actId == null || ENV.actId == "") {
+						common.req("new_act.json", {}, r => this.refresh(r));
+					} else {
+						common.req("view_act.json", {actId:ENV.actId}, r => this.refresh(r));
+					}
+
+                    let drop = e => {
+                        e.preventDefault();
+                        var fileList = e.dataTransfer.files;
+                        if(fileList.length == 0)
+                            return false;
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("post", common.url("file.do"), true);
+                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                        xhr.onreadystatechange = r => {
+                            if (xhr.readyState == 4 && xhr.status == 200) {
+                                this.refresh(JSON.parse(xhr.responseText).content);
+                            }
+                        };
+
+                        var fd = new FormData();
+                        fd.append("pageIndex", 0);
+                        fd.append("actId", ENV.doc.actId);
+                        if (e.target == document.getElementById('detail')) {
+                            if (ENV.selected == null) {
+                                fd.append("type", "desk");
+                            } else {
+                                fd.append("elementIndex", ENV.selectedIndex);
+                                fd.append("type", "image");
+							}
+                        } else if (e.target == document.getElementById('canvas')) {
+                            fd.append("type", "element");
+                        } else {
+                            fd = null;
+						}
+						if (fd != null) {
+                            for (var i = 0; i < fileList.length; i++)
+                                fd.append("file", fileList[i]);
+                            xhr.send(fd);
+                        }
+                    };
+
+                    document.getElementById('desk').addEventListener("drop", drop, false);
+                    document.getElementById('detail').addEventListener("drop", drop, false);
+                },
+                refresh(doc) {
+                    if (doc != null) ENV.doc = doc;
+                    let page = ENV.doc.pages[ENV.index];
+                    ENV.W = page.w;
+                    ENV.H = page.h;
+                    let w = document.getElementById('desk').clientWidth;
+                    this.setState({w: w, h: ENV.H * w / ENV.W}, () => {
+                        ENV.draw();
+                    })
+                },
+				clickSelect(e) {
+                    let c = $("#canvas");
+                    let s = c.offset();
+					let x = (e.clientX - s.left) * ENV.W / c.width();
+                    let y = (e.clientY - s.top) * ENV.H / c.height();
+                    let page = ENV.doc.pages[ENV.index];
+                    page.elements.map((e, i) => {
+                        if (e.x <= x && e.y <= y && e.x + e.w >= x && e.y + e.h >= y) {
+                            ENV.selected = e;
+                            ENV.selectedIndex = i;
+                        }
+                    });
+                    this.refresh();
+				},
+                select(e, i) {
+                    ENV.selected = e;
+                    ENV.selectedIndex = i;
+                    this.refresh();
+                },
+				drag(e) {
+                    if (ENV.selected == null)
+                        return;
+                    let c = $("#canvas");
+                    let s = c.offset();
+                    let x = (e.clientX - s.left) * ENV.W / c.width();
+                    let y = (e.clientY - s.top) * ENV.H / c.height();
+                    if (e.type == "dragstart") {
+						ENV.drag = {sx:x, sy:y, ex:ENV.selected.x, ey:ENV.selected.y};
+					} else if (e.type == "drag") {
+                        ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
+                        ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                        ENV.draw();
+                    } else if (e.type == "dragend") {
+                        ENV.selected.x = Math.round((ENV.drag.ex + x - ENV.drag.sx) * 100) / 100;
+                        ENV.selected.y = Math.round((ENV.drag.ey + y - ENV.drag.sy) * 100) / 100;
+                        this.refresh();
+					}
+				},
+                element() {
+
+				},
+                render() {
+                    let tree = ENV.doc == null ? null : ENV.doc.pages.map((page, i) => {
+                        return (
+                            <div className="ml-3">
+                                <div className="pl-2 pr-2 pt-1 pb-1">第{i+1}页</div>
+                                { page.elements.map(e => {
+                                    return <div className={"ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, i)}>元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+                                })}
+                            </div>
+                        )
+                    });
+                    let detail;
+                    if (ENV.selected == null) {
+                        detail = <div>
+							<div>第{ENV.index + 1}页</div>
+							<div>宽: {ENV.W}</div>
+							<div>高: {ENV.H}</div>
+						</div>
+                    } else {
+                        let e = ENV.selected;
+                        detail = <div>
+							<div>X: {e.x}</div>
+							<div>Y: {e.y}</div>
+							<div>Z：{e.z}</div>
+							<div>宽: {e.w}</div>
+							<div>高: {e.h}</div>
+							<div>背景：{e.image}</div>
+							<div>事件
+
+							</div>
+						</div>
+					}
+                    return (
+						<div className="form-horizontal">
+							<div className="form-row m-0 p-0">
+								<div className="col-sm-4 m-0 p-0" id="desk" style={{overflowY:"scroll", overflowX:"hidden", height:window.innerHeight+"px"}}>
+									<canvas id="canvas" ref="canvas" style={{width:this.state.w + "px", height:this.state.h + "px"}} width={ENV.W} height={ENV.H} onClick={this.clickSelect} draggable="true" onDragStart={this.drag} onDrag={this.drag} onDragEnd={this.drag}></canvas>
+								</div>
+								<div className="col-sm-8 m-0">
+									<div className="navbar navbar-expand-lg navbar-light bg-light m-0">
+										<div className="collapse navbar-collapse">
+											<button type="button" className="btn btn-success mr-2" onClick={ENV.draw}>刷新</button>
+											<button type="button" className="btn btn-success mr-2">页面</button>
+											<button type="button" className="btn btn-success mr-2" onClick={this.element.bind(this, 0)}>元素</button>
+										</div>
+									</div>
+									<div className="form-row m-0">
+										<div className="col-sm-6 pt-3 pl-3 pr-3 pb-3">
+											<div className="pl-2 pr-2 pt-1 pb-1">活动文档</div>
+											{tree}
+										</div>
+										<div className="col-sm-6" id="detail">
+											{detail}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                    );
+                }
+            });
+
+            $(document).ready( function() {
+                ENV.actId = common.param("actId");
+                ReactDOM.render(<Main/>, document.getElementById("content"));
+
+                $(document).on({
+                    dragleave:function(e){    //拖离
+                        e.preventDefault();
+                    },
+                    drop:function(e){  //拖后放
+                        e.preventDefault();
+                    },
+                    dragenter:function(e){    //拖进
+                        e.preventDefault();
+                    },
+                    dragover:function(e){    //拖来拖去
+                        e.preventDefault();
+                    }
+                });
+            });
+		</script>
+	</body>
+</html>

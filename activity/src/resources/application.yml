@@ -1,0 +1,10 @@
+server:
+  port: 7555
+
+datasource:
+  url: jdbc:mysql://101.37.72.72:5306/nova?useUnicode=true&characterEncoding=UTF-8
+  username: iyb
+  password: Abcd2017
+
+spring.http.multipart.maxFileSize: 8Mb
+spring.http.multipart.maxRequestSize: 16Mb

@@ -1,1 +1,437 @@
-{"AGENT":{"NAME":"回归测试0406001"},"GROUP":{"NAME":"chenlin","AGE":25,"NUMBER":5},"PLANS":[{"PRICE":"13","NAME":"员工计划1","OCCUPATION_LEVEL":"3","SOCIAL_INS":"Y","SPAG":"无特约","DETAIL":{"C002":{"COMMISSION":2.6,"COMMISSION_RATE":20,"NAME":"公共交通意外伤害（身故及伤残）","PREMIUM":13,"DETAIL":{"C00201":{"COMMISSION":0.2,"COMMISSION_RATE":20,"NAME":"航空意外","PREMIUM":1,"AMOUNT":100000,"CODE":"C00201"},"C00202":{"COMMISSION":0.4,"COMMISSION_RATE":20,"NAME":"轨道交通（含火车、地铁）意外","PREMIUM":2,"AMOUNT":100000,"CODE":"C00202"},"C00203":{"COMMISSION":0.4,"COMMISSION_RATE":20,"NAME":"水路交通（含轮船、渡船）意外","PREMIUM":2,"AMOUNT":100000,"CODE":"C00203"},"C00204":{"COMMISSION":1.6,"COMMISSION_RATE":20,"NAME":"公路交通（公交车等）意外","PREMIUM":8,"EXP":1,"AMOUNT":100000,"CODE":"C00204"}},"CODE":"C002"}},"TYPE":1}],"PRINT_DATE":"2017年08月24日","VALID_DAY":"90天"}
+{
+  "AGENT": {
+    "NAME": "回归测试0406001"
+  },
+  "GROUP": {
+    "NAME": "chenlin",
+    "AGE": 25,
+    "NUMBER": 5
+  },
+  "PLANS": [{
+    "X": 1,
+    "PRICE": "13",
+    "NAME": "员工计划1",
+    "OCCUPATION_LEVEL": "3",
+    "SOCIAL_INS": "Y",
+    "SPAG": "无特约",
+    "DETAIL": {
+      "C002": {
+        "COMMISSION": 2.6,
+        "COMMISSION_RATE": 20,
+        "NAME": "公共交通意外伤害（身故及伤残）",
+        "PREMIUM": 13,
+        "DETAIL": {
+          "C00201": {
+            "COMMISSION": 0.2,
+            "COMMISSION_RATE": 20,
+            "NAME": "航空意外",
+            "PREMIUM": 1,
+            "AMOUNT": 100000,
+            "CODE": "C00201"
+          },
+          "C00202": {
+            "COMMISSION": 0.4,
+            "COMMISSION_RATE": 20,
+            "NAME": "轨道交通（含火车、地铁）意外",
+            "PREMIUM": 2,
+            "AMOUNT": 100000,
+            "CODE": "C00202"
+          },
+          "C00203": {
+            "COMMISSION": 0.4,
+            "COMMISSION_RATE": 20,
+            "NAME": "水路交通（含轮船、渡船）意外",
+            "PREMIUM": 2,
+            "AMOUNT": 100000,
+            "CODE": "C00203"
+          },
+          "C00204": {
+            "COMMISSION": 1.6,
+            "COMMISSION_RATE": 20,
+            "NAME": "公路交通（公交车等）意外",
+            "PREMIUM": 8,
+            "EXP": 1,
+            "AMOUNT": 100000,
+            "CODE": "C00204"
+          }
+        },
+        "CODE": "C002"
+      }
+    },
+    "TYPE": 1
+  },
+    {
+      "X": 2,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 3,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 4,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 5,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 6,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 7,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    },
+    {
+      "X": 8,
+      "PRICE": "13",
+      "NAME": "员工计划1",
+      "OCCUPATION_LEVEL": "3",
+      "SOCIAL_INS": "Y",
+      "SPAG": "无特约",
+      "DETAIL": {
+        "C002": {
+          "COMMISSION": 2.6,
+          "COMMISSION_RATE": 20,
+          "NAME": "公共交通意外伤害（身故及伤残）",
+          "PREMIUM": 13,
+          "DETAIL": {
+            "C00201": {
+              "COMMISSION": 0.2,
+              "COMMISSION_RATE": 20,
+              "NAME": "航空意外",
+              "PREMIUM": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00201"
+            },
+            "C00202": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "轨道交通（含火车、地铁）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00202"
+            },
+            "C00203": {
+              "COMMISSION": 0.4,
+              "COMMISSION_RATE": 20,
+              "NAME": "水路交通（含轮船、渡船）意外",
+              "PREMIUM": 2,
+              "AMOUNT": 100000,
+              "CODE": "C00203"
+            },
+            "C00204": {
+              "COMMISSION": 1.6,
+              "COMMISSION_RATE": 20,
+              "NAME": "公路交通（公交车等）意外",
+              "PREMIUM": 8,
+              "EXP": 1,
+              "AMOUNT": 100000,
+              "CODE": "C00204"
+            }
+          },
+          "CODE": "C002"
+        }
+      },
+      "TYPE": 1
+    }
+  ],
+  "PRINT_DATE": "2017年08月24日",
+  "VALID_DAY": "90天"
+}
