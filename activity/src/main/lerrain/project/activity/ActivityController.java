@@ -100,6 +100,36 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/element.json")
+	@ResponseBody
+	public JSONObject element(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		int pageIndex = json.getIntValue("pageIndex");
+		int index = json.getIntValue("index");
+
+		ActivityDoc doc = act.getAct(actId);
+		Page page = doc.getList().get(pageIndex);
+
+		Element e = page.getList().get(index);
+		JSONObject o = json.getJSONObject("element");
+
+		e.setX(o.getFloat("x"));
+		e.setY(o.getFloat("y"));
+		e.setZ(o.getIntValue("z"));
+		e.setW(o.getFloat("w"));
+		e.setH(o.getFloat("h"));
+		e.setFile(o.getString("image"));
+		e.setBgColor(o.getString("bgcolor"));
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+
+		return res;
+	}
+
 	@RequestMapping("/file.do")
 	@ResponseBody
 	@CrossOrigin

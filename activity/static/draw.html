@@ -160,24 +160,51 @@
                     this.refresh();
                 },
 				drag(e) {
-                    if (ENV.selected == null)
+                    let f = ENV.selected;
+                    if (f == null)
                         return;
                     let c = $("#canvas");
                     let s = c.offset();
                     let x = (e.clientX - s.left) * ENV.W / c.width();
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     if (e.type == "dragstart") {
-						ENV.drag = {sx:x, sy:y, ex:ENV.selected.x, ey:ENV.selected.y};
-					} else if (e.type == "drag") {
-                        ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
-                        ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                        ENV.draw();
-                    } else if (e.type == "dragend") {
-                        ENV.selected.x = Math.round((ENV.drag.ex + x - ENV.drag.sx) * 100) / 100;
-                        ENV.selected.y = Math.round((ENV.drag.ey + y - ENV.drag.sy) * 100) / 100;
-                        this.refresh();
-					}
+						ENV.drag = {sx:x, sy:y, ex:ENV.selected.x, ey:ENV.selected.y, ew:ENV.selected.w, eh:ENV.selected.h};
+                        if (f.x <= x && f.y <= y && f.x + f.w >= x && f.y + f.h >= y) {
+                            ENV.drag.mode = 5;
+                        } else if (f.x <= x && f.y > y && f.x + f.w >= x && f.y - 20 < y) {
+                            ENV.drag.mode = 8;
+						}
+					} else if (ENV.drag.mode != null) {
+                        if (e.type == "drag") {
+                            if (ENV.drag.mode == 5) {
+                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                            } else if (ENV.drag.mode == 3) {
+                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
+                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
+                            } else if (ENV.drag.mode == 8) {
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                            }
+                            ENV.draw();
+                        } else if (e.type == "dragend") {
+							ENV.selected.x = Math.round((ENV.selected.x * 100) / 100);
+							ENV.selected.y = Math.round((ENV.selected.y * 100) / 100);
+                            ENV.selected.w = Math.round((ENV.selected.w * 100) / 100);
+                            ENV.selected.h = Math.round((ENV.selected.h * 100) / 100);
+							this.refresh();
+                            this.saveElement();
+                        }
+                    }
 				},
+                saveElement() {
+                    common.req("element.json", {
+                        actId: ENV.actId,
+                        pageIndex: ENV.index,
+						index: ENV.selectedIndex,
+						element: ENV.selected
+                    }, r => {});
+                },
                 element() {
 
 				},
@@ -186,8 +213,8 @@
                         return (
                             <div className="ml-3">
                                 <div className="pl-2 pr-2 pt-1 pb-1">第{i+1}页</div>
-                                { page.elements.map(e => {
-                                    return <div className={"ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, i)}>元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+                                { page.elements.map((e, j) => {
+                                    return <div className={"ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, j)}>元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
                                 })}
                             </div>
                         )
@@ -201,15 +228,69 @@
 						</div>
                     } else {
                         let e = ENV.selected;
-                        detail = <div>
-							<div>X: {e.x}</div>
-							<div>Y: {e.y}</div>
-							<div>Z：{e.z}</div>
-							<div>宽: {e.w}</div>
-							<div>高: {e.h}</div>
-							<div>背景：{e.image}</div>
-							<div>事件
-
+                        detail = <div key={ENV.selectedIndex}>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>X</div>
+								</div>
+								<input type="text" className="form-control" ref="eX" defaultValue={e.x}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
+								</div>
+								<input type="text" className="form-control" ref="eY" defaultValue={e.y}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>Z</div>
+								</div>
+								<input type="text" className="form-control" ref="eZ" defaultValue={e.z}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
+								</div>
+								<input type="text" className="form-control" ref="eW" defaultValue={e.w}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
+								</div>
+								<input type="text" className="form-control" ref="eH" defaultValue={e.h}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>纵横比</div>
+								</div>
+								<select className="form-control" ref="eKeep">
+									<option value="Y">自由</option>
+									<option value="N">按图片锁定</option>
+								</select>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
+								</div>
+								<input type="text" className="form-control" ref="eImage" defaultValue={e.image}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>事件类型</div>
+								</div>
+								<select className="form-control" ref="eAction">
+									<option value="">无</option>
+									<option value="1">跳转</option>
+									<option value="2">JS方法</option>
+									<option value="3">跳转产品</option>
+									<option value="4">转发产品</option>
+								</select>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
+								</div>
+								<input type="text" className="form-control" ref="eParam"/>
 							</div>
 						</div>
 					}
@@ -232,7 +313,7 @@
 											<div className="pl-2 pr-2 pt-1 pb-1">活动文档</div>
 											{tree}
 										</div>
-										<div className="col-sm-6" id="detail">
+										<div className="col-sm-6 pt-3 pl-3 pr-3 pb-3" id="detail">
 											{detail}
 										</div>
 									</div>
