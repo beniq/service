@@ -39,8 +39,11 @@
                     img = new Image();
                     img.src = "http://localhost:7555/" + url;
                     img.onload = function() {
+                        img.succ = true;
                         let listeners = ENV.imagesOnload[url];
                         listeners.map(l => { l() });
+					}
+					img.onerror = function() {
 					}
                     ENV.imagesOnload[url] = [];
                     ENV.images[url] = img;
@@ -50,8 +53,8 @@
 
             ENV.drawImage = function(c, src, x, y, w, h) {
                 let img = ENV.getImage(src);
-                if (img.complete) {
-                    c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
+                if (img.complete && img.succ) {
+					c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
                 } else {
                     let ll = ENV.imagesOnload[src];
                     ll.push(function() {
@@ -212,7 +215,7 @@
                     let tree = ENV.doc == null ? null : ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3">
-                                <div className="pl-2 pr-2 pt-1 pb-1">第{i+1}页</div>
+                                <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null, null)}>第{i+1}页</div>
                                 { page.elements.map((e, j) => {
                                     return <div className={"ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, j)}>元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
                                 })}
@@ -221,14 +224,23 @@
                     });
                     let detail;
                     if (ENV.selected == null) {
-                        detail = <div>
-							<div>第{ENV.index + 1}页</div>
-							<div>宽: {ENV.W}</div>
-							<div>高: {ENV.H}</div>
+                        detail = <div key={"page" + ENV.index}>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
+								</div>
+								<input type="text" className="form-control" ref="eW" defaultValue={ENV.W}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
+								</div>
+								<input type="text" className="form-control" ref="eH" defaultValue={ENV.H}/>
+							</div>
 						</div>
                     } else {
                         let e = ENV.selected;
-                        detail = <div key={ENV.selectedIndex}>
+                        detail = <div key={"element" + ENV.selectedIndex}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>X</div>
@@ -302,10 +314,15 @@
 								</div>
 								<div className="col-sm-8 m-0">
 									<div className="navbar navbar-expand-lg navbar-light bg-light m-0">
-										<div className="collapse navbar-collapse">
+										<div className="mr-auto">
 											<button type="button" className="btn btn-success mr-2" onClick={ENV.draw}>刷新</button>
 											<button type="button" className="btn btn-success mr-2">页面</button>
 											<button type="button" className="btn btn-success mr-2" onClick={this.element.bind(this, 0)}>元素</button>
+										</div>
+										<div className="text-right">
+											<button type="button" className="btn btn-danger mr-2">发布测试</button>
+											<button type="button" className="btn btn-danger mr-2">发布预发</button>
+											<button type="button" className="btn btn-danger mr-2">发布生产</button>
 										</div>
 									</div>
 									<div className="form-row m-0">

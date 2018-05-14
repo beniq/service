@@ -4,8 +4,6 @@ import java.util.List;
 
 public class Element
 {
-    public static final int TYPE_IMAGE = 1;
-
     float x, y;
     float w, h;
 
@@ -13,7 +11,7 @@ public class Element
 
     String bgColor;
 
-    List<Animation> list;
+    List<Object> effects;
 
     String file;
 

@@ -138,6 +138,9 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(index);
 
+		File dir = new File("./static/images/temp/");
+		dir.mkdirs();
+
 		for (MultipartFile file : files)
 		{
 			String fileName = file.getOriginalFilename().toLowerCase();
