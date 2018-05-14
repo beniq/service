@@ -209,9 +209,9 @@ public class ActivityController
 		return res;
 	}
 
-	@RequestMapping("/depoly.json")
+	@RequestMapping("/deploy.json")
 	@ResponseBody
-	public JSONObject depoly(@RequestBody JSONObject json)
+	public JSONObject deploy(@RequestBody JSONObject json)
 	{
 		Long actId = json.getLong("actId");
 		ActivityDoc doc = act.getAct(actId);
