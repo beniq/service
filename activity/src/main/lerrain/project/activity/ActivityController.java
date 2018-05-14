@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
+import lerrain.project.activity.export.JQueryExport;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,6 +205,21 @@ public class ActivityController
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
 		res.put("content", DocUtil.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/depoly.json")
+	@ResponseBody
+	public JSONObject depoly(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+		String env = json.getString("env");
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", act.depoly(doc, env));
 
 		return res;
 	}

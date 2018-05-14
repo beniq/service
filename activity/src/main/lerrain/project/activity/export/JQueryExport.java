@@ -4,6 +4,8 @@ import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
 
+import java.util.List;
+
 public class JQueryExport
 {
     public static String export(ActivityDoc doc)
@@ -30,5 +32,20 @@ public class JQueryExport
         root = root.replace("<!-- PAGES -->", pagesHtml);
 
         return root;
+    }
+
+    private static String export(List<Element> elements)
+    {
+        String elementsHtml = "";
+        for (Element e : elements)
+        {
+            String eh = JQueryTemplate.element;
+
+            String es = export(e.getChildren());
+
+            elementsHtml += eh;
+        }
+
+        return elementsHtml;
     }
 }

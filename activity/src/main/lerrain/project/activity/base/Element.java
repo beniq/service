@@ -15,6 +15,8 @@ public class Element
 
     String file;
 
+    List<Element> children;
+
     public String getFile()
     {
         return file;
@@ -83,5 +85,15 @@ public class Element
     public void setBgColor(String bgColor)
     {
         this.bgColor = bgColor;
+    }
+
+    public List<Element> getChildren()
+    {
+        return children;
+    }
+
+    public void setChildren(List<Element> children)
+    {
+        this.children = children;
     }
 }

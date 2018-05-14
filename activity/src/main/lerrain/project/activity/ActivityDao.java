@@ -25,4 +25,10 @@ public class ActivityDao
 		String sql = "replace into t_activity_editor(id, detail) values(?, ?)";
 		jdbc.update(sql, doc.getActId(), DocUtil.toJson(doc).toJSONString());
 	}
+
+	public long maxId()
+	{
+		String sql = "select max(id) from t_activity_editor";
+		return jdbc.queryForObject(sql, Long.class);
+	}
 }
