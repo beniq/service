@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +68,7 @@ public class ActivityService
 			files.add(file);
 		}
 
+		req.put("key", Common.md5Of(Common.getString(new Date()) + "_ACT"));
 		req.put("root", "x:/1/activity");
 		req.put("files", files);
 

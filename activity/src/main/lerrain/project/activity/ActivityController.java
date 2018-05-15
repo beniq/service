@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -273,6 +274,10 @@ public class ActivityController
 	@ResponseBody
 	public JSONObject upload(@RequestBody JSONObject req)
 	{
+		String key = req.getString("password");
+		if (!Common.md5Of(Common.getString(new Date()) + "_ACT").equals(key))
+			throw new RuntimeException("error");
+
 		String root = req.getString("root");
 		JSONArray list = req.getJSONArray("files");
 
