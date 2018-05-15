@@ -101,18 +101,49 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/del_element.json")
+	@ResponseBody
+	public JSONObject delElement(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		int pageIndex = json.getIntValue("pageIndex");
+		int index = Common.intOf(json.getInteger("index"), -1);
+
+		ActivityDoc doc = act.getAct(actId);
+		Page page = doc.getList().get(pageIndex);
+		page.getList().remove(index);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocUtil.toJson(doc));
+
+		return res;
+	}
+
 	@RequestMapping("/element.json")
 	@ResponseBody
 	public JSONObject element(@RequestBody JSONObject json)
 	{
 		Long actId = json.getLong("actId");
 		int pageIndex = json.getIntValue("pageIndex");
-		int index = json.getIntValue("index");
+		int index = Common.intOf(json.getInteger("index"), -1);
 
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(pageIndex);
 
-		Element e = page.getList().get(index);
+		Element e;
+		if (index < 0)
+		{
+			e = new Element();
+			page.getList().add(e);
+		}
+		else
+		{
+			e = page.getList().get(index);
+		}
+
 		JSONObject o = json.getJSONObject("element");
 
 		e.setX(o.getFloat("x"));
@@ -127,6 +158,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
+		res.put("content", DocUtil.toJson(doc));
 
 		return res;
 	}
@@ -139,7 +171,7 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(index);
 
-		File dir = new File("./static/images/temp/");
+		File dir = new File("./static/images/temp/" + actId);
 		dir.mkdirs();
 
 		for (MultipartFile file : files)
@@ -149,8 +181,11 @@ public class ActivityController
 			{
 				try (InputStream is = file.getInputStream())
 				{
-					File f = new File("./static/images/temp/" + file.getOriginalFilename());
+					File f = new File("./static/images/temp/" + actId + "/" + file.getOriginalFilename());
 					Disk.saveToDisk(is, f);
+
+					f = ImageTool.compress(f);
+					String imgFile = f.getName();
 
 					BufferedImage bi = ImageIO.read(f);
 					int w = bi.getWidth();
@@ -164,13 +199,13 @@ public class ActivityController
 
 					if ("desk".equalsIgnoreCase(type))
 					{
-						page.setBackground("images/temp/" + file.getOriginalFilename());
+						page.setBackground("images/temp/" + actId + "/" + imgFile);
 						page.setH(h);
 					}
 					else if ("element".equalsIgnoreCase(type))
 					{
 						Element img = new Element();
-						img.setFile("images/temp/" + file.getOriginalFilename());
+						img.setFile("images/temp/" + actId + "/" + imgFile);
 
 						if (h > 1200)
 						{
@@ -189,7 +224,7 @@ public class ActivityController
 					{
 						int eInx = Common.intOf(req.getParameter("elementIndex"), -1);
 						Element img = page.getList().get(eInx);
-						img.setFile("images/temp/" + file.getOriginalFilename());
+						img.setFile("images/temp/" + actId + "/" + imgFile);
 						img.setH(h * img.getW() / w);
 					}
 				}

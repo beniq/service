@@ -21,6 +21,7 @@ public class DocUtil
             pageObj.put("w", page.getW());
             pageObj.put("h", page.getH());
 
+            int i = 0;
             JSONArray elements = new JSONArray();
             for (Element element : page.getList())
             {
@@ -30,6 +31,7 @@ public class DocUtil
                 e.put("w", element.getW());
                 e.put("h", element.getH());
                 e.put("image", element.getFile());
+                e.put("index", i++);
 
                 elements.add(e);
             }

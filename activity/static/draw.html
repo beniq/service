@@ -72,6 +72,10 @@
                 if (page.background != null)
                     ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
                 page.elements.map(e => {
+                    if (e.bgColor != null){
+                        c.fillStyle = "#" + e.bgColor;
+                        c.fillRect(e.x, e.y, e.w, e.h);
+                    }
                     if (e.image != null) {
                         ENV.drawImage(c, e.image, e.x, e.y, e.w, e.h);
                     }
@@ -79,6 +83,10 @@
                 if (ENV.selected) {
                     c.fillStyle = "rgba(100%,60%,60%,0.5)";
                     c.fillRect(ENV.selected.x, ENV.selected.y, ENV.selected.w, ENV.selected.h);
+                }
+                if (ENV.cursorRect) {
+                    c.fillStyle = "rgba(100%,60%,60%,0.5)";
+                    c.fillRect(ENV.cursorRect.x, ENV.cursorRect.y, ENV.cursorRect.w, ENV.cursorRect.h);
                 }
             }
 
@@ -163,21 +171,26 @@
 				drag(e) {
                     let f = ENV.selected;
                     if (f == null)
-                        return;
+                        f = {};
                     let c = $("#canvas");
                     let s = c.offset();
                     let x = (e.clientX - s.left) * ENV.W / c.width();
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     if (e.type == "dragstart") {
-						ENV.drag = {sx:x, sy:y, ex:ENV.selected.x, ey:ENV.selected.y, ew:ENV.selected.w, eh:ENV.selected.h};
-                        if (f.x <= x && f.y <= y && f.x + f.w >= x && f.y + f.h >= y) {
+						ENV.drag = {sx:x, sy:y, ex:f.x, ey:f.y, ew:f.w, eh:f.h};
+                        ENV.cursorRect = null;
+						if (e.altKey) {
+                            ENV.drag.mode = 10;
+						} else if (f.x <= x && f.y <= y && f.x + f.w >= x && f.y + f.h >= y) {
                             ENV.drag.mode = 5;
                         } else if (f.x <= x && f.y > y && f.x + f.w >= x && f.y - 20 < y) {
                             ENV.drag.mode = 8;
 						}
 					} else if (ENV.drag.mode != null) {
                         if (e.type == "drag") {
-                            if (ENV.drag.mode == 5) {
+                            if (ENV.drag.mode == 10) {
+                                ENV.cursorRect = {x:ENV.drag.sx, y:ENV.drag.sy, z:0, w:x - ENV.drag.sx, h:y - ENV.drag.sy};
+                            } else if (ENV.drag.mode == 5) {
                                 ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
                                 ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
                             } else if (ENV.drag.mode == 3) {
@@ -188,12 +201,16 @@
                                 ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
                             }
                             ENV.draw();
-                        } else if (e.type == "dragend") {
-							ENV.selected.x = Math.round((ENV.selected.x * 100) / 100);
-							ENV.selected.y = Math.round((ENV.selected.y * 100) / 100);
-                            ENV.selected.w = Math.round((ENV.selected.w * 100) / 100);
-                            ENV.selected.h = Math.round((ENV.selected.h * 100) / 100);
-							this.refresh();
+						} else if (e.type == "dragend") {
+                            if (ENV.drag.mode == 10) {
+                                ENV.selected = ENV.cursorRect;
+                                ENV.cursorRect = null;
+                            } else {
+                                ENV.selected.x = Math.round((ENV.selected.x * 100) / 100);
+                                ENV.selected.y = Math.round((ENV.selected.y * 100) / 100);
+                                ENV.selected.w = Math.round((ENV.selected.w * 100) / 100);
+                                ENV.selected.h = Math.round((ENV.selected.h * 100) / 100);
+                            }
                             this.saveElement();
                         }
                     }
@@ -204,18 +221,80 @@
                         pageIndex: ENV.index,
 						index: ENV.selectedIndex,
 						element: ENV.selected
-                    }, r => {});
+                    }, r => {
+                        this.refresh(r);
+                    });
                 },
                 element() {
 
 				},
+				delete(i) {
+					if (confirm("删除？")) {
+                        common.req("del_element.json", {
+                            actId: ENV.actId,
+                            pageIndex: ENV.index,
+                            index: i
+                        }, r => {
+                            this.refresh(r);
+                        });
+					}
+				},
+				fillBgColor(e) { //以element的四个角的颜色平均值填充背景色
+                    let img = ENV.getImage(ENV.doc.pages[ENV.index].background);
+                    let canvas = document.getElementById("canvas");
+                    let c = canvas.getContext("2d");
+
+                    let x1 = e.x - 1;
+                    let y1 = e.y - 1;
+                    let x2 = e.x + e.w + 1;
+                    let y2 = e.y + e.h + 1;
+
+                    let rgb = [0, 0, 0, 0];
+                    if (x1 >= 0 && y1 >= 0 && x1 < ENV.W && y1 < ENV.H) {
+                        let d1 = c.getImageData(x1, y1, 1, 1).data;
+                        rgb[0] += d1[0];
+                        rgb[1] += d1[1];
+                        rgb[2] += d1[2];
+                        rgb[3]++;
+                    }
+                    if (x1 >= 0 && y2 >= 0 && x1 < ENV.W && y2 < ENV.H) {
+                        let d1 = c.getImageData(x1, y2, 1, 1).data;
+                        rgb[0] += d1[0];
+                        rgb[1] += d1[1];
+                        rgb[2] += d1[2];
+                        rgb[3]++;
+                    }
+                    if (x2 >= 0 && y1 >= 0 && x2 < ENV.W && y1 < ENV.H) {
+                        let d1 = c.getImageData(x2, y1, 1, 1).data;
+                        rgb[0] += d1[0];
+                        rgb[1] += d1[1];
+                        rgb[2] += d1[2];
+                        rgb[3]++;
+                    }
+                    if (x2 >= 0 && y2 >= 0 && x2 < ENV.W && y2 < ENV.H) {
+                        let d1 = c.getImageData(x2, y2, 1, 1).data;
+                        rgb[0] += d1[0];
+                        rgb[1] += d1[1];
+                        rgb[2] += d1[2];
+                        rgb[3]++;
+                    }
+                    if (rgb[3] > 0) {
+                        e.bgColor = Math.round(rgb[0] / rgb[3]).toString(16) + Math.round(rgb[1] / rgb[3]).toString(16) + Math.round(rgb[2] / rgb[3]).toString(16);
+					}
+                    this.saveElement();
+                },
                 render() {
                     let tree = ENV.doc == null ? null : ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3">
                                 <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null, null)}>第{i+1}页</div>
                                 { page.elements.map((e, j) => {
-                                    return <div className={"ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, j)}>元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+                                    return (
+                                        <div className={"form-row ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, j)}>
+											<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+											<div onClick={this.delete.bind(this, j)}>&nbsp;X&nbsp;</div>
+										</div>
+									);
                                 })}
                             </div>
                         )
@@ -284,6 +363,15 @@
 									<option value="Y">自由</option>
 									<option value="N">按图片锁定</option>
 								</select>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>背景色</div>
+								</div>
+								<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor}/>
+								<div className="input-group-append">
+									<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
+								</div>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
