@@ -7,7 +7,7 @@ public class Element
     float x, y;
     float w, h;
 
-    int z;
+    int z = 1;
 
     String bgColor;
 
@@ -16,6 +16,9 @@ public class Element
     String file;
 
     List<Element> children;
+
+    String action;
+    String actionParam;
 
     public String getFile()
     {
@@ -95,5 +98,25 @@ public class Element
     public void setChildren(List<Element> children)
     {
         this.children = children;
+    }
+
+    public String getAction()
+    {
+        return action;
+    }
+
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
+
+    public String getActionParam()
+    {
+        return actionParam;
+    }
+
+    public void setActionParam(String actionParam)
+    {
+        this.actionParam = actionParam;
     }
 }

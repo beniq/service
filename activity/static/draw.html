@@ -37,7 +37,7 @@
                 let img = ENV.images[url];
                 if (img == null) {
                     img = new Image();
-                    img.src = "http://localhost:7555/" + url;
+                    img.src = common.server() + "/" + url;
                     img.onload = function() {
                         img.succ = true;
                         let listeners = ENV.imagesOnload[url];
@@ -72,11 +72,11 @@
                 if (page.background != null)
                     ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
                 page.elements.map(e => {
-                    if (e.bgColor != null){
+                    if (e.bgColor != null && e.bgColor != "") {
                         c.fillStyle = "#" + e.bgColor;
                         c.fillRect(e.x, e.y, e.w, e.h);
                     }
-                    if (e.image != null) {
+                    if (e.image != null && e.image != "") {
                         ENV.drawImage(c, e.image, e.x, e.y, e.w, e.h);
                     }
                 })
@@ -122,7 +122,7 @@
                         if (e.target == document.getElementById('pBg')) {
                             fd.append("type", "desk");
                         } else if (e.target == document.getElementById('eImage')) {
-                            fd.append("elementIndex", ENV.selectedIndex);
+                            fd.append("elementIndex", ENV.select.index);
                             fd.append("type", "image");
                         } else if (e.target == document.getElementById('canvas')) {
                             fd.append("type", "element");
@@ -156,16 +156,13 @@
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     let page = ENV.doc.pages[ENV.index];
                     page.elements.map((e, i) => {
-                        if (e.x <= x && e.y <= y && e.x + e.w >= x && e.y + e.h >= y) {
+                        if (e.x <= x && e.y <= y && e.x + e.w >= x && e.y + e.h >= y)
                             ENV.selected = e;
-                            ENV.selectedIndex = i;
-                        }
                     });
                     this.refresh();
 				},
-                select(e, i) {
+                select(e) {
                     ENV.selected = e;
-                    ENV.selectedIndex = i;
                     this.refresh();
                 },
 				drag(e) {
@@ -179,7 +176,7 @@
                     if (e.type == "dragstart") {
 						ENV.drag = {sx:x, sy:y, ex:f.x, ey:f.y, ew:f.w, eh:f.h};
                         ENV.cursorRect = null;
-						if (e.altKey) {
+						if (e.altKey || e.ctrlKey) {
                             ENV.drag.mode = 10;
 						} else if (f.x <= x && f.y <= y && f.x + f.w >= x && f.y + f.h >= y) {
                             ENV.drag.mode = 5;
@@ -189,7 +186,7 @@
 					} else if (ENV.drag.mode != null) {
                         if (e.type == "drag") {
                             if (ENV.drag.mode == 10) {
-                                ENV.cursorRect = {x:ENV.drag.sx, y:ENV.drag.sy, z:0, w:x - ENV.drag.sx, h:y - ENV.drag.sy};
+                                ENV.cursorRect = {x:ENV.drag.sx, y:ENV.drag.sy, z:1, w:x - ENV.drag.sx, h:y - ENV.drag.sy};
                             } else if (ENV.drag.mode == 5) {
                                 ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
                                 ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
@@ -219,7 +216,6 @@
                     common.req("element.json", {
                         actId: ENV.actId,
                         pageIndex: ENV.index,
-						index: ENV.selectedIndex,
 						element: ENV.selected
                     }, r => {
                         this.refresh(r);
@@ -283,6 +279,17 @@
 					}
                     this.saveElement();
                 },
+                setZIndex(e, k) {
+                    if (k == 0) {
+                        e.z = 0;
+					} else {
+                        e.z += k;
+                    }
+                    this.saveElement();
+                },
+                deploy(env) {
+                    common.req("deploy.json", {actId: ENV.actId, env:env}, r => { alert(r) });
+				},
                 render() {
                     let tree = ENV.doc == null ? null : ENV.doc.pages.map((page, i) => {
                         return (
@@ -307,53 +314,58 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
 								</div>
-								<input type="text" className="form-control" ref="pW" defaultValue={ENV.W} onChange={v => {ENV.W = v.target.value}}/>
+								<input type="text" className="form-control" ref="pW" defaultValue={p.w} onChange={v => {p.w = v.target.value}}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
 								</div>
-								<input type="text" className="form-control" ref="pH" defaultValue={ENV.H}/>
+								<input type="text" className="form-control" ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
 								</div>
-								<input type="text" className="form-control" id="pBg" ref="pBg" defaultValue={p.background}/>
+								<input type="text" className="form-control" id="pBg" ref="pBg" value={p.background}/>
 							</div>
 						</div>
                     } else {
                         let e = ENV.selected;
-                        detail = <div key={"element" + ENV.selectedIndex}>
+                        detail = <div key={"element" + e.index}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>X</div>
 								</div>
-								<input type="text" className="form-control" ref="eX" defaultValue={e.x}/>
+								<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
 								</div>
-								<input type="text" className="form-control" ref="eY" defaultValue={e.y}/>
+								<input type="text" className="form-control" ref="eY" defaultValue={e.y} onChange={v => {e.y = v.target.value}} onBlur={this.saveElement}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>Z</div>
+									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, -1)}>▼</div>
 								</div>
-								<input type="text" className="form-control" ref="eZ" defaultValue={e.z}/>
+								<input type="text" className="form-control text-center" ref="eZ" value={e.z} readOnly="true"/>
+								<div className="input-group-append">
+									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 1)}>▲</div>
+									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
+								</div>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
 								</div>
-								<input type="text" className="form-control" ref="eW" defaultValue={e.w}/>
+								<input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
 								</div>
-								<input type="text" className="form-control" ref="eH" defaultValue={e.h}/>
+								<input type="text" className="form-control" ref="eH" defaultValue={e.h} onChange={v => {e.h = v.target.value}} onBlur={this.saveElement}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
@@ -368,7 +380,7 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>背景色</div>
 								</div>
-								<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor}/>
+								<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
 								<div className="input-group-append">
 									<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
 								</div>
@@ -377,13 +389,13 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
 								</div>
-								<input type="text" className="form-control" id="eImage" ref="eImage" defaultValue={e.image}/>
+								<input type="text" className="form-control" id="eImage" ref="eImage" value={e.image}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>事件类型</div>
 								</div>
-								<select className="form-control" ref="eAction">
+								<select className="form-control" ref="eAction" defaultValue={e.action} onChange={v => {e.action = v.target.value}} onBlur={this.saveElement}>
 									<option value="">无</option>
 									<option value="1">跳转</option>
 									<option value="2">JS方法</option>
@@ -395,7 +407,7 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
 								</div>
-								<input type="text" className="form-control" ref="eParam"/>
+								<input type="text" className="form-control" ref="eParam" defaultValue={e.param} onChange={v => {e.param = v.target.value}}  onBlur={this.saveElement}/>
 							</div>
 						</div>
 					}
@@ -413,7 +425,7 @@
 											<button type="button" className="btn btn-success mr-2" onClick={this.element.bind(this, 0)}>元素</button>
 										</div>
 										<div className="text-right">
-											<button type="button" className="btn btn-danger mr-2">发布测试</button>
+											<button type="button" className="btn btn-danger mr-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
 											<button type="button" className="btn btn-danger mr-2">发布预发</button>
 											<button type="button" className="btn btn-danger mr-2">发布生产</button>
 										</div>

@@ -1,10 +1,10 @@
 package lerrain.project.activity;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
-import lerrain.project.activity.export.JQueryExport;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -53,7 +54,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -70,7 +71,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -96,7 +97,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -117,7 +118,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -128,7 +129,8 @@ public class ActivityController
 	{
 		Long actId = json.getLong("actId");
 		int pageIndex = json.getIntValue("pageIndex");
-		int index = Common.intOf(json.getInteger("index"), -1);
+		JSONObject o = json.getJSONObject("element");
+		int index = Common.intOf(o.getInteger("index"), -1);
 
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(pageIndex);
@@ -144,21 +146,29 @@ public class ActivityController
 			e = page.getList().get(index);
 		}
 
-		JSONObject o = json.getJSONObject("element");
-
 		e.setX(o.getFloat("x"));
 		e.setY(o.getFloat("y"));
-		e.setZ(o.getIntValue("z"));
+		e.setZ(Common.intOf(o.getInteger("z"), 0));
 		e.setW(o.getFloat("w"));
 		e.setH(o.getFloat("h"));
-		e.setFile(o.getString("image"));
-		e.setBgColor(o.getString("bgcolor"));
+
+		String action = o.getString("action");
+		e.setAction(Common.isEmpty(action) ? null : o.getString("action"));
+
+		String param = o.getString("param");
+		e.setActionParam(Common.isEmpty(param) ? null : o.getString("param"));
+
+		String image = o.getString("image");
+		e.setFile(Common.isEmpty(image) ? null : image);
+
+		String bgColor = o.getString("bgColor");
+		e.setBgColor(Common.isEmpty(bgColor) ? null : bgColor);
 
 		queue.add(doc);
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -239,7 +249,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocUtil.toJson(doc));
+		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -254,7 +264,40 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", act.depoly(doc, env));
+		res.put("content", act.deploy(doc, env));
+
+		return res;
+	}
+
+	@RequestMapping("/upload.json")
+	@ResponseBody
+	public JSONObject upload(@RequestBody JSONObject req)
+	{
+		String root = req.getString("root");
+		JSONArray list = req.getJSONArray("files");
+
+		for (int i=0;i<list.size();i++)
+		{
+			JSONObject f = list.getJSONObject(i);
+			String fileName = f.getString("fileName");
+			String content = f.getString("content");
+
+			try
+			{
+				File file = new File(Common.pathOf(root, fileName));
+				file.getParentFile().mkdirs();
+
+				byte[] b = Common.decodeBase64ToByte(content);
+				Disk.saveToDisk(new ByteArrayInputStream(b), file);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
 
 		return res;
 	}

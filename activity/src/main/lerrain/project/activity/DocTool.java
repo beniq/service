@@ -6,7 +6,7 @@ import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
 
-public class DocUtil
+public class DocTool
 {
     public static JSONObject toJson(ActivityDoc doc)
     {
@@ -28,9 +28,13 @@ public class DocUtil
                 JSONObject e = new JSONObject();
                 e.put("x", element.getX());
                 e.put("y", element.getY());
+                e.put("z", element.getZ());
                 e.put("w", element.getW());
                 e.put("h", element.getH());
                 e.put("image", element.getFile());
+                e.put("bgColor", element.getBgColor());
+                e.put("action", element.getAction());
+                e.put("param", element.getActionParam());
                 e.put("index", i++);
 
                 elements.add(e);
