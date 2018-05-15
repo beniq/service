@@ -111,13 +111,11 @@
                         var fd = new FormData();
                         fd.append("pageIndex", 0);
                         fd.append("actId", ENV.doc.actId);
-                        if (e.target == document.getElementById('detail')) {
-                            if (ENV.selected == null) {
-                                fd.append("type", "desk");
-                            } else {
-                                fd.append("elementIndex", ENV.selectedIndex);
-                                fd.append("type", "image");
-							}
+                        if (e.target == document.getElementById('pBg')) {
+                            fd.append("type", "desk");
+                        } else if (e.target == document.getElementById('eImage')) {
+                            fd.append("elementIndex", ENV.selectedIndex);
+                            fd.append("type", "image");
                         } else if (e.target == document.getElementById('canvas')) {
                             fd.append("type", "element");
                         } else {
@@ -224,18 +222,25 @@
                     });
                     let detail;
                     if (ENV.selected == null) {
+                        let p = ENV.doc == null ? {} : ENV.doc.pages[ENV.index];
                         detail = <div key={"page" + ENV.index}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
 								</div>
-								<input type="text" className="form-control" ref="eW" defaultValue={ENV.W}/>
+								<input type="text" className="form-control" ref="pW" defaultValue={ENV.W} onChange={v => {ENV.W = v.target.value}}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
 								</div>
-								<input type="text" className="form-control" ref="eH" defaultValue={ENV.H}/>
+								<input type="text" className="form-control" ref="pH" defaultValue={ENV.H}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
+								</div>
+								<input type="text" className="form-control" id="pBg" ref="pBg" defaultValue={p.background}/>
 							</div>
 						</div>
                     } else {
@@ -284,7 +289,7 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
 								</div>
-								<input type="text" className="form-control" ref="eImage" defaultValue={e.image}/>
+								<input type="text" className="form-control" id="eImage" ref="eImage" defaultValue={e.image}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
