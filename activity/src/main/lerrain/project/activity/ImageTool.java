@@ -3,6 +3,8 @@ package lerrain.project.activity;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import lerrain.tool.Common;
+import lerrain.tool.Disk;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,12 +13,10 @@ import java.io.FileOutputStream;
 
 public class ImageTool
 {
-    public static File compress(File src)
+    public static File compress(File src, String path, String dest)
     {
         if (src.length() < 60000) //太小，没必要压缩
-            return src;
-
-        File dst;
+            return copy(src, path, dest);
 
         try
         {
@@ -25,13 +25,9 @@ public class ImageTool
             int h = bi.getHeight();
 
             if (src.length() * 1.0f / w / h < 0.2f) //压缩比已经很好，不压缩
-                return src;
+                return copy(src, path, dest);
 
-            String fn = src.getAbsolutePath().toLowerCase();
-            fn = fn.substring(0, fn.lastIndexOf(".")) + "_s.jpg";
-
-            dst = new File(fn);
-
+            File dst = new File(Common.pathOf(path, dest + ".jpg"));
             try (FileOutputStream fos = new FileOutputStream(dst))
             {
                 JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fos);
@@ -40,12 +36,24 @@ public class ImageTool
                 encoder.setJPEGEncodeParam(param);
                 encoder.encode(bi);
             }
+
+            return dst;
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            dst = src;
+
+            return copy(src, path, dest);
         }
+    }
+
+    private static File copy(File src, String path, String dest)
+    {
+        String suffix = src.getName();
+        suffix = suffix.substring(suffix.length() - 4);
+
+        File dst = new File(Common.pathOf(path, dest, suffix));
+        Disk.copy(src, dst);
 
         return dst;
     }

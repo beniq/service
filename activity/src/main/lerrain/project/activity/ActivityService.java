@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.export.JQueryExport;
+import lerrain.project.activity.export.JQueryTemplate;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.Network;
@@ -25,6 +26,20 @@ public class ActivityService
 	Map<Long, ActivityDoc> map = new HashMap<>();
 
 	long actIdSeq = -1;
+	long fileIdSeq = 1;
+
+	@PostConstruct
+	public void reset()
+	{
+		JQueryTemplate.root = Disk.load(new File("./static/act/root.html"), "utf-8");
+		JQueryTemplate.page = Disk.load(new File("./static/act/page.html"), "utf-8");
+		JQueryTemplate.element = Disk.load(new File("./static/act/element.html"), "utf-8");
+	}
+
+	public long nextFileId()
+	{
+		return fileIdSeq++;
+	}
 
 	public ActivityDoc getAct(Long actId)
 	{
@@ -55,7 +70,7 @@ public class ActivityService
 	public String deploy(ActivityDoc doc, String env)
 	{
 		String url = null;
-		//String html = JQueryExport.export(doc);
+		String html = new JQueryExport().export(doc);
 
 		JSONObject req = new JSONObject();
 

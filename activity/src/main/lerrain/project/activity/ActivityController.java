@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
+import lerrain.project.activity.export.JQueryExport;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -182,7 +185,11 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(index);
 
-		File dir = new File("./static/images/temp/" + actId);
+		String root = "./static";
+
+		File dir = new File(Common.pathOf(root, "/act/" + actId));
+		dir.mkdirs();
+		dir = new File(Common.pathOf(root, "/temp/" + actId));
 		dir.mkdirs();
 
 		for (MultipartFile file : files)
@@ -192,13 +199,13 @@ public class ActivityController
 			{
 				try (InputStream is = file.getInputStream())
 				{
-					File f = new File("./static/images/temp/" + actId + "/" + file.getOriginalFilename());
-					Disk.saveToDisk(is, f);
+					File src = new File(Common.pathOf(dir.getPath(), fileName));
+					Disk.saveToDisk(is, src);
 
-					f = ImageTool.compress(f);
-					String imgFile = f.getName();
+					File dst = ImageTool.compress(src, root, "act/" + actId + "/" + act.nextFileId());
+					String uriName = "act/" + actId + "/" + dst.getName();
 
-					BufferedImage bi = ImageIO.read(f);
+					BufferedImage bi = ImageIO.read(dst);
 					int w = bi.getWidth();
 					int h = bi.getHeight();
 
@@ -210,13 +217,13 @@ public class ActivityController
 
 					if ("desk".equalsIgnoreCase(type))
 					{
-						page.setBackground("images/temp/" + actId + "/" + imgFile);
+						page.setBackground(uriName);
 						page.setH(h);
 					}
 					else if ("element".equalsIgnoreCase(type))
 					{
 						Element img = new Element();
-						img.setFile("images/temp/" + actId + "/" + imgFile);
+						img.setFile(uriName);
 
 						if (h > 1200)
 						{
@@ -235,7 +242,7 @@ public class ActivityController
 					{
 						int eInx = Common.intOf(req.getParameter("elementIndex"), -1);
 						Element img = page.getList().get(eInx);
-						img.setFile("images/temp/" + actId + "/" + imgFile);
+						img.setFile(uriName);
 						img.setH(h * img.getW() / w);
 					}
 				}
@@ -269,6 +276,20 @@ public class ActivityController
 
 		return res;
 	}
+
+	@RequestMapping("/act/{actId}/test.html")
+	public void test(HttpServletRequest req, HttpServletResponse res, @PathVariable Long actId) throws Exception
+	{
+		ActivityDoc doc = act.getAct(actId);
+		String env = "test";
+
+		String html = new JQueryExport().export(doc);
+		try (OutputStream os = res.getOutputStream())
+		{
+			os.write(html.getBytes("utf-8"));
+		}
+	}
+
 
 	@RequestMapping("/upload.json")
 	@ResponseBody
