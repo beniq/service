@@ -1,9 +1,13 @@
 package lerrain.project.activity.base;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Element
 {
+    String id;
+
     float x, y;
     float w, h;
 
@@ -15,10 +19,30 @@ public class Element
 
     String file;
 
-    List<Element> children;
+    List<Element> children = new ArrayList<>();
 
     String action;
     String actionParam;
+
+    String fontSize;
+    String text;
+    String color;
+
+    public Element()
+    {
+        id = UUID.randomUUID().toString();
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        if (id != null)
+            this.id = id;
+    }
 
     public String getFile()
     {
@@ -118,5 +142,35 @@ public class Element
     public void setActionParam(String actionParam)
     {
         this.actionParam = actionParam;
+    }
+
+    public String getFontSize()
+    {
+        return fontSize;
+    }
+
+    public void setFontSize(String fontSize)
+    {
+        this.fontSize = fontSize;
+    }
+
+    public String getText()
+    {
+        return text;
+    }
+
+    public void setText(String text)
+    {
+        this.text = text;
+    }
+
+    public String getColor()
+    {
+        return color;
+    }
+
+    public void setColor(String color)
+    {
+        this.color = color;
     }
 }

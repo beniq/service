@@ -29,6 +29,9 @@
 			    W: 750,
 				H: 1200,
 				index: 0,
+				doc: {
+			        pages: []
+				},
 				images: {},
 				imagesOnload: {}
             };
@@ -72,23 +75,43 @@
                 if (page.background != null)
                     ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
                 page.elements.map(e => {
-                    if (e.bgColor != null && e.bgColor != "") {
-                        c.fillStyle = "#" + e.bgColor;
-                        c.fillRect(e.x, e.y, e.w, e.h);
-                    }
-                    if (e.image != null && e.image != "") {
-                        ENV.drawImage(c, e.image, e.x, e.y, e.w, e.h);
-                    }
+                    ENV.drawElement(c, e);
+                    if (e.children != null) e.children.map(e => {
+                        ENV.drawElement(c, e);
+                    });
                 })
                 if (ENV.selected) {
                     c.fillStyle = "rgba(100%,60%,60%,0.5)";
-                    c.fillRect(ENV.selected.x, ENV.selected.y, ENV.selected.w, ENV.selected.h);
+                    c.fillRect(ENV.selected.cx, ENV.selected.cy, ENV.selected.w, ENV.selected.h);
                 }
                 if (ENV.cursorRect) {
                     c.fillStyle = "rgba(100%,60%,60%,0.5)";
                     c.fillRect(ENV.cursorRect.x, ENV.cursorRect.y, ENV.cursorRect.w, ENV.cursorRect.h);
                 }
             }
+
+            ENV.drawElement = function(c, e) {
+                if (e.bgColor != null && e.bgColor != "") {
+                    c.fillStyle = "#" + e.bgColor;
+                    c.fillRect(e.cx, e.cy, e.w, e.h);
+                }
+                if (e.image != null && e.image != "") {
+                    ENV.drawImage(c, e.image, e.cx, e.cy, e.w, e.h);
+                }
+			}
+
+            ENV.in = function(px, py, x, y, w, h) {
+                return px > x && py > y && px < x + w && py < y + h;
+			}
+
+            ENV.inRect = function(x, y, e) {
+                return ENV.in(x, y, e.x, e.y, e.w, e.h);
+            }
+
+            ENV.inRC = function(x, y, e) {
+                return ENV.in(x, y, e.cx, e.cy, e.w, e.h);
+            }
+
 
             var Main = React.createClass({
                 getInitialState() {
@@ -122,9 +145,17 @@
                         if (e.target == document.getElementById('pBg')) {
                             fd.append("type", "desk");
                         } else if (e.target == document.getElementById('eImage')) {
-                            fd.append("elementIndex", ENV.select.index);
+                            fd.append("elementId", ENV.selected.id);
                             fd.append("type", "image");
                         } else if (e.target == document.getElementById('canvas')) {
+                            if (ENV.selected != null) {
+                                let c = $("#canvas");
+                                let s = c.offset();
+                                let x = (e.clientX - s.left) * ENV.W / c.width();
+                                let y = (e.clientY - s.top) * ENV.H / c.height();
+                                if (ENV.inRect(x, y, ENV.selected))
+                                	fd.append("parentId", ENV.selected.id);
+							}
                             fd.append("type", "element");
                         } else {
                             fd = null;
@@ -156,8 +187,12 @@
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     let page = ENV.doc.pages[ENV.index];
                     page.elements.map((e, i) => {
-                        if (e.x <= x && e.y <= y && e.x + e.w >= x && e.y + e.h >= y)
+                        if (ENV.inRC(x, y, e))
                             ENV.selected = e;
+                        if (e.children != null) e.children.map(e => {
+                            if (ENV.inRC(x, y, e))
+                                ENV.selected = e;
+                        });
                     });
                     this.refresh();
 				},
@@ -174,14 +209,28 @@
                     let x = (e.clientX - s.left) * ENV.W / c.width();
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     if (e.type == "dragstart") {
-						ENV.drag = {sx:x, sy:y, ex:f.x, ey:f.y, ew:f.w, eh:f.h};
+						ENV.drag = {sx:x, sy:y, ex:f.x, ey:f.y, cx:f.cx, cy:f.cy, ew:f.w, eh:f.h};
                         ENV.cursorRect = null;
 						if (e.altKey || e.ctrlKey) {
                             ENV.drag.mode = 10;
-						} else if (f.x <= x && f.y <= y && f.x + f.w >= x && f.y + f.h >= y) {
+						} else if (ENV.inRC(x, y, f)) {
                             ENV.drag.mode = 5;
-                        } else if (f.x <= x && f.y > y && f.x + f.w >= x && f.y - 20 < y) {
+                        } else if (ENV.in(x, y, f.cx - 20, f.cy - 20, 20, 20)) {
+                            ENV.drag.mode = 7;
+                        } else if (ENV.in(x, y, f.cx, f.cy - 20, f.w, 20)) {
                             ENV.drag.mode = 8;
+                        } else if (ENV.in(x, y, f.cx + f.w, f.cy - 20, 20, 20)) {
+                            ENV.drag.mode = 9;
+                        } else if (ENV.in(x, y, f.cx - 20, f.cy, 20, f.h)) {
+                            ENV.drag.mode = 4;
+                        } else if (ENV.in(x, y, f.cx + f.w, f.cy, 20, f.h)) {
+                            ENV.drag.mode = 6;
+                        } else if (ENV.in(x, y, f.cx - 20, f.cy + f.h, 20, 20)) {
+                            ENV.drag.mode = 1;
+                        } else if (ENV.in(x, y, f.cx, f.cy + f.h, f.w, 20)) {
+                            ENV.drag.mode = 2;
+                        } else if (ENV.in(x, y, f.cx + f.w, f.cy + f.h, 20, 20)) {
+                            ENV.drag.mode = 3;
 						}
 					} else if (ENV.drag.mode != null) {
                         if (e.type == "drag") {
@@ -190,16 +239,51 @@
                             } else if (ENV.drag.mode == 5) {
                                 ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
                                 ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                            } else if (ENV.drag.mode == 7) {
+                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
+                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                            } else if (ENV.drag.mode == 8) {
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                            } else if (ENV.drag.mode == 9) {
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
+                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                            } else if (ENV.drag.mode == 4) {
+                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
+                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
+                            } else if (ENV.drag.mode == 6) {
+                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
+                            } else if (ENV.drag.mode == 1) {
+                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
+                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
+                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
+                            } else if (ENV.drag.mode == 2) {
+                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
+                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
                             } else if (ENV.drag.mode == 3) {
                                 ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
                                 ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
-                            } else if (ENV.drag.mode == 8) {
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
                             }
                             ENV.draw();
 						} else if (e.type == "dragend") {
                             if (ENV.drag.mode == 10) {
+                                if (ENV.selected != null && ENV.in(ENV.drag.sx, ENV.drag.sy, ENV.selected.x, ENV.selected.y, ENV.selected.w, ENV.selected.h)) {
+                                    ENV.cursorRect.parentId = ENV.selected.id;
+                                    ENV.cursorRect.x = ENV.cursorRect.x - ENV.selected.cx;
+                                    ENV.cursorRect.y = ENV.cursorRect.y - ENV.selected.cy;
+								}
                                 ENV.selected = ENV.cursorRect;
                                 ENV.cursorRect = null;
                             } else {
@@ -212,6 +296,25 @@
                         }
                     }
 				},
+                saveDoc() {
+                    common.req("save_act.json", {
+                        actId: ENV.actId,
+						code: ENV.doc.code,
+						name: ENV.doc.name,
+						onStart: ENV.doc.startJs
+                    }, r => {
+                        this.refresh(r);
+                    });
+                },
+                saveDPage() {
+                    common.req("save_page.json", {
+                        actId: ENV.actId,
+                        pageIndex: ENV.index,
+                        page: ENV.doc.pages[ENV.index]
+                    }, r => {
+                        this.refresh(r);
+                    });
+                },
                 saveElement() {
                     common.req("element.json", {
                         actId: ENV.actId,
@@ -224,12 +327,11 @@
                 element() {
 
 				},
-				delete(i) {
+				delete(elementId) {
 					if (confirm("删除？")) {
                         common.req("del_element.json", {
                             actId: ENV.actId,
-                            pageIndex: ENV.index,
-                            index: i
+                            elementId: elementId
                         }, r => {
                             this.refresh(r);
                         });
@@ -291,15 +393,23 @@
                     common.req("deploy.json", {actId: ENV.actId, env:env}, r => { alert(r) });
 				},
                 render() {
-                    let tree = ENV.doc == null ? null : ENV.doc.pages.map((page, i) => {
+                    let tree = ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3">
-                                <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null, null)}>第{i+1}页</div>
+                                <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
                                 { page.elements.map((e, j) => {
                                     return (
-                                        <div className={"form-row ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e, j)}>
-											<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
-											<div onClick={this.delete.bind(this, j)}>&nbsp;X&nbsp;</div>
+                                        <div className="ml-3">
+											<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e)}>
+												<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+												<div onClick={this.delete.bind(this, e.id)}>&nbsp;X&nbsp;</div>
+											</div>
+											{ e.children == null ? null : e.children.map((e, j) => {
+												return <div className={"form-row ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e)}>
+													<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
+													<div onClick={this.delete.bind(this, e.id)}>&nbsp;X&nbsp;</div>
+												</div>
+											})}
 										</div>
 									);
                                 })}
@@ -307,20 +417,39 @@
                         )
                     });
                     let detail;
-                    if (ENV.selected == null) {
-                        let p = ENV.doc == null ? {} : ENV.doc.pages[ENV.index];
+                    if (ENV.selected == null && ENV.doc.pages.length > ENV.index) {
+                        let p = ENV.doc.pages[ENV.index];
                         detail = <div key={"page" + ENV.index}>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>活动CODE</div>
+								</div>
+								<input type="text" className="form-control" ref="actCode" defaultValue={ENV.doc.code} onChange={v => {ENV.doc.code = v.target.value}} onBlur={this.saveDoc}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>活动名</div>
+								</div>
+								<input type="text" className="form-control" ref="actName" defaultValue={ENV.doc.name} onChange={v => {ENV.doc.name = v.target.value}} onBlur={this.saveDoc}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>启动JS</div>
+								</div>
+								<input type="text" className="form-control" ref="actName" defaultValue={ENV.doc.startJs} onChange={v => {ENV.doc.startJs = v.target.value}} onBlur={this.saveDoc}/>
+							</div>
+							<br/>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
 								</div>
-								<input type="text" className="form-control" ref="pW" defaultValue={p.w} onChange={v => {p.w = v.target.value}}/>
+								<input type="text" className="form-control" ref="pW" defaultValue={p.w} onChange={v => {p.w = v.target.value}} onBlur={this.savePage}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
 								</div>
-								<input type="text" className="form-control" ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}}/>
+								<input type="text" className="form-control" ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}} onBlur={this.savePage}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
@@ -329,9 +458,9 @@
 								<input type="text" className="form-control" id="pBg" ref="pBg" value={p.background}/>
 							</div>
 						</div>
-                    } else {
+                    } else if (ENV.selected != null) {
                         let e = ENV.selected;
-                        detail = <div key={"element" + e.index}>
+                        detail = <div key={e.id}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>X</div>
@@ -384,6 +513,42 @@
 								<div className="input-group-append">
 									<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
 								</div>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>颜色</div>
+								</div>
+								<input type="text" className="form-control" id="eColor" ref="eColor" defaultValue={e.color} onChange={v => {e.color = v.target.value}} onBlur={this.saveElement}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>文字</div>
+								</div>
+								<select className="form-control" ref="eFontSize" defaultValue={e.fontSize} onChange={v => {e.fontSize = v.target.value}} onBlur={this.saveElement}>
+									<option value="0">无</option>
+									<option value="5">5px</option>
+									<option value="6">6px</option>
+									<option value="7">7px</option>
+									<option value="8">8px</option>
+									<option value="9">9px</option>
+									<option value="10">10px</option>
+									<option value="11">11px</option>
+									<option value="12">12px</option>
+									<option value="14">14px</option>
+									<option value="16">16px</option>
+									<option value="18">18px</option>
+									<option value="20">20px</option>
+									<option value="22">22px</option>
+									<option value="24">24px</option>
+									<option value="28">28px</option>
+									<option value="32">32px</option>
+								</select>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>文本</div>
+								</div>
+								<input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value}} onBlur={this.saveElement}/>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">

@@ -70,4 +70,24 @@ public class Page
     {
         this.h = h;
     }
+
+    public Element find(String elementId)
+    {
+        return find(list, elementId);
+    }
+
+    private Element find(List<Element> list, String elementId)
+    {
+        for (Element e : list)
+        {
+            if (elementId.equals(e.getId()))
+                return e;
+
+            Element f = find(e.getChildren(), elementId);
+            if (f != null)
+                return f;
+        }
+
+        return null;
+    }
 }

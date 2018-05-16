@@ -52,7 +52,7 @@ public class ImageTool
         String suffix = src.getName();
         suffix = suffix.substring(suffix.length() - 4);
 
-        File dst = new File(Common.pathOf(path, dest, suffix));
+        File dst = new File(Common.pathOf(path, dest + suffix));
         Disk.copy(src, dst);
 
         return dst;

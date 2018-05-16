@@ -26,7 +26,6 @@ public class ActivityService
 	Map<Long, ActivityDoc> map = new HashMap<>();
 
 	long actIdSeq = -1;
-	long fileIdSeq = 1;
 
 	@PostConstruct
 	public void reset()
@@ -36,9 +35,13 @@ public class ActivityService
 		JQueryTemplate.element = Disk.load(new File("./static/act/element.html"), "utf-8");
 	}
 
-	public long nextFileId()
+	public String getDestFile(String dest)
 	{
-		return fileIdSeq++;
+		long k = 0;
+		for (int i=0;i<dest.length();i++)
+			k += dest.charAt(i);
+
+		return k + "";
 	}
 
 	public ActivityDoc getAct(Long actId)
@@ -70,7 +73,7 @@ public class ActivityService
 	public String deploy(ActivityDoc doc, String env)
 	{
 		String url = null;
-		String html = new JQueryExport().export(doc);
+		String html = new JQueryExport(env).export(doc);
 
 		JSONObject req = new JSONObject();
 

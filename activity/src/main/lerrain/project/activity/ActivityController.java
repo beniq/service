@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,15 @@ public class ActivityController
 
 	@Autowired
 	WriteQueue queue;
+
+	@PostConstruct
+	@RequestMapping({"/reset"})
+	@ResponseBody
+	public String reset()
+	{
+		act.reset();
+		return "success";
+	}
 
 	@RequestMapping("/view_act.json")
 	@ResponseBody
@@ -63,6 +73,25 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/save_act.json")
+	@ResponseBody
+	public JSONObject saveAct(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+
+		doc.setCode(json.getString("code"));
+		doc.setName(json.getString("name"));
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
 	@RequestMapping("/new_page.json")
 	@ResponseBody
 	public JSONObject newPage(@RequestBody JSONObject json)
@@ -72,6 +101,27 @@ public class ActivityController
 
 		Page page = new Page();
 		doc.getList().add(page);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/save_page.json")
+	@ResponseBody
+	public JSONObject savePage(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+
+		int pageIndex = json.getIntValue("pageIndex");
+		Page page = doc.getList().get(pageIndex);
+		page.setW(json.getIntValue("w"));
+		page.setH(json.getIntValue("h"));
+
+		queue.add(doc);
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
@@ -111,12 +161,15 @@ public class ActivityController
 	public JSONObject delElement(@RequestBody JSONObject json)
 	{
 		Long actId = json.getLong("actId");
-		int pageIndex = json.getIntValue("pageIndex");
-		int index = Common.intOf(json.getInteger("index"), -1);
+		String elementId = json.getString("elementId");
 
 		ActivityDoc doc = act.getAct(actId);
-		Page page = doc.getList().get(pageIndex);
-		page.getList().remove(index);
+		for (Page page : doc.getList())
+		{
+			Element e = page.find(elementId);
+			if (e != null)
+				page.getList().remove(e);
+		}
 
 		queue.add(doc);
 
@@ -134,20 +187,30 @@ public class ActivityController
 		Long actId = json.getLong("actId");
 		int pageIndex = json.getIntValue("pageIndex");
 		JSONObject o = json.getJSONObject("element");
-		int index = Common.intOf(o.getInteger("index"), -1);
+		String elementId = o.getString("id");
+		String parentId = o.getString("parentId");
 
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(pageIndex);
 
 		Element e;
-		if (index < 0)
+		if (elementId == null)
 		{
 			e = new Element();
-			page.getList().add(e);
+			if (parentId == null)
+			{
+				page.getList().add(e);
+			}
+			else
+			{
+				Element parent = page.find(parentId);
+				if (parent != null)
+					parent.getChildren().add(e);
+			}
 		}
 		else
 		{
-			e = page.getList().get(index);
+			e = page.find(elementId);
 		}
 
 		e.setX(o.getFloat("x"));
@@ -167,6 +230,15 @@ public class ActivityController
 
 		String bgColor = o.getString("bgColor");
 		e.setBgColor(Common.isEmpty(bgColor) ? null : bgColor);
+
+		String fontSize = o.getString("fontSize");
+		e.setFontSize(Common.isEmpty(fontSize) ? null : fontSize);
+
+		String text = o.getString("text");
+		e.setText(Common.isEmpty(text) ? null : text);
+
+		String color = o.getString("color");
+		e.setColor(Common.isEmpty(color) ? null : color);
 
 		queue.add(doc);
 
@@ -202,7 +274,7 @@ public class ActivityController
 					File src = new File(Common.pathOf(dir.getPath(), fileName));
 					Disk.saveToDisk(is, src);
 
-					File dst = ImageTool.compress(src, root, "act/" + actId + "/" + act.nextFileId());
+					File dst = ImageTool.compress(src, root, "act/" + actId + "/" + act.getDestFile(file.getOriginalFilename()));
 					String uriName = "act/" + actId + "/" + dst.getName();
 
 					BufferedImage bi = ImageIO.read(dst);
@@ -236,12 +308,39 @@ public class ActivityController
 						img.setW(w);
 						img.setH(h);
 
-						page.addElement(img);
+						String parentId = req.getParameter("parentId");
+						if (parentId == null)
+						{
+							page.addElement(img);
+						}
+						else
+						{
+							w = bi.getWidth();
+							h = bi.getHeight();
+
+							Element parent = page.find(parentId);
+
+							if (w > parent.getW())
+							{
+								img.setW(h * parent.getW() / w);
+								img.setH(parent.getW());
+							}
+							else
+							{
+								img.setW(w);
+								img.setH(h);
+							}
+
+							img.setX(0);
+							img.setY(0);
+
+							parent.getChildren().add(img);
+						}
 					}
 					else if ("image".equalsIgnoreCase(type))
 					{
-						int eInx = Common.intOf(req.getParameter("elementIndex"), -1);
-						Element img = page.getList().get(eInx);
+						String elementId = req.getParameter("elementId");
+						Element img = page.find(elementId);
 						img.setFile(uriName);
 						img.setH(h * img.getW() / w);
 					}
@@ -283,7 +382,7 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		String env = "test";
 
-		String html = new JQueryExport().export(doc);
+		String html = new JQueryExport(env).export(doc);
 		try (OutputStream os = res.getOutputStream())
 		{
 			os.write(html.getBytes("utf-8"));
