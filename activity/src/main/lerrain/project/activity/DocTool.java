@@ -141,7 +141,7 @@ public class DocTool
                 element.setChildren(toElements(e.getJSONArray("children")));
 
             if (e.containsKey("events"))
-                element.setEvents(toEvents(e.getJSONArray("events")));
+                element.setEvents(toEvents(element, e.getJSONArray("events")));
 
             list.add(element);
         }
@@ -149,7 +149,7 @@ public class DocTool
         return list;
     }
 
-    private static List<Event> toEvents(JSONArray events)
+    private static List<Event> toEvents(Element element, JSONArray events)
     {
         List<Event> r = new ArrayList<>();
 
@@ -162,6 +162,7 @@ public class DocTool
             e.setType(effect.getString("type"));
             e.setParam(effect.getJSONObject("param"));
             e.setFinish(effect.getJSONObject("onFinish"));
+            e.setElement(element);
 
             r.add(e);
         }

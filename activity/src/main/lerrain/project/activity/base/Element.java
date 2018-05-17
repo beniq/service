@@ -30,7 +30,7 @@ public class Element
 
     public Element()
     {
-        id = UUID.randomUUID().toString();
+        setId(UUID.randomUUID().toString());
     }
 
     public String getId()
@@ -41,7 +41,7 @@ public class Element
     public void setId(String id)
     {
         if (id != null)
-            this.id = id;
+            this.id = id.replaceAll("[-]", "");;
     }
 
     public String getFile()
@@ -172,6 +172,12 @@ public class Element
     public void setColor(String color)
     {
         this.color = color;
+    }
+
+    public void addEvent(Event e)
+    {
+        e.setElement(this);
+        events.add(e);
     }
 
     public List<Event> getEvents()

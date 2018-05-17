@@ -10,12 +10,13 @@ public class Event
     String type;
 
     JSONObject param;
-
     JSONObject finish;
+
+    Element element;
 
     public Event()
     {
-        id = UUID.randomUUID().toString();
+        setId(UUID.randomUUID().toString());
     }
 
     public String getId()
@@ -26,7 +27,7 @@ public class Event
     public void setId(String id)
     {
         if (id != null)
-            this.id = id;
+            this.id = id.replaceAll("[-]", "");;
     }
 
     public JSONObject getFinish()
@@ -66,5 +67,15 @@ public class Event
     public void setParam(JSONObject param)
     {
         this.param = param;
+    }
+
+    public Element getElement()
+    {
+        return element;
+    }
+
+    public void setElement(Element element)
+    {
+        this.element = element;
     }
 }

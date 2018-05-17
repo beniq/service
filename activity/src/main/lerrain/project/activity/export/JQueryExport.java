@@ -1,8 +1,11 @@
 package lerrain.project.activity.export;
 
+import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
+import lerrain.project.activity.base.Event;
 import lerrain.project.activity.base.Page;
+import lerrain.tool.Common;
 
 import java.io.File;
 import java.util.List;
@@ -33,6 +36,8 @@ public class JQueryExport
 
     public String export(ActivityDoc doc)
     {
+        JQueryEvents tool = new JQueryEvents(doc);
+
         js1 += "var xx = document.getElementById(\"ccc\");";
 
         int i = 0;
@@ -49,31 +54,32 @@ public class JQueryExport
                 style += String.format("background-image:url(%s);", uri(p.getBackground()));
 
             ph = ph.replace("<!-- STYLE -->", style);
-            ph = ph.replace("<!-- ELEMENTS -->", build(p.getList(), id + "_"));
+            ph = ph.replace("<!-- ELEMENTS -->", build(tool, p.getList()));
 
             pages += ph;
         }
+
+        js2 += tool.envJs;
 
         root = root.replace("<!-- TITLE -->", doc.getName());
         root = root.replace("<!-- PAGES -->", pages);
         root = root.replace("<!-- JS_START -->", js1);
         root = root.replace("<!-- JS_ENV -->", js2);
-        root = root.replaceAll("[<][!][-][-] ACT_CODE [-][-][>]", doc.getCode());
-        root = root.replaceAll("[<][!][-][-] SERVER [-][-][>]", server);
+        root = root.replaceAll("<!-- ACT_CODE -->", doc.getCode());
+        root = root.replaceAll("<!-- SERVER -->", server);
 
         return root;
     }
 
-    private String build(List<Element> list, String pre)
+    private String build(JQueryEvents tool, List<Element> list)
     {
         String elements = "";
 
         if (list != null)
         {
-            int i = 0;
             for (Element e : list)
             {
-                String id = pre + i++;
+                String id = e.getId();
 
                 String style = "";
                 if (e.getFile() != null)
@@ -84,27 +90,38 @@ public class JQueryExport
                     style += String.format("color:#%s;", e.getColor());
                 if (e.getBgColor() != null)
                     style += String.format("background-color:#%s;", e.getBgColor());
-
-                String ea = "";
-                if (e.getAction() != null)
+                if (e.getStyle() != null)
                 {
-                    if ("1".equals(e.getAction()))
+                    if (Common.boolOf(e.getStyle().get("hide"), false))
+                        style += "display:none;";
+                }
+
+                String ex = "", ea = "";
+                //生成所有事件的js
+                List<Event> evs = e.getEvents();
+                for (Event ev : evs)
+                {
+                    if ("tiger".equals(ev.getType()))
                     {
-                        ea = "onClick=\"click" + id + "()\"";
-                        js2 += "var click" + id + " = function(event) { document.location.href='" + e.getActionParam() + "' }\n";
+                        js2 += "ENV.tiger = new Tiger1();\n";
                     }
-                    else if ("2".equals(e.getAction()))
+                    else if ("click".equals(ev.getType()))
                     {
-                        ea = "onClick=\"click" + id + "()\"";
-                        js2 += "var click" + id + " = function(event) { " + e.getActionParam() + " }\n";
+                        ex += tool.getJs(ev.getFinish());
                     }
+                }
+
+                if (!"".equals(ex))
+                {
+                    js2 += "var click" + id + " = function(EVENT) {" + ex + "};";
+                    ea = "onClick=\"click" + id + "()\"";
                 }
 
                 if (e.getFontSize() != null && e.getText() != null)
                     js1 += "$(\"#" + id + "\").html(" + e.getText() + ");\n";
 
-                String es = build(e.getChildren(), id + "_");
-                String eh = String.format("<div id=\"%s\" style=\"%s\" %s %s></div>", id, style, es, ea);
+                String es = build(tool, e.getChildren());
+                String eh = String.format("<div id=\"%s\" style=\"%s\" %s>%s</div>", id, style, ea, es);
                 elements += eh;
 
                 js1 += String.format("pot(\"%s\", %.2f, %.2f, %.2f, %.2f);\n", id, e.getX(), e.getY(), e.getW(), e.getH());

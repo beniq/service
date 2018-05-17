@@ -169,7 +169,7 @@
 
             var Main = React.createClass({
                 getInitialState() {
-                    return {w:90, h:160};
+                    return {w:90, h:160, mode:1};
                 },
                 componentDidMount() {
 					if (ENV.actId == null || ENV.actId == "") {
@@ -234,6 +234,14 @@
                         this.refresh(r);
                     });
 				},
+                saveEvent(ev) {
+                    common.req("save_event.json", {
+                        actId: ENV.actId,
+                        event: ev
+                    }, r => {
+                        this.refresh(r);
+                    });
+                },
                 refresh(doc) {
                     if (doc != null) ENV.doc = doc;
                     let page = ENV.doc.pages[ENV.index];
@@ -467,6 +475,9 @@
                 deploy(env) {
                     common.req("deploy.json", {actId: ENV.actId, env:env}, r => { alert(r) });
 				},
+                setDetailMode(mode) {
+                    this.setState({mode:mode});
+				},
                 render() {
                     let tree = ENV.doc.pages.map((page, i) => {
                         return (
@@ -520,140 +531,178 @@
 						</div>
                     } else if (ENV.selected != null) {
                         let e = ENV.selected;
+                        let divs;
+                        if (this.state.mode == 1) {
+							divs = <div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>X</div>
+									</div>
+									<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
+									</div>
+									<input type="text" className="form-control" ref="eY" defaultValue={e.y} onChange={v => {e.y = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>Z</div>
+										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, -1)}>▼</div>
+									</div>
+									<input type="text" className="form-control text-center" ref="eZ" value={e.z} readOnly="true"/>
+									<div className="input-group-append">
+										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 1)}>▲</div>
+										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
+									</div>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
+									</div>
+									<input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>高</div>
+									</div>
+									<input type="text" className="form-control" ref="eH" defaultValue={e.h} onChange={v => {e.h = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>纵横比</div>
+									</div>
+									<select className="form-control" ref="eKeep">
+										<option value="Y">自由</option>
+										<option value="N">按图片锁定</option>
+									</select>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
+									</div>
+									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } />
+									<div className="dropdown-menu" aria-labelledby="eStyle">
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
+									</div>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>背景色</div>
+									</div>
+									<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
+									<div className="input-group-append">
+										<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
+									</div>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>颜色</div>
+									</div>
+									<input type="text" className="form-control" id="eColor" ref="eColor" defaultValue={e.color} onChange={v => {e.color = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>文字</div>
+									</div>
+									<select className="form-control" ref="eFontSize" defaultValue={e.fontSize} onChange={v => {e.fontSize = v.target.value}} onBlur={this.saveElement}>
+										<option value="0">无</option>
+										<option value="5">5px</option>
+										<option value="6">6px</option>
+										<option value="7">7px</option>
+										<option value="8">8px</option>
+										<option value="9">9px</option>
+										<option value="10">10px</option>
+										<option value="11">11px</option>
+										<option value="12">12px</option>
+										<option value="14">14px</option>
+										<option value="16">16px</option>
+										<option value="18">18px</option>
+										<option value="20">20px</option>
+										<option value="22">22px</option>
+										<option value="24">24px</option>
+										<option value="28">28px</option>
+										<option value="32">32px</option>
+									</select>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>文本</div>
+									</div>
+									<input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
+									</div>
+									<input type="text" className="form-control" id="eImage" ref="eImage" value={e.image}/>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>事件类型</div>
+									</div>
+									<select className="form-control" ref="eAction" defaultValue={e.action} onChange={v => {e.action = v.target.value}} onBlur={this.saveElement}>
+										<option value="">无</option>
+										<option value="1">跳转</option>
+										<option value="2">JS方法</option>
+										<option value="3">跳转产品</option>
+										<option value="4">转发产品</option>
+									</select>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
+									</div>
+									<input type="text" className="form-control" ref="eParam" defaultValue={e.param} onChange={v => {e.param = v.target.value}} onBlur={this.saveElement}/>
+								</div>
+							</div>
+                        } else {
+							divs = <div>
+                                { e.events == null ? null : e.events.map(ev => {
+                                    return <div className="card mt-2 mb-1" id={ev.id}>
+										<div className="card-header input-group">
+											<div className="mr-auto">{ev.type}</div>
+											<div onClick={this.deleteEvent.bind(this, e.id, ev.id)}>X</div>
+										</div>
+										<div className="card-body">
+											<div className="input-group pl-2 pr-2 pt-1 pb-1">
+												<div className="input-group-prepend">
+													<div className="btn btn-primary" style={{width:"100px"}}>参数</div>
+												</div>
+												<input type="text" className="form-control" ref="evParam" defaultValue={ev.param==null?null:JSON.stringify(ev.param)} onChange={v => {ev.param = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+											</div>
+											<div className="input-group pl-2 pr-2 pt-1 pb-1">
+												<div className="input-group-prepend">
+													<div className="btn btn-primary" style={{width:"100px"}}>onFinish</div>
+												</div>
+												<input type="text" className="form-control" ref="evParam" defaultValue={ev.onFinish==null?null:JSON.stringify(ev.onFinish)} onChange={v => {ev.onFinish = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+											</div>
+										</div>
+									</div>
+                                })}
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
+									<div className="dropdown-menu" aria-labelledby="eEvent">
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "click")}>点击事件</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "tiger")}>老虎机</a>
+									</div>
+								</div>
+							</div>
+                        }
                         detail = <div key={e.id}>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>X</div>
-								</div>
-								<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
-								</div>
-								<input type="text" className="form-control" ref="eY" defaultValue={e.y} onChange={v => {e.y = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>Z</div>
-									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, -1)}>▼</div>
-								</div>
-								<input type="text" className="form-control text-center" ref="eZ" value={e.z} readOnly="true"/>
-								<div className="input-group-append">
-									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 1)}>▲</div>
-									<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1 text-center">
+								<div className="btn-group ml-auto mr-auto">
+									<button type="button" className={"btn " + (this.state.mode == 1 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 1)}>&nbsp;&nbsp;组件&nbsp;&nbsp;</button>
+									<button type="button" className={"btn " + (this.state.mode == 2 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 2)}>&nbsp;&nbsp;事项&nbsp;&nbsp;</button>
 								</div>
 							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
-								</div>
-								<input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>高</div>
-								</div>
-								<input type="text" className="form-control" ref="eH" defaultValue={e.h} onChange={v => {e.h = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>纵横比</div>
-								</div>
-								<select className="form-control" ref="eKeep">
-									<option value="Y">自由</option>
-									<option value="N">按图片锁定</option>
-								</select>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
-								</div>
-								<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } />
-								<div className="dropdown-menu" aria-labelledby="eStyle">
-									<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
-									<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
-								</div>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>背景色</div>
-								</div>
-								<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
-								<div className="input-group-append">
-									<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
-								</div>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>颜色</div>
-								</div>
-								<input type="text" className="form-control" id="eColor" ref="eColor" defaultValue={e.color} onChange={v => {e.color = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>文字</div>
-								</div>
-								<select className="form-control" ref="eFontSize" defaultValue={e.fontSize} onChange={v => {e.fontSize = v.target.value}} onBlur={this.saveElement}>
-									<option value="0">无</option>
-									<option value="5">5px</option>
-									<option value="6">6px</option>
-									<option value="7">7px</option>
-									<option value="8">8px</option>
-									<option value="9">9px</option>
-									<option value="10">10px</option>
-									<option value="11">11px</option>
-									<option value="12">12px</option>
-									<option value="14">14px</option>
-									<option value="16">16px</option>
-									<option value="18">18px</option>
-									<option value="20">20px</option>
-									<option value="22">22px</option>
-									<option value="24">24px</option>
-									<option value="28">28px</option>
-									<option value="32">32px</option>
-								</select>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>文本</div>
-								</div>
-								<input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value}} onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
-								</div>
-								<input type="text" className="form-control" id="eImage" ref="eImage" value={e.image}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>事件类型</div>
-								</div>
-								<select className="form-control" ref="eAction" defaultValue={e.action} onChange={v => {e.action = v.target.value}} onBlur={this.saveElement}>
-									<option value="">无</option>
-									<option value="1">跳转</option>
-									<option value="2">JS方法</option>
-									<option value="3">跳转产品</option>
-									<option value="4">转发产品</option>
-								</select>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<div className="input-group-prepend">
-									<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
-								</div>
-								<input type="text" className="form-control" ref="eParam" defaultValue={e.param} onChange={v => {e.param = v.target.value}}  onBlur={this.saveElement}/>
-							</div>
-							<div className="input-group pl-2 pr-2 pt-1 pb-1">
-								<button id="eEvent" className="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">+ 事件</button>
-								<div className="dropdown-menu" aria-labelledby="eEvent">
-									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "click")}>点击事件</a>
-									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
-									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
-								</div>
-							</div>
+							{divs}
 						</div>
-					}
+                    }
                     return (
 						<div className="form-horizontal">
 							<div className="form-row m-0 p-0">

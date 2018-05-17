@@ -5,9 +5,10 @@ function Tiger1() {
     this.w = 20;
     this.h = 20;
 	this.max = 0;
+	this.onFinish = null
 	this.element = null;
 	this.pos = [[0,0],[0,1],[0,2],[1,2],[2,2],[2,1],[2,0],[1,0]];
-    this.go = (d, l, x, y, w, h) => {
+    this.go = (d, l, of, x, y, w, h) => {
         if (this.i < this.max)
             return;
         this.element = d;
@@ -17,6 +18,7 @@ function Tiger1() {
         this.y = y;
         this.w = w;
         this.h = h;
+        this.onFinish = of;
         setTimeout(this.run, 200);
     };
     this.run = () => {
@@ -33,6 +35,9 @@ function Tiger1() {
         	else if (this.i > this.max - 30)
             	t = (this.i - this.max + 35) * 10;
             setTimeout(this.run, t);
+        } else {
+            if (this.onFinish != null)
+                this.onFinish();
         }
     };
 };

@@ -239,7 +239,30 @@ public class ActivityController
 
 		Event event = new Event();
 		event.setType(json.getString("type"));
-		element.getEvents().add(event);
+		element.addEvent(event);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/save_event.json")
+	@ResponseBody
+	public JSONObject saveEvent(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		JSONObject ej = json.getJSONObject("event");
+		String eventId = ej.getString("id");
+
+		ActivityDoc doc = act.getAct(actId);
+		Event event = doc.findEvent(eventId);
+
+		event.setType(ej.getString("type"));
+		event.setFinish(ej.getJSONObject("param"));
 
 		queue.add(doc);
 
@@ -449,11 +472,10 @@ public class ActivityController
 		return res;
 	}
 
-	@RequestMapping("/act/{actId}/test.html")
-	public void test(HttpServletRequest req, HttpServletResponse res, @PathVariable Long actId) throws Exception
+	@RequestMapping("/act/{actId}/{env}.html")
+	public void test(HttpServletRequest req, HttpServletResponse res, @PathVariable Long actId, @PathVariable String env) throws Exception
 	{
 		ActivityDoc doc = act.getAct(actId);
-		String env = "test";
 
 		String html = new JQueryExport(env).export(doc);
 		try (OutputStream os = res.getOutputStream())
