@@ -240,6 +240,9 @@ public class ActivityController
 		String color = o.getString("color");
 		e.setColor(Common.isEmpty(color) ? null : color);
 
+		if (o.containsKey("style"))
+			e.setStyle(o.getJSONObject("style"));
+
 		queue.add(doc);
 
 		JSONObject res = new JSONObject();

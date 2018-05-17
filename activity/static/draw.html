@@ -13,6 +13,7 @@
 		<link href="./css/web.css" rel="stylesheet">
 
 		<script src="./js/jquery.min.js"></script>
+		<script src="./js/popper.min.js"></script>
 		<script src="./js/bootstrap.min.js"></script>
 		<script src="./js/common.js"></script>
 
@@ -110,6 +111,26 @@
 
             ENV.inRC = function(x, y, e) {
                 return ENV.in(x, y, e.cx, e.cy, e.w, e.h);
+            }
+
+            var Element = {
+                setStyle: function(e, style) {
+                    if (e.style == null)
+                        e.style = {};
+                    if (e.style[style] == null)
+                        e.style[style] = true;
+                    else
+                        e.style[style] = null;
+                    this.forceUpdate();
+				},
+                getStyle: function(e) {
+                    let r = "";
+                    if (e.style != null) for (let x in e.style) {
+                        if (e.style[x])
+                            r += x + ",";
+					}
+					return r;
+				}
             }
 
 
@@ -504,6 +525,16 @@
 									<option value="Y">自由</option>
 									<option value="N">按图片锁定</option>
 								</select>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<div className="input-group-prepend">
+									<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
+								</div>
+								<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } />
+								<div className="dropdown-menu" aria-labelledby="eStyle">
+									<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
+									<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
+								</div>
 							</div>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
 								<div className="input-group-prepend">

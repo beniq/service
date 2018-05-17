@@ -1,8 +1,8 @@
 package lerrain.project.activity.base;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.*;
 
 public class Element
 {
@@ -15,7 +15,7 @@ public class Element
 
     String bgColor;
 
-    List<Object> effects;
+    List<Effect> effects;
 
     String file;
 
@@ -27,6 +27,8 @@ public class Element
     String fontSize;
     String text;
     String color;
+
+    Map style = new HashMap();
 
     public Element()
     {
@@ -172,5 +174,25 @@ public class Element
     public void setColor(String color)
     {
         this.color = color;
+    }
+
+    public List<Effect> getEffects()
+    {
+        return effects;
+    }
+
+    public void setEffects(List<Effect> effects)
+    {
+        this.effects = effects;
+    }
+
+    public Map getStyle()
+    {
+        return style;
+    }
+
+    public void setStyle(Map style)
+    {
+        this.style = style;
     }
 }

@@ -3,6 +3,7 @@ package lerrain.project.activity;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
+import lerrain.project.activity.base.Effect;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
 
@@ -54,17 +55,37 @@ public class DocTool
             e.put("color", element.getColor());
             e.put("text", element.getText());
             e.put("fontSize", element.getFontSize());
+            e.put("style", element.getStyle());
 
             e.put("cx", x + element.getX());
             e.put("cy", y + element.getY());
 
-            if (!element.getChildren().isEmpty())
+            if (element.getChildren() != null && !element.getChildren().isEmpty())
                 e.put("children", toJson(element.getChildren(), x + element.getX(), y + element.getY()));
+
+            if (element.getEffects() != null && !element.getEffects().isEmpty())
+                e.put("effects", toJson(element.getEffects()));
 
             elements.add(e);
         }
 
         return elements;
+    }
+
+    private static JSONArray toJson(List<Effect> list)
+    {
+        JSONArray effects = new JSONArray();
+
+        for (Effect e : list)
+        {
+            JSONObject effect = new JSONObject();
+            effect.put("type", e.getType());
+            effect.put("param", e.getParam());
+
+            effects.add(effect);
+        }
+
+        return effects;
     }
 
     public static ActivityDoc toDoc(JSONObject json)
@@ -112,13 +133,36 @@ public class DocTool
             element.setFontSize(e.getString("fontSize"));
             element.setText(e.getString("text"));
             element.setColor(e.getString("color"));
+            element.setStyle(e.getJSONObject("style"));
 
             if (e.containsKey("children"))
                 element.setChildren(toElements(e.getJSONArray("children")));
+
+            if (e.containsKey("effects"))
+                element.setEffects(toEffects(e.getJSONArray("effects")));
 
             list.add(element);
         }
 
         return list;
     }
+
+    private static List<Effect> toEffects(JSONArray effects)
+    {
+        List<Effect> r = new ArrayList<>();
+
+        for (int i = 0; i < effects.size(); i++)
+        {
+            JSONObject effect = effects.getJSONObject(i);
+
+            Effect e = new Effect();
+            e.setType(effect.getString("type"));
+            e.setParam(effect.getJSONObject("param"));
+
+            r.add(e);
+        }
+
+        return r;
+    }
+
 }
