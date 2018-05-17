@@ -90,4 +90,25 @@ public class Page
 
         return null;
     }
+
+    public Event findEvent(String eventId)
+    {
+        return findEvent(list, eventId);
+    }
+
+    private Event findEvent(List<Element> list, String eventId)
+    {
+        for (Element e : list)
+        {
+            Event ev = e.findEvent(eventId);
+            if (ev != null)
+                return ev;
+
+            ev = findEvent(e.getChildren(), eventId);
+            if (ev != null)
+                return ev;
+        }
+
+        return null;
+    }
 }

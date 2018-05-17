@@ -8,4 +8,4 @@ datasource:
 
 spring.http.multipart.maxFileSize: 8Mb
 spring.http.multipart.maxRequestSize: 16Mb
-spring.http.multipart.location: x:/1/tmp
+#spring.http.multipart.location: x:/1/tmp

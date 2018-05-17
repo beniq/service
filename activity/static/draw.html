@@ -130,7 +130,40 @@
                             r += x + ",";
 					}
 					return r;
-				}
+				},
+                addEvent: function(type) {
+                    common.req("event.json", {
+                        actId: ENV.actId,
+                        elementId: ENV.selected.id,
+						type: type
+                    }, r => {
+                        this.refresh(r);
+                    });
+                },
+                onEventLink: function(e, ev) {
+                    ev.dataTransfer.setData("fromEventId", e.id);
+				},
+				toDivs: function(self, elements) {
+                	return elements == null ? null : elements.map(e => {
+                        return (
+							<div className="ml-3">
+								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)}>
+									<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}] {e.image != null ? " [图片]" : null}</div>
+									<div onClick={self.delete.bind(self, e.id)}>&nbsp;X&nbsp;</div>
+								</div>
+								<div className="ml-3">
+									{ e.events == null ? null : e.events.map(ev => {
+										return <div className="form-row pl-2 pr-2 pt-1 pb-1" draggable="true" onDragStart={this.onEventLink.bind(self, ev)}>
+											<div id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " = " + ev.onFinish.type}</div>
+											<div onClick={self.deleteEvent.bind(self, e.id, ev.id)}>&nbsp;X&nbsp;</div>
+										</div>
+									})}
+								</div>
+								{ Element.toDivs(self, e.children) }
+							</div>
+                        );
+                    });
+                }
             }
 
 
@@ -148,49 +181,59 @@
                     let drop = e => {
                         e.preventDefault();
                         var fileList = e.dataTransfer.files;
-                        if(fileList.length == 0)
-                            return false;
-
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("post", common.url("file.do"), true);
-                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-                        xhr.onreadystatechange = r => {
-                            if (xhr.readyState == 4 && xhr.status == 200) {
-                                this.refresh(JSON.parse(xhr.responseText).content);
+                        if(fileList.length > 0) {
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("post", common.url("file.do"), true);
+                            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                            xhr.onreadystatechange = r => {
+                                if (xhr.readyState == 4 && xhr.status == 200) {
+                                    this.refresh(JSON.parse(xhr.responseText).content);
+                                }
+                            };
+                            var fd = new FormData();
+                            fd.append("pageIndex", 0);
+                            fd.append("actId", ENV.doc.actId);
+                            if (e.target.id == 'pBg') {
+                                fd.append("type", "desk");
+                            } else if (e.target.id == 'eImage') {
+                                fd.append("elementId", ENV.selected.id);
+                                fd.append("type", "image");
+                            } else if (e.target.id == 'canvas') {
+                                if (ENV.selected != null) {
+                                    let c = $("#canvas");
+                                    let s = c.offset();
+                                    let x = (e.clientX - s.left) * ENV.W / c.width();
+                                    let y = (e.clientY - s.top) * ENV.H / c.height();
+                                    if (ENV.inRect(x, y, ENV.selected))
+                                        fd.append("parentId", ENV.selected.id);
+                                }
+                                fd.append("type", "element");
+                            } else {
+                                fd = null;
                             }
-                        };
-
-                        var fd = new FormData();
-                        fd.append("pageIndex", 0);
-                        fd.append("actId", ENV.doc.actId);
-                        if (e.target == document.getElementById('pBg')) {
-                            fd.append("type", "desk");
-                        } else if (e.target == document.getElementById('eImage')) {
-                            fd.append("elementId", ENV.selected.id);
-                            fd.append("type", "image");
-                        } else if (e.target == document.getElementById('canvas')) {
-                            if (ENV.selected != null) {
-                                let c = $("#canvas");
-                                let s = c.offset();
-                                let x = (e.clientX - s.left) * ENV.W / c.width();
-                                let y = (e.clientY - s.top) * ENV.H / c.height();
-                                if (ENV.inRect(x, y, ENV.selected))
-                                	fd.append("parentId", ENV.selected.id);
-							}
-                            fd.append("type", "element");
+                            if (fd != null) {
+                                for (var i = 0; i < fileList.length; i++)
+                                    fd.append("file", fileList[i]);
+                                xhr.send(fd);
+                            }
                         } else {
-                            fd = null;
+                            let srcId = e.dataTransfer.getData("fromEventId");
+							let dstId = e.target.id;
+							this.link(srcId, dstId);
 						}
-						if (fd != null) {
-                            for (var i = 0; i < fileList.length; i++)
-                                fd.append("file", fileList[i]);
-                            xhr.send(fd);
-                        }
                     };
 
-                    document.getElementById('desk').addEventListener("drop", drop, false);
-                    document.getElementById('detail').addEventListener("drop", drop, false);
+                    document.getElementById('content').addEventListener("drop", drop, false);
                 },
+				link(e1, e2) {
+                    common.req("link_event.json", {
+                        actId: ENV.actId,
+                        fromEventId: e2,
+						invokeEventId: e1
+                    }, r => {
+                        this.refresh(r);
+                    });
+				},
                 refresh(doc) {
                     if (doc != null) ENV.doc = doc;
                     let page = ENV.doc.pages[ENV.index];
@@ -358,6 +401,17 @@
                         });
 					}
 				},
+                deleteEvent(elementId, eventId) {
+                    if (confirm("删除？")) {
+                        common.req("del_event.json", {
+                            actId: ENV.actId,
+                            elementId: elementId,
+							eventId: eventId
+                        }, r => {
+                            this.refresh(r);
+                        });
+                    }
+                },
 				fillBgColor(e) { //以element的四个角的颜色平均值填充背景色
                     let img = ENV.getImage(ENV.doc.pages[ENV.index].background);
                     let canvas = document.getElementById("canvas");
@@ -418,22 +472,7 @@
                         return (
                             <div className="ml-3">
                                 <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
-                                { page.elements.map((e, j) => {
-                                    return (
-                                        <div className="ml-3">
-											<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e)}>
-												<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
-												<div onClick={this.delete.bind(this, e.id)}>&nbsp;X&nbsp;</div>
-											</div>
-											{ e.children == null ? null : e.children.map((e, j) => {
-												return <div className={"form-row ml-3 pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={this.select.bind(this, e)}>
-													<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}]{e.image != null ? " [图片]" : null}</div>
-													<div onClick={this.delete.bind(this, e.id)}>&nbsp;X&nbsp;</div>
-												</div>
-											})}
-										</div>
-									);
-                                })}
+                                { Element.toDivs(this, page.elements) }
                             </div>
                         )
                     });
@@ -604,6 +643,14 @@
 									<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
 								</div>
 								<input type="text" className="form-control" ref="eParam" defaultValue={e.param} onChange={v => {e.param = v.target.value}}  onBlur={this.saveElement}/>
+							</div>
+							<div className="input-group pl-2 pr-2 pt-1 pb-1">
+								<button id="eEvent" className="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">+ 事件</button>
+								<div className="dropdown-menu" aria-labelledby="eEvent">
+									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "click")}>点击事件</a>
+									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
+									<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
+								</div>
 							</div>
 						</div>
 					}

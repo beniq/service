@@ -1,7 +1,5 @@
 package lerrain.project.activity.base;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.*;
 
 public class Element
@@ -15,7 +13,7 @@ public class Element
 
     String bgColor;
 
-    List<Effect> effects;
+    List<Event> events = new ArrayList<>();
 
     String file;
 
@@ -176,14 +174,14 @@ public class Element
         this.color = color;
     }
 
-    public List<Effect> getEffects()
+    public List<Event> getEvents()
     {
-        return effects;
+        return events;
     }
 
-    public void setEffects(List<Effect> effects)
+    public void setEvents(List<Event> events)
     {
-        this.effects = effects;
+        this.events = events;
     }
 
     public Map getStyle()
@@ -194,5 +192,16 @@ public class Element
     public void setStyle(Map style)
     {
         this.style = style;
+    }
+
+    public Event findEvent(String eventId)
+    {
+        for (Event e : this.getEvents())
+        {
+            if (eventId.equals(e.getId()))
+                return e;
+        }
+
+        return null;
     }
 }

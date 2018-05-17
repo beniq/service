@@ -64,4 +64,15 @@ public class ActivityDoc
         return null;
     }
 
+    public Event findEvent(String eventId)
+    {
+        for (Page p : list)
+        {
+            Event ev = p.findEvent(eventId);
+            if (ev != null)
+                return ev;
+        }
+
+        return null;
+    }
 }

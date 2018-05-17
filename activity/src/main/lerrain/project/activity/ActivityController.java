@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
+import lerrain.project.activity.base.Event;
 import lerrain.project.activity.base.Page;
 import lerrain.project.activity.export.JQueryExport;
 import lerrain.tool.Common;
@@ -156,6 +157,52 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/del_event.json")
+	@ResponseBody
+	public JSONObject delEvent(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String elementId = json.getString("elementId");
+		String eventId = json.getString("eventId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Element element = doc.find(elementId);
+
+		Event ev = element.findEvent(eventId);
+		element.getEvents().remove(ev);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/link_event.json")
+	@ResponseBody
+	public JSONObject link(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String fromEventId = json.getString("fromEventId");
+		String invokeEventId = json.getString("invokeEventId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Event fromEvent = doc.findEvent(fromEventId);
+		Event invokeEvent = doc.findEvent(invokeEventId);
+
+		fromEvent.setFinish(invokeEvent);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
 	@RequestMapping("/del_element.json")
 	@ResponseBody
 	public JSONObject delElement(@RequestBody JSONObject json)
@@ -170,6 +217,29 @@ public class ActivityController
 			if (e != null)
 				page.getList().remove(e);
 		}
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/event.json")
+	@ResponseBody
+	public JSONObject event(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String elementId = json.getString("elementId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Element element = doc.find(elementId);
+
+		Event event = new Event();
+		event.setType(json.getString("type"));
+		element.getEvents().add(event);
 
 		queue.add(doc);
 

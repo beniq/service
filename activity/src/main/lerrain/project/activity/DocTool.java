@@ -3,7 +3,7 @@ package lerrain.project.activity;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
-import lerrain.project.activity.base.Effect;
+import lerrain.project.activity.base.Event;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
 
@@ -63,8 +63,8 @@ public class DocTool
             if (element.getChildren() != null && !element.getChildren().isEmpty())
                 e.put("children", toJson(element.getChildren(), x + element.getX(), y + element.getY()));
 
-            if (element.getEffects() != null && !element.getEffects().isEmpty())
-                e.put("effects", toJson(element.getEffects()));
+            if (element.getEvents() != null && !element.getEvents().isEmpty())
+                e.put("events", toJson(element.getEvents()));
 
             elements.add(e);
         }
@@ -72,15 +72,17 @@ public class DocTool
         return elements;
     }
 
-    private static JSONArray toJson(List<Effect> list)
+    private static JSONArray toJson(List<Event> list)
     {
         JSONArray effects = new JSONArray();
 
-        for (Effect e : list)
+        for (Event e : list)
         {
             JSONObject effect = new JSONObject();
+            effect.put("id", e.getId());
             effect.put("type", e.getType());
             effect.put("param", e.getParam());
+            effect.put("onFinish", e.getFinish());
 
             effects.add(effect);
         }
@@ -138,8 +140,8 @@ public class DocTool
             if (e.containsKey("children"))
                 element.setChildren(toElements(e.getJSONArray("children")));
 
-            if (e.containsKey("effects"))
-                element.setEffects(toEffects(e.getJSONArray("effects")));
+            if (e.containsKey("events"))
+                element.setEvents(toEvents(e.getJSONArray("events")));
 
             list.add(element);
         }
@@ -147,17 +149,19 @@ public class DocTool
         return list;
     }
 
-    private static List<Effect> toEffects(JSONArray effects)
+    private static List<Event> toEvents(JSONArray events)
     {
-        List<Effect> r = new ArrayList<>();
+        List<Event> r = new ArrayList<>();
 
-        for (int i = 0; i < effects.size(); i++)
+        for (int i = 0; i < events.size(); i++)
         {
-            JSONObject effect = effects.getJSONObject(i);
+            JSONObject effect = events.getJSONObject(i);
 
-            Effect e = new Effect();
+            Event e = new Event();
+            e.setId(effect.getString("id"));
             e.setType(effect.getString("type"));
             e.setParam(effect.getJSONObject("param"));
+            e.setFinish(effect.getJSONObject("onFinish"));
 
             r.add(e);
         }
