@@ -318,8 +318,13 @@ public class ActivityController
 		String param = o.getString("param");
 		e.setActionParam(Common.isEmpty(param) ? null : o.getString("param"));
 
-		String image = o.getString("image");
-		e.setFile(Common.isEmpty(image) ? null : image);
+		if (o.containsKey("image"))
+		{
+			e.getFile().clear();
+			JSONArray ja = o.getJSONArray("image");
+			for (int k=0;k<ja.size();k++)
+				e.getFile().add(ja.getString(k));
+		}
 
 		String bgColor = o.getString("bgColor");
 		e.setBgColor(Common.isEmpty(bgColor) ? null : bgColor);
@@ -359,6 +364,13 @@ public class ActivityController
 		dir.mkdirs();
 		dir = new File(Common.pathOf(root, "/temp/" + actId));
 		dir.mkdirs();
+
+		String elementId = req.getParameter("elementId");
+		if (elementId != null)
+		{
+			Element img = page.find(elementId);
+			img.getFile().clear();
+		}
 
 		for (MultipartFile file : files)
 		{
@@ -435,9 +447,8 @@ public class ActivityController
 					}
 					else if ("image".equalsIgnoreCase(type))
 					{
-						String elementId = req.getParameter("elementId");
 						Element img = page.find(elementId);
-						img.setFile(uriName);
+						img.addFile(uriName);
 						img.setH(h * img.getW() / w);
 					}
 				}

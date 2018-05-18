@@ -15,7 +15,7 @@ public class Element
 
     List<Event> events = new ArrayList<>();
 
-    String file;
+    List<String> file = new ArrayList<>();
 
     List<Element> children = new ArrayList<>();
 
@@ -44,12 +44,23 @@ public class Element
             this.id = id.replaceAll("[-]", "");;
     }
 
-    public String getFile()
+    public List<String> getFile()
     {
         return file;
     }
 
     public void setFile(String file)
+    {
+        this.file.clear();
+        this.file.add(file);
+    }
+
+    public void addFile(String file)
+    {
+        this.file.add(file);
+    }
+
+    public void setFile(List<String> file)
     {
         this.file = file;
     }

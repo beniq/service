@@ -1,0 +1,22 @@
+@-moz-keyframes play<!-- EVENT_ID --> {
+<!-- EVENT_BG -->
+}
+@-webkit-keyframes play<!-- EVENT_ID --> {
+<!-- EVENT_BG -->
+}
+@-o-keyframes play<!-- EVENT_ID --> {
+<!-- EVENT_BG -->
+}
+@keyframes play<!-- EVENT_ID --> {
+<!-- EVENT_BG -->
+}
+.play<!-- EVENT_ID --> {
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    background-size: 100% 100%;
+    -moz-animation:play<!-- EVENT_ID --> <!-- EVENT_TIME -->s linear 0s infinite normal forwards;
+    -webkit-animation:play<!-- EVENT_ID --> <!-- EVENT_TIME -->s linear 0s infinite normal forwards;
+    -o-animation:play<!-- EVENT_ID --> <!-- EVENT_TIME -->s linear 0s infinite normal forwards;
+    animation:play<!-- EVENT_ID --> <!-- EVENT_TIME -->s linear 0s infinite normal forwards;
+}

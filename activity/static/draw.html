@@ -96,8 +96,8 @@
                     c.fillStyle = "#" + e.bgColor;
                     c.fillRect(e.cx, e.cy, e.w, e.h);
                 }
-                if (e.image != null && e.image != "") {
-                    ENV.drawImage(c, e.image, e.cx, e.cy, e.w, e.h);
+                if (e.image != null && e.image.length > 0) {
+                    ENV.drawImage(c, e.image[0], e.cx, e.cy, e.w, e.h);
                 }
 			}
 
@@ -586,6 +586,7 @@
 									<div className="dropdown-menu" aria-labelledby="eStyle">
 										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
 										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "alpha50")}>50%透明度</a>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -688,6 +689,7 @@
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "click")}>点击事件</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "play")}>背景轮播</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "tiger")}>老虎机</a>
 									</div>
 								</div>

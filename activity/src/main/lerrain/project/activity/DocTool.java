@@ -128,7 +128,6 @@ public class DocTool
             element.setY(e.getFloat("y"));
             element.setW(e.getFloat("w"));
             element.setH(e.getFloat("h"));
-            element.setFile(e.getString("image"));
             element.setBgColor(e.getString("bgColor"));
             element.setAction(e.getString("action"));
             element.setActionParam(e.getString("param"));
@@ -136,6 +135,14 @@ public class DocTool
             element.setText(e.getString("text"));
             element.setColor(e.getString("color"));
             element.setStyle(e.getJSONObject("style"));
+
+            if (e.containsKey("image"))
+            {
+                element.getFile().clear();
+                JSONArray ja = e.getJSONArray("image");
+                for (int k=0;k<ja.size();k++)
+                    element.getFile().add(ja.getString(k));
+            }
 
             if (e.containsKey("children"))
                 element.setChildren(toElements(e.getJSONArray("children")));

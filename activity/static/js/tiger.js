@@ -32,8 +32,8 @@ function Tiger1() {
         	var t = 50;
         	if (this.i < 20)
         		t = (29 - this.i) * 5;
-        	else if (this.i > this.max - 30)
-            	t = (this.i - this.max + 35) * 10;
+        	else if (this.i >= this.max - 20)
+            	t = Math.pow(this.i - this.max + 21, 2) + 50;
             setTimeout(this.run, t);
         } else {
             if (this.onFinish != null)
