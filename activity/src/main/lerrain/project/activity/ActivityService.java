@@ -30,10 +30,10 @@ public class ActivityService
 	@PostConstruct
 	public void reset()
 	{
-		JQueryTemplate.root = Disk.load(new File("./static/act/root.html"), "utf-8");
-		JQueryTemplate.page = Disk.load(new File("./static/act/page.html"), "utf-8");
-		JQueryTemplate.popupCss = Disk.load(new File("./static/act/popup.css"), "utf-8");
-		JQueryTemplate.playCss = Disk.load(new File("./static/act/play.css"), "utf-8");
+		JQueryTemplate.root = Disk.load(new File("./static/act/root.htmlx"), "utf-8");
+		JQueryTemplate.page = Disk.load(new File("./static/act/page.htmlx"), "utf-8");
+		JQueryTemplate.popupCss = Disk.load(new File("./static/act/popup.cssx"), "utf-8");
+		JQueryTemplate.playCss = Disk.load(new File("./static/act/play.cssx"), "utf-8");
 	}
 
 	public String getDestFile(String dest)

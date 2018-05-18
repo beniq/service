@@ -1,0 +1,136 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title><!-- TITLE --></title>
+    <link rel="stylesheet" href="../../css/activity.css">
+    <style type="text/css">
+        <!-- CSS -->
+    </style>
+    <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/zepto.min.js"></script>
+    <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/qqdialog.js"></script>
+    <script src="https://cdn.iyb.tm/common/js/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="../../js/tiger.js"></script>
+</head>
+<body>
+<!-- PAGES -->
+</body>
+
+<script>
+    var ENV = {
+        init: {}
+    };
+    var zoom = function(size){
+        size = size || 1;
+        var xx = document.getElementById("ccc");
+        return xx.offsetWidth * size / 750;
+    };
+    var pot = function(name, x, y, w, h)
+    {
+        var d5 = document.getElementById(name);
+        d5.style.position = "absolute";
+        d5.style.left = zoom() * x;
+        d5.style.top = zoom() * y;
+        poSize(name, w, h);
+    };
+    var pob = function(name, x, fy, w, h)
+    {
+        var d5 = document.getElementById(name);
+        d5.style.position = "absolute";
+        d5.style.left = zoom() * x;
+        d5.style.bottom = zoom() * fy;
+        poSize(name, w, h);
+    };
+    var poSize = function(name, w, h){
+        var d5 = document.getElementById(name);
+        d5.style.width = zoom() * w;
+        d5.style.height = zoom() * h;
+    };
+    var fnt = function(name, size)
+    {
+        try{
+            var obj = document.getElementById(name);
+            var v = zoom() * size;
+            obj.style.fontSize = (v)+'px';
+            obj.style.lineHeight = (v)+'px';
+        }catch(e){}
+        return v;
+    };
+    var hidedown = function(e)
+    {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+</script>
+<script>
+    var gotoPrd = function(p) {
+        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        stat("GoProduct", dest, p.productId)
+        try{IYB.go(dest);}catch(e){document.location.href = dest;}
+    };
+    var shareProduct = function(p){
+        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        p.link = dest;
+        stat("ShareProduct", dest)
+        iHealthBridge.doAction("share", JSON.stringify(p));
+    };
+    var stat = function(code, dest, productId) {
+        $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
+    }
+</script>
+
+<script>
+    var gpo = {};
+    gpo.post = function(url, val, callback, failcall) {
+        $.ajax({url:"<!-- SERVER -->" + url, type:"POST", data:JSON.stringify(val), contentType:'application/json;charset=UTF-8', success:callback, error:failcall, dataType:"json"});
+    };
+    gpo.param = function(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    };
+    gpo.runJS = function() {
+        // https://gpo.iyunbao.com
+        $.ajax({url:"/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/open', accountId:gpo.accountId, url:window.location.href}), contentType:'application/json;charset=UTF-8', dataType:"json"});
+        gpo.refreshAct();
+    };
+    gpo.refreshAct = function(){
+        try{
+            gpo.post("/npo/temp.json", {activity:'<!-- ACT_CODE -->', event:'init', account:gpo.accountId}, function(r){
+                if (r != null && r.result == "success") {
+                    var c = r.content;
+                    ENV.init = c;
+                    refreshText();
+                }
+            });
+        }catch(e){console.log('refreshAcc-err', e);}
+    };
+    var refreshText = function() {
+        <!-- JS_TEXT -->
+    };
+    <!-- JS_ENV -->
+    $(document).ready( function() {
+        <!-- JS_START -->
+        refreshText();
+        gpo.accountId = gpo.param("accountId");
+        if (gpo.accountId != null && gpo.accountId != "") {
+            gpo.runJS();
+        } else {
+            gpo.post("/iybapi/broker/app/salesmanInfoAjax/getSalemanInfo.json", null, function (r) {
+                if (r.isSuccess)
+                    gpo.accountId = r.result.accountId;
+                if (gpo.accountId == null || gpo.accountId == "") {
+                    Life.Dialog.alert("无法获取用户信息");
+                } else {
+                    gpo.runJS();
+                }
+            }, function (r) {
+                Life.Dialog.alert("服务器连接失败，请重试" + JSON.stringify(r));
+            });
+        }
+    });
+</script>
+
+</html>

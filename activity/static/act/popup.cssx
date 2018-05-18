@@ -1,0 +1,28 @@
+@-moz-keyframes kfplat10xz {
+    from {-moz-transform:scale(0, 0) rotateY(0deg);-moz-opacity: 1;}
+    /*50%  {-moz-transform:scale(0.5, 0.5) rotateY(720deg);}*/
+    to   {-moz-transform:scale(1, 1) rotateY(1440deg);-moz-opacity: 1;}
+}
+@-webkit-keyframes kfplat10xz {
+    from {-webkit-transform:scale(0, 0) rotateY(0deg);-khtml-opacity:1;opacity: 1;}
+    /*50%  {-webkit-transform:scale(0.5, 0.5) rotateY(720deg);}*/
+    to   {-webkit-transform:scale(1, 1) rotateY(1440deg);-khtml-opacity:1;opacity: 1;}
+}
+@-o-keyframes kfplat10xz {
+    from {-o-transform:scale(0, 0) rotateY(0deg);opacity: 1;}
+    /*50%  {-o-transform:scale(0.5, 0.5) rotateY(720deg);}*/
+    to   {-o-transform:scale(1, 1) rotateY(1440deg);opacity: 1;}
+}
+@keyframes kfplat10xz {
+    from {transform:scale(0, 0) rotateY(0deg);opacity: 1;}
+    /*50%  {transform:scale(0.5, 0.5) rotateY(720deg);}*/
+    to   {transform:scale(1, 1) rotateY(1440deg);opacity: 1;}
+}
+.plat10_xz {
+    -moz-opacity: 0;
+    -khtml-opacity:0;opacity: 0;
+    -moz-animation:kfplat10xz 1s cubic-bezier(0.95, 0, 1, 1) 0s 1 normal forwards;
+    -webkit-animation:kfplat10xz 1s cubic-bezier(0.95, 0, 1, 1) 0s 1 normal forwards;
+    -o-animation:kfplat10xz 1s cubic-bezier(0.95, 0, 1, 1) 0s 1 normal forwards;
+    animation:kfplat10xz 1s cubic-bezier(0.95, 0, 1, 1) 0s 1 normal forwards;
+}
