@@ -19,10 +19,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -473,15 +470,25 @@ public class ActivityController
 
 	@RequestMapping("/deploy.json")
 	@ResponseBody
-	public JSONObject deploy(@RequestBody JSONObject json)
+	public JSONObject deploy(@RequestBody JSONObject json) throws Exception
 	{
 		Long actId = json.getLong("actId");
 		ActivityDoc doc = act.getAct(actId);
 		String env = json.getString("env");
 
+		File dest = new File(Common.pathOf("./static/act", actId.toString(), env + ".html"));
+
+		String html = new JQueryExport(env).export(doc);
+		try (OutputStream os = new FileOutputStream(dest))
+		{
+			os.write(html.getBytes("utf-8"));
+		}
+
+		String append = "prd".equalsIgnoreCase(env) ? "" : "-" + env;
+
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", act.deploy(doc, env));
+		res.put("content", "https://gpo" + append + ".iyunbao.com/act/" + actId + "/" + env + ".html");
 
 		return res;
 	}
@@ -497,7 +504,6 @@ public class ActivityController
 			os.write(html.getBytes("utf-8"));
 		}
 	}
-
 
 	@RequestMapping("/upload.json")
 	@ResponseBody

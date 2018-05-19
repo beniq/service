@@ -502,7 +502,10 @@
                     this.saveElement();
                 },
                 deploy(env) {
-                    common.req("deploy.json", {actId: ENV.actId, env:env}, r => { alert(r) });
+                    common.req("deploy.json", {actId: ENV.actId, env:env}, r => {
+                        console.log(r);
+                        alert(r);
+                    });
 				},
                 setDetailMode(mode) {
                     this.setState({mode:mode});
@@ -760,8 +763,8 @@
 										</div>
 										<div className="text-right">
 											<button type="button" className="btn btn-danger mr-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
-											<button type="button" className="btn btn-danger mr-2">发布预发</button>
-											<button type="button" className="btn btn-danger mr-2">发布生产</button>
+											<button type="button" className="btn btn-danger mr-2" onClick={this.deploy.bind(this, "uat")}>发布预发</button>
+											<button type="button" className="btn btn-danger mr-2" onClick={this.deploy.bind(this, "prd")}>发布生产</button>
 										</div>
 									</div>
 									<div className="form-row m-0">
