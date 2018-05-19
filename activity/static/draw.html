@@ -33,6 +33,14 @@
 				doc: {
 			        pages: []
 				},
+				style: {
+			        hide: "隐藏",
+                    play: "背景轮播",
+                    popup: "弹出动效",
+                    alpha50: "50%透明",
+                    bgSwitch: "背景切换",
+                    stars: "金色星星",
+				},
 				images: {},
 				imagesOnload: {}
             };
@@ -119,9 +127,9 @@
                     if (e.style == null)
                         e.style = {};
                     if (e.style[style] == null)
-                        e.style[style] = true;
+                        e.style[style] = "";
                     else
-                        e.style[style] = null;
+                        delete e.style[style];
                     this.saveElement();
 				},
                 getStyle: function(e) {
@@ -614,14 +622,18 @@
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
 									</div>
-									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } readOnly="true"/>
+									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ JSON.stringify(e.style) } readOnly="true"/>
 									<div className="dropdown-menu" aria-labelledby="eStyle">
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "alpha50")}>50%透明度</a>
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "play")}>背景轮播</a>
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "bgSwitch")}>背景切换</a>
-										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "stars")}>金色星星</a>
+                                        { Object.keys(ENV.style).map(v => {
+											return <div className="dropdown-item" key={v}>
+												<div className="input-group pl-1 pr-1 pt-1 pb-1">
+													<div className="input-group-prepend">
+														<div className={e.style[v]?"btn btn-success":"btn btn-secondary"} style={{width:"100px"}} onClick={Element.setStyle.bind(this, e, v)}>{ENV.style[v]}</div>
+													</div>
+													<input type="text" className="form-control text-center" defaultValue={e.style[v]} onChange={c => {e.style[v] = c.target.value}} onBlur={this.forceUpdate}/>
+												</div>
+											</div>
+                                        })}
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">

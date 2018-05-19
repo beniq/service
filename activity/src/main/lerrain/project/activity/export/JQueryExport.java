@@ -109,16 +109,18 @@ public class JQueryExport
                     style += String.format("z-index:%d;", e.getZ());
                 if (e.getStyle() != null)
                 {
-                    if (Common.boolOf(e.getStyle().get("hide"), false))
+                    if (e.getStyle().get("hide") != null)
                         style += "display:none;";
-                    if (Common.boolOf(e.getStyle().get("popup"), false))
+                    if (e.getStyle().get("popup") != null)
                     {
                         css += JQueryExport.popupCss;
                         className += "plat10_xz";
                     }
-                    if (Common.boolOf(e.getStyle().get("alpha50"), false))
+                    if (e.getStyle().get("alpha50") != null)
                         style += "opacity:0.5;";
-                    if (Common.boolOf(e.getStyle().get("stars"), false))
+                    if (e.getStyle().get("alpha") != null)
+                        style += "opacity:"+(Common.doubleOf(e.getStyle().get("alpha"), 1))+";";
+                    if (e.getStyle().get("stars") != null)
                     {
                         xcss.put("star", JQueryExport.starCss);
                         int sq = (int)(e.getW()*e.getH());

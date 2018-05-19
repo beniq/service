@@ -203,6 +203,8 @@ public class Element
 
     public void setStyle(Map style)
     {
+        if (style == null)
+            style = new HashMap();
         this.style = style;
     }
 
