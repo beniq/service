@@ -41,3 +41,14 @@ function Tiger1() {
         }
     };
 };
+
+
+function star1(div, num, w, h, size){
+    for(var ii = 0; ii < num; ii++){
+        var xx = Math.floor(Math.random()*w/3)+(ii%3)*w/3;
+        var yy = Math.floor(Math.random()*h/3)+Math.floor((ii%9)/3)*h/3;
+        var ww = Math.floor(Math.random()*size+size/2);
+        pot(div+"_"+ii , xx - ww/2, yy - ww/2,  ww, ww);
+        $("#"+div+"_"+ii).attr("src", "https://static.iyunbao.com/website/health/iyb/resource/activity/gpo/images/timemachine/xingxing_"+Math.floor(Math.random()*3+1)+".png");
+    }
+}

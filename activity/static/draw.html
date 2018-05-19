@@ -76,6 +76,7 @@
                 if (page.background != null)
                     ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
                 page.elements.map(e => {
+                    if (e.display == 0) return;
                     ENV.drawElement(c, e);
                     if (e.children != null) e.children.map(e => {
                         ENV.drawElement(c, e);
@@ -121,7 +122,7 @@
                         e.style[style] = true;
                     else
                         e.style[style] = null;
-                    this.forceUpdate();
+                    this.saveElement();
 				},
                 getStyle: function(e) {
                     let r = "";
@@ -130,6 +131,14 @@
                             r += x + ",";
 					}
 					return r;
+				},
+                addAction: function(e, action) {
+                    if (action == null) {
+                        e.action = [];
+					} else {
+                        e.action.push({type:action});
+					}
+					this.saveElement();
 				},
                 addEvent: function(type) {
                     common.req("event.json", {
@@ -143,19 +152,28 @@
                 onEventLink: function(e, ev) {
                     ev.dataTransfer.setData("fromEventId", e.id);
 				},
+                display: function(e) {
+                    if (e.display == 1)
+                        e.display = 0;
+                    else
+                        e.display = 1;
+                    ENV.selected = e;
+                    this.saveElement();
+				},
 				toDivs: function(self, elements) {
                 	return elements == null ? null : elements.map(e => {
                         return (
-							<div className="ml-3">
+							<div className="ml-3" key={e.id}>
 								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)}>
 									<div className="mr-auto">元素 [{e.x},{e.y}] [{e.w},{e.h}] {e.image != null ? " [图片]" : null}</div>
-									<div onClick={self.delete.bind(self, e.id)}>&nbsp;X&nbsp;</div>
+									<div onClick={Element.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
+									<div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 								</div>
 								<div className="ml-3">
 									{ e.events == null ? null : e.events.map(ev => {
-										return <div className="form-row pl-2 pr-2 pt-1 pb-1" draggable="true" onDragStart={this.onEventLink.bind(self, ev)}>
-											<div id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " = " + ev.onFinish.type}</div>
-											<div onClick={self.deleteEvent.bind(self, e.id, ev.id)}>&nbsp;X&nbsp;</div>
+										return <div key={ev.id} className="form-row pl-2 pr-2 pt-1 pb-1" draggable="true" onDragStart={this.onEventLink.bind(self, ev)}>
+											<div id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " → " + ev.onFinish.type}</div>
+											<div onClick={self.deleteEvent.bind(self, e.id, ev.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 										</div>
 									})}
 								</div>
@@ -219,7 +237,12 @@
                         } else {
                             let srcId = e.dataTransfer.getData("fromEventId");
 							let dstId = e.target.id;
-							this.link(srcId, dstId);
+							if (dstId == "eAction") {
+							    ENV.selected.action.push({type:"event", param:srcId})
+								this.saveElement();
+							} else {
+                                this.link(srcId, dstId);
+                            }
 						}
                     };
 
@@ -243,6 +266,8 @@
                     });
                 },
                 refresh(doc) {
+                    if (document.activeElement)
+                    	document.activeElement.blur();
                     if (doc != null) ENV.doc = doc;
                     let page = ENV.doc.pages[ENV.index];
                     ENV.W = page.w;
@@ -460,10 +485,14 @@
                         rgb[3]++;
                     }
                     if (rgb[3] > 0) {
-                        e.bgColor = Math.round(rgb[0] / rgb[3]).toString(16) + Math.round(rgb[1] / rgb[3]).toString(16) + Math.round(rgb[2] / rgb[3]).toString(16);
+                        e.bgColor = "#" + Math.round(rgb[0] / rgb[3]).toString(16) + Math.round(rgb[1] / rgb[3]).toString(16) + Math.round(rgb[2] / rgb[3]).toString(16);
 					}
                     this.saveElement();
                 },
+                removeBg(e) {
+                    e.image = [];
+                    this.saveElement();
+				},
                 setZIndex(e, k) {
                     if (k == 0) {
                         e.z = 0;
@@ -481,7 +510,7 @@
                 render() {
                     let tree = ENV.doc.pages.map((page, i) => {
                         return (
-                            <div className="ml-3">
+                            <div className="ml-3" key={i}>
                                 <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
                                 { Element.toDivs(this, page.elements) }
                             </div>
@@ -526,7 +555,7 @@
 								<div className="input-group-prepend">
 									<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
 								</div>
-								<input type="text" className="form-control" id="pBg" ref="pBg" value={p.background}/>
+								<input type="text" className="form-control" id="pBg" ref="pBg" value={p.background} readOnly="true"/>
 							</div>
 						</div>
                     } else if (ENV.selected != null) {
@@ -549,12 +578,12 @@
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>Z</div>
-										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, -1)}>▼</div>
 									</div>
 									<input type="text" className="form-control text-center" ref="eZ" value={e.z} readOnly="true"/>
 									<div className="input-group-append">
-										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 1)}>▲</div>
-										<div className="btn btn-outline-dark" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
+										<div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, 1)}>↑</div>
+										<div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, -1)}>↓</div>
+										<div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -582,11 +611,14 @@
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
 									</div>
-									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } />
+									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ Element.getStyle(e) } readOnly="true"/>
 									<div className="dropdown-menu" aria-labelledby="eStyle">
 										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "hide")}>隐藏</a>
 										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "popup")}>弹出动效</a>
 										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "alpha50")}>50%透明度</a>
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "play")}>背景轮播</a>
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "bgSwitch")}>背景切换</a>
+										<a className="dropdown-item" onClick={Element.setStyle.bind(this, e, "stars")}>金色星星</a>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -638,31 +670,39 @@
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>背景</div>
 									</div>
-									<input type="text" className="form-control" id="eImage" ref="eImage" value={e.image}/>
+									<input type="text" className="form-control" id="eImage" ref="eImage" value={JSON.stringify(e.image)} readOnly="true"/>
+									<div className="input-group-append">
+										<div className="btn btn-success" onClick={this.removeBg.bind(this, e)}>清除</div>
+									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
-										<div className="btn btn-primary" style={{width:"100px"}}>事件类型</div>
+										<div className="btn btn-primary" style={{width:"100px"}} id="eActionSel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">onClick</div>
+										<div className="dropdown-menu" aria-labelledby="eActionSel">
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, null)}>清空</a>
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "redirect")}>跳转</a>
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "js")}>JS方法</a>
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "toProduct")}>跳转产品</a>
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "shareProduct")}>转发产品</a>
+										</div>
 									</div>
-									<select className="form-control" ref="eAction" defaultValue={e.action} onChange={v => {e.action = v.target.value}} onBlur={this.saveElement}>
-										<option value="">无</option>
-										<option value="1">跳转</option>
-										<option value="2">JS方法</option>
-										<option value="3">跳转产品</option>
-										<option value="4">转发产品</option>
-									</select>
-								</div>
-								<div className="input-group pl-2 pr-2 pt-1 pb-1">
-									<div className="input-group-prepend">
-										<div className="btn btn-primary" style={{width:"100px"}}>事件参数</div>
+									<div className="form-control">
+										<div id="eAction" ref="eAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{JSON.stringify(e.action)}</div>
+										<div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
+											{ e.action.map(act => {
+                                                return <div className="dropdown-item">
+													{act.type}
+													<input type="text" className="form-control" defaultValue={act.param} onChange={v => {act.param = v.target.value}} onBlur={this.saveElement}/>
+												</div>
+											})}
+										</div>
 									</div>
-									<input type="text" className="form-control" ref="eParam" defaultValue={e.param} onChange={v => {e.param = v.target.value}} onBlur={this.saveElement}/>
 								</div>
 							</div>
                         } else {
 							divs = <div>
                                 { e.events == null ? null : e.events.map(ev => {
-                                    return <div className="card mt-2 mb-1" id={ev.id}>
+                                    return <div className="card mt-2 mb-1" id={ev.id} key={ev.id}>
 										<div className="card-header input-group">
 											<div className="mr-auto">{ev.type}</div>
 											<div onClick={this.deleteEvent.bind(this, e.id, ev.id)}>X</div>
@@ -672,13 +712,13 @@
 												<div className="input-group-prepend">
 													<div className="btn btn-primary" style={{width:"100px"}}>参数</div>
 												</div>
-												<input type="text" className="form-control" ref="evParam" defaultValue={ev.param==null?null:JSON.stringify(ev.param)} onChange={v => {ev.param = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+												<input type="text" className="form-control" ref="evParam" defaultValue={ev.param==null?null:ev.param.value} onChange={v => {ev.param = v.target.value==""?null:{value:v.target.value}}} onBlur={this.saveEvent.bind(this, ev)}/>
 											</div>
 											<div className="input-group pl-2 pr-2 pt-1 pb-1">
 												<div className="input-group-prepend">
 													<div className="btn btn-primary" style={{width:"100px"}}>onFinish</div>
 												</div>
-												<input type="text" className="form-control" ref="evParam" defaultValue={ev.onFinish==null?null:JSON.stringify(ev.onFinish)} onChange={v => {ev.onFinish = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+												<input type="text" className="form-control" ref="evOnFinish" defaultValue={ev.onFinish==null?null:JSON.stringify(ev.onFinish)} onChange={v => {ev.onFinish = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
 											</div>
 										</div>
 									</div>
@@ -686,11 +726,11 @@
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
 									<div className="dropdown-menu" aria-labelledby="eEvent">
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "click")}>点击事件</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
 										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "play")}>背景轮播</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "tiger")}>老虎机</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "bgSwitch")}>背景切换</a>
+										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "tiger")}>抽奖机</a>
 									</div>
 								</div>
 							</div>

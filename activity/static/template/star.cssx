@@ -1,0 +1,52 @@
+@-moz-keyframes kfscale5 {
+    from {-moz-transform:scale(0, 0);-moz-opacity: 0;}
+    20% {-moz-opacity: 0.6;}
+    to   {-moz-transform:scale(1, 1);-moz-opacity: 1;}
+}
+@-webkit-keyframes kfscale5 {
+    from {-webkit-transform:scale(0, 0);-khtml-opacity:0;opacity: 0;}
+    20% {-khtml-opacity: 0.6;opacity: 0.6;}
+    to   {-webkit-transform:scale(1, 1);-khtml-opacity:1;opacity: 1;}
+}
+@-o-keyframes kfscale5 {
+    from {-o-transform:scale(0, 0);opacity: 0;}
+    20% {opacity: 0.6;}
+    to   {-o-transform:scale(1, 1);opacity: 1;}
+}
+@keyframes kfscale5 {
+    from {transform:scale(0, 0);opacity: 0;}
+    20% {opacity: 0.6;}
+    to   {transform:scale(1, 1);opacity: 1;}
+}
+.plat10_xx1{
+    -moz-opacity: 0;
+    -khtml-opacity:0;opacity: 0;
+    -moz-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0s infinite alternate forwards;
+    -webkit-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0s infinite alternate forwards;
+    -o-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0s infinite alternate forwards;
+    animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0s infinite alternate forwards;
+}
+.plat10_xx2{
+    -moz-opacity: 0;
+    -khtml-opacity:0;opacity: 0;
+    -moz-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0.4s infinite alternate forwards;
+    -webkit-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0.4s infinite alternate forwards;
+    -o-animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0.4s infinite alternate forwards;
+    animation:kfscale5 1s cubic-bezier(0.95, 0, 1, 1) 0.4s infinite alternate forwards;
+}
+.plat10_xx3{
+    -moz-opacity: 0;
+    -khtml-opacity:0;opacity: 0;
+    -moz-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.5s infinite alternate forwards;
+    -webkit-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.5s infinite alternate forwards;
+    -o-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.5s infinite alternate forwards;
+    animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.5s infinite alternate forwards;
+}
+.plat10_xx4{
+    -moz-opacity: 0;
+    -khtml-opacity:0;opacity: 0;
+    -moz-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.2s infinite alternate forwards;
+    -webkit-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.2s infinite alternate forwards;
+    -o-animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.2s infinite alternate forwards;
+    animation:kfscale5 0.8s cubic-bezier(0.95, 0, 1, 1) 0.2s infinite alternate forwards;
+}

@@ -1,5 +1,7 @@
 package lerrain.project.activity.base;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.*;
 
 public class Element
@@ -19,14 +21,15 @@ public class Element
 
     List<Element> children = new ArrayList<>();
 
-    String action;
-    String actionParam;
+    JSONArray action = new JSONArray();
 
     String fontSize;
     String text;
     String color;
 
     Map style = new HashMap();
+
+    int display = 1;
 
     public Element()
     {
@@ -135,24 +138,16 @@ public class Element
         this.children = children;
     }
 
-    public String getAction()
+    public JSONArray getAction()
     {
         return action;
     }
 
-    public void setAction(String action)
+    public void setAction(JSONArray action)
     {
+        if (action == null)
+            action = new JSONArray();
         this.action = action;
-    }
-
-    public String getActionParam()
-    {
-        return actionParam;
-    }
-
-    public void setActionParam(String actionParam)
-    {
-        this.actionParam = actionParam;
     }
 
     public String getFontSize()
@@ -220,5 +215,15 @@ public class Element
         }
 
         return null;
+    }
+
+    public int getDisplay()
+    {
+        return display;
+    }
+
+    public void setDisplay(int display)
+    {
+        this.display = display;
     }
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.export.JQueryExport;
-import lerrain.project.activity.export.JQueryTemplate;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 import lerrain.tool.Network;
@@ -30,10 +29,11 @@ public class ActivityService
 	@PostConstruct
 	public void reset()
 	{
-		JQueryTemplate.root = Disk.load(new File("./static/act/root.htmlx"), "utf-8");
-		JQueryTemplate.page = Disk.load(new File("./static/act/page.htmlx"), "utf-8");
-		JQueryTemplate.popupCss = Disk.load(new File("./static/act/popup.cssx"), "utf-8");
-		JQueryTemplate.playCss = Disk.load(new File("./static/act/play.cssx"), "utf-8");
+		JQueryExport.rootHtml = Disk.load(new File("./static/template/root.htmlx"), "utf-8");
+		JQueryExport.pageHtml = Disk.load(new File("./static/template/page.htmlx"), "utf-8");
+		JQueryExport.popupCss = Disk.load(new File("./static/template/popup.cssx"), "utf-8");
+		JQueryExport.playCss = Disk.load(new File("./static/template/play.cssx"), "utf-8");
+		JQueryExport.starCss = Disk.load(new File("./static/template/star.cssx"), "utf-8");
 	}
 
 	public String getDestFile(String dest)

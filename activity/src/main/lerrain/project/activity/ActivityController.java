@@ -212,11 +212,7 @@ public class ActivityController
 
 		ActivityDoc doc = act.getAct(actId);
 		for (Page page : doc.getList())
-		{
-			Element e = page.find(elementId);
-			if (e != null)
-				page.getList().remove(e);
-		}
+			page.remove(elementId);
 
 		queue.add(doc);
 
@@ -262,7 +258,8 @@ public class ActivityController
 		Event event = doc.findEvent(eventId);
 
 		event.setType(ej.getString("type"));
-		event.setFinish(ej.getJSONObject("param"));
+		event.setParam(ej.getJSONObject("param"));
+		event.setFinish(ej.getJSONObject("onFinish"));
 
 		queue.add(doc);
 
@@ -311,12 +308,9 @@ public class ActivityController
 		e.setZ(Common.intOf(o.getInteger("z"), 0));
 		e.setW(o.getFloat("w"));
 		e.setH(o.getFloat("h"));
+		e.setDisplay(Common.intOf(o.getInteger("display"), 1));
 
-		String action = o.getString("action");
-		e.setAction(Common.isEmpty(action) ? null : o.getString("action"));
-
-		String param = o.getString("param");
-		e.setActionParam(Common.isEmpty(param) ? null : o.getString("param"));
+		e.setAction(o.getJSONArray("action"));
 
 		if (o.containsKey("image"))
 		{
@@ -365,11 +359,29 @@ public class ActivityController
 		dir = new File(Common.pathOf(root, "/temp/" + actId));
 		dir.mkdirs();
 
-		String elementId = req.getParameter("elementId");
-		if (elementId != null)
+		Element img = null;
+		Element parent = null;
+
+		if ("image".equalsIgnoreCase(type))
 		{
-			Element img = page.find(elementId);
+			img = page.find(req.getParameter("elementId"));
 			img.getFile().clear();
+		}
+
+		if ("element".equalsIgnoreCase(type))
+		{
+			img = new Element();
+
+			String parentId = req.getParameter("parentId");
+			if (parentId == null)
+			{
+				page.addElement(img);
+			}
+			else
+			{
+				parent = page.find(parentId);
+				parent.getChildren().add(img);
+			}
 		}
 
 		for (MultipartFile file : files)
@@ -402,31 +414,12 @@ public class ActivityController
 					}
 					else if ("element".equalsIgnoreCase(type))
 					{
-						Element img = new Element();
-						img.setFile(uriName);
+						img.addFile(uriName);
 
-						if (h > 1200)
-						{
-							w = w * 1200 / h;
-							h = 1200;
-						}
-
-						img.setX(750 / 2 - w / 2);
-						img.setY(1200 / 2 - h / 2);
-						img.setW(w);
-						img.setH(h);
-
-						String parentId = req.getParameter("parentId");
-						if (parentId == null)
-						{
-							page.addElement(img);
-						}
-						else
+						if (parent != null)
 						{
 							w = bi.getWidth();
 							h = bi.getHeight();
-
-							Element parent = page.find(parentId);
 
 							if (w > parent.getW())
 							{
@@ -441,13 +434,23 @@ public class ActivityController
 
 							img.setX(0);
 							img.setY(0);
+						}
+						else
+						{
+							if (h > 1200)
+							{
+								w = w * 1200 / h;
+								h = 1200;
+							}
 
-							parent.getChildren().add(img);
+							img.setX(750 / 2 - w / 2);
+							img.setY(1200 / 2 - h / 2);
+							img.setW(w);
+							img.setH(h);
 						}
 					}
 					else if ("image".equalsIgnoreCase(type))
 					{
-						Element img = page.find(elementId);
 						img.addFile(uriName);
 						img.setH(h * img.getW() / w);
 					}

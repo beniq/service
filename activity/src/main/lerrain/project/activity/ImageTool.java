@@ -24,7 +24,7 @@ public class ImageTool
             int w = bi.getWidth();
             int h = bi.getHeight();
 
-            if (w * h < 740 * 740 || src.length() * 1.0f / w / h < 0.2f) //压缩比已经很好，不压缩
+            if ((w * h < 750 * 900 && src.getName().endsWith(".png")) || src.length() * 1.0f / w / h < 0.2f) //压缩比已经很好，不压缩
                 return copy(src, path, dest);
 
             File dst = new File(Common.pathOf(path, dest + ".jpg"));

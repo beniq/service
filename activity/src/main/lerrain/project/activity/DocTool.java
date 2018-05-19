@@ -6,6 +6,7 @@ import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Event;
 import lerrain.project.activity.base.Element;
 import lerrain.project.activity.base.Page;
+import lerrain.tool.Common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +49,10 @@ public class DocTool
             e.put("z", element.getZ());
             e.put("w", element.getW());
             e.put("h", element.getH());
+            e.put("display", element.getDisplay());
             e.put("image", element.getFile());
             e.put("bgColor", element.getBgColor());
             e.put("action", element.getAction());
-            e.put("param", element.getActionParam());
             e.put("color", element.getColor());
             e.put("text", element.getText());
             e.put("fontSize", element.getFontSize());
@@ -126,11 +127,12 @@ public class DocTool
             element.setId(e.getString("id"));
             element.setX(e.getFloat("x"));
             element.setY(e.getFloat("y"));
+            element.setZ(e.getInteger("z"));
             element.setW(e.getFloat("w"));
             element.setH(e.getFloat("h"));
+            element.setDisplay(Common.intOf(e.getInteger("display"), 1));
             element.setBgColor(e.getString("bgColor"));
-            element.setAction(e.getString("action"));
-            element.setActionParam(e.getString("param"));
+            element.setAction(e.getJSONArray("action"));
             element.setFontSize(e.getString("fontSize"));
             element.setText(e.getString("text"));
             element.setColor(e.getString("color"));

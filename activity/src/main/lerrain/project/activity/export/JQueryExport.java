@@ -8,16 +8,26 @@ import lerrain.project.activity.base.Page;
 import lerrain.tool.Common;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JQueryExport
 {
+    public static String rootHtml;
+    public static String pageHtml;
+    public static String popupCss;
+    public static String playCss;
+    public static String starCss;
+
     String server;
 
-    String root = JQueryTemplate.root;
+    String root = JQueryExport.rootHtml;
     String js1 = "", js2 = "", js3 = "";
     String pages = "";
     String css = "";
+
+    Map<String, String> xcss = new HashMap();
 
     public JQueryExport(String env)
     {
@@ -45,7 +55,7 @@ public class JQueryExport
         {
             js1 += String.format("xx.style.height = xx.offsetWidth * %d / %d;", p.getH(), p.getW());
 
-            String ph = JQueryTemplate.page;
+            String ph = JQueryExport.pageHtml;
 
             String style = "";
             if (p.getBackground() != null)
@@ -58,6 +68,9 @@ public class JQueryExport
         }
 
         js2 += tool.envJs;
+
+        for (String cssStr : xcss.values())
+            css += cssStr;
 
         root = root.replace("<!-- TITLE -->", doc.getName());
         root = root.replace("<!-- PAGES -->", pages);
@@ -80,6 +93,7 @@ public class JQueryExport
             for (Element e : list)
             {
                 String id = e.getId();
+                String es = build(tool, e.getChildren());
 
                 String style = "";
                 String className = "";
@@ -88,37 +102,64 @@ public class JQueryExport
                 if (e.getFontSize() != null)
                     style += String.format("font-size:%s;", e.getFontSize());
                 if (e.getColor() != null)
-                    style += String.format("color:#%s;", e.getColor());
+                    style += String.format("color:%s;", e.getColor());
                 if (e.getBgColor() != null)
-                    style += String.format("background-color:#%s;", e.getBgColor());
+                    style += String.format("background-color:%s;", e.getBgColor());
+                if (e.getZ() > 0)
+                    style += String.format("z-index:%d;", e.getZ());
                 if (e.getStyle() != null)
                 {
                     if (Common.boolOf(e.getStyle().get("hide"), false))
                         style += "display:none;";
                     if (Common.boolOf(e.getStyle().get("popup"), false))
                     {
-                        css += JQueryTemplate.popupCss;
+                        css += JQueryExport.popupCss;
                         className += "plat10_xz";
                     }
                     if (Common.boolOf(e.getStyle().get("alpha50"), false))
                         style += "opacity:0.5;";
+                    if (Common.boolOf(e.getStyle().get("stars"), false))
+                    {
+                        xcss.put("star", JQueryExport.starCss);
+                        int sq = (int)(e.getW()*e.getH());
+                        int size = sq > 250000 ? 100 : (int)(Math.sqrt(sq) / 5);
+                        int num = (int)(e.getW()*e.getH()/size/size/2.2f);
+                        for (int k=0;k<num;k++)
+                            es += "<img class=\"plat10_xx"+(k%4+1)+"\" style=\"z-index: 0;\" id=\""+id+"_"+k+"\">\n";
+                        js1 += "star1('"+id+"',"+num+","+e.getW()+","+e.getH()+","+size+");";
+                    }
                 }
 
-                String ea = "", ec = "";
                 //生成所有事件的js
                 List<Event> evs = e.getEvents();
                 for (Event ev : evs)
                 {
-                    String js = tool.getJs(ev);
+                    tool.initiate(ev);
 
                     if ("play".equals(ev.getType()))
                         className += " play" + ev.getId();
-                    else if ("click".equals(ev.getType()))
-                        ec += js;
                 }
 
-                if (!"".equals(ec))
+                String ea = "";
+                if (e.getAction().size() > 0)
                 {
+                    String ec = "";
+                    for (int i=0;i<e.getAction().size();i++)
+                    {
+                        JSONObject act = e.getAction().getJSONObject(i);
+                        String type = act.getString("type");
+                        if ("redirect".equals(type))
+                        {
+                            ec += "document.location.href = " + act.getString("param") + ";\n";
+                        }
+                        else if ("event".equals(type))
+                        {
+                            String eventId = act.getString("param");
+                            Event event = tool.doc.findEvent(eventId);
+                            ec += tool.getJs(event);
+                        }
+                    }
+
                     js2 += "var click" + id + " = function(EVENT) {" + ec + "};";
                     ea = "onClick=\"click" + id + "()\"";
                 }
@@ -126,7 +167,6 @@ public class JQueryExport
                 if (e.getFontSize() != null && e.getText() != null)
                     js3 += "$(\"#" + id + "\").html(" + e.getText() + ");\n";
 
-                String es = build(tool, e.getChildren());
                 String eh = String.format("<div id=\"%s\" class=\"%s\" style=\"%s\" %s>%s</div>", id, className, style, ea, es);
                 elements += eh;
 

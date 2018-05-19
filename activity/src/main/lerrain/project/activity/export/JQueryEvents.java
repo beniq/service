@@ -19,10 +19,10 @@ public class JQueryEvents
         this.doc = doc;
     }
 
-    public String getJs(Event event)
+    public void initiate(Event event)
     {
         if (event == null)
-            return null;
+            return;
 
         String onFinish = getJs(event.getFinish());
         if (onFinish != null)
@@ -32,12 +32,34 @@ public class JQueryEvents
         if ("tiger".equals(event.getType()))
         {
             envJs += "ENV.tiger = new Tiger1();\n";
+        }
+        else if ("play".equals(event.getType()))
+        {
+            List<String> list = event.getElement().getFile();
+            String line = "";
+            for (int i=0;i<list.size();i++)
+            {
+                line += i*100/list.size() + "% {background-image: url("+uri(list.get(i))+");}\n";
+            }
+            String css = JQueryExport.playCss.replaceAll("<!-- EVENT_BG -->", line);
+            css = css.replaceAll("<!-- EVENT_ID -->", event.getId());
+            css = css.replaceAll("<!-- EVENT_TIME -->", "1");
+            envCss += css;
+        }
+    }
 
+    public String getJs(Event event)
+    {
+        if (event == null)
+            return null;
+
+        String id = event.getElement().getId();
+        if ("tiger".equals(event.getType()))
+        {
             int x = (int)event.getElement().getX();
             int y = (int)event.getElement().getY();
             int w = (int)event.getElement().getW();
             int h = (int)event.getElement().getH();
-            //return "ENV.tiger.go('" + id + "', 70, finish" + event.getId() + ", "+x+", "+y+", "+w+", "+h+");\n";
 
             return "        try{\n" +
                     "            gpo.post(\"/npo/temp.json\", {activity:'"+doc.getCode()+"', event:'tiger', account:gpo.accountId}, function(r){\n" +
@@ -60,23 +82,8 @@ public class JQueryEvents
         {
             return "$('#" + id + "').hide();\n";
         }
-        else if ("click".equals(event.getType()))
-        {
-            return onFinish == null ? null : "finish" + event.getId() + "()";
-        }
         else if ("play".equals(event.getType()))
         {
-            List<String> list = event.getElement().getFile();
-            String line = "";
-            for (int i=0;i<list.size();i++)
-            {
-                line += i*100/list.size() + "% {background-image: url("+uri(list.get(i))+");}\n";
-            }
-            String css = JQueryTemplate.playCss.replaceAll("<!-- EVENT_BG -->", line);
-            css = css.replaceAll("<!-- EVENT_ID -->", event.getId());
-            css = css.replaceAll("<!-- EVENT_TIME -->", "1");
-            envCss += css;
-
             return null;
         }
 

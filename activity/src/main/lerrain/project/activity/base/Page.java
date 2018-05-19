@@ -76,6 +76,11 @@ public class Page
         return find(list, elementId);
     }
 
+    public Element remove(String elementId)
+    {
+        return remove(list, elementId);
+    }
+
     private Element find(List<Element> list, String elementId)
     {
         for (Element e : list)
@@ -84,6 +89,24 @@ public class Page
                 return e;
 
             Element f = find(e.getChildren(), elementId);
+            if (f != null)
+                return f;
+        }
+
+        return null;
+    }
+
+    private Element remove(List<Element> list, String elementId)
+    {
+        for (Element e : list)
+        {
+            if (elementId.equals(e.getId()))
+            {
+                list.remove(e);
+                return e;
+            }
+
+            Element f = remove(e.getChildren(), elementId);
             if (f != null)
                 return f;
         }
