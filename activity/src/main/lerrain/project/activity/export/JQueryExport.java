@@ -110,10 +110,11 @@ public class JQueryExport
                 if (e.getStyle() != null)
                 {
                     if (e.getStyle().get("hide") != null)
-                        style += "display:none;";
+                        style += "display:none; overflow:hidden;";
                     if (e.getStyle().get("popup") != null)
                     {
                         css += JQueryExport.popupCss;
+                        //style += String.format("transform: translateZ(%dpx);", 400);
                         className += "plat10_xz";
                     }
                     if (e.getStyle().get("alpha50") != null)
