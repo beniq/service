@@ -476,7 +476,14 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		String env = json.getString("env");
 
-		File dest = new File(Common.pathOf("./static/act", actId.toString(), env + ".html"));
+		File dest = new File(Common.pathOf("./static/" + env, actId.toString(), "main.html"));
+
+		File parent = dest.getParentFile();
+		parent.mkdirs();
+
+		File dir = new File(Common.pathOf("./static/act", actId.toString()));
+		for (File f : dir.listFiles())
+			Disk.copy(f, new File(Common.pathOf("./static/" + env, actId.toString(), f.getName())), true);
 
 		String html = new JQueryExport(env).export(doc);
 		try (OutputStream os = new FileOutputStream(dest))
@@ -488,7 +495,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", "https://gpo" + append + ".iyunbao.com/act/" + actId + "/" + env + ".html");
+		res.put("content", "https://gpo" + append + ".iyunbao.com/" + env + "/" + actId + "/main.html");
 
 		return res;
 	}
