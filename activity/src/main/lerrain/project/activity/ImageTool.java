@@ -1,12 +1,15 @@
 package lerrain.project.activity;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,13 +31,19 @@ public class ImageTool
                 return copy(src, path, dest);
 
             File dst = new File(Common.pathOf(path, dest + ".jpg"));
-            try (FileOutputStream fos = new FileOutputStream(dst))
+            try (FileOutputStream fos = new FileOutputStream(dst); ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
             {
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fos);
-                JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(bi);
-                param.setQuality(0.6f, true);
-                encoder.setJPEGEncodeParam(param);
-                encoder.encode(bi);
+                JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpg").next();
+                imageWriter.setOutput(ios);
+
+                IIOMetadata imageMetaData = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(bi), null);
+
+                JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
+                jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+                jpegParams.setCompressionQuality(0.6f);
+
+                imageWriter.write(imageMetaData, new IIOImage(bi, null, null), null);
+                imageWriter.dispose();
             }
 
             return dst;
