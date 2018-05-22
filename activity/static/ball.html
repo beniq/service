@@ -1,0 +1,274 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>ACTIVITY</title>
+
+		<link href="./css/bootstrap.min.css" rel="stylesheet">
+		<link href="./css/web.css" rel="stylesheet">
+
+		<script src="./js/three.js"></script>
+		<script src="./js/SceneUtils.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/popper.min.js"></script>
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/common.js"></script>
+
+		<script src="./js/react.js"></script>
+		<script src="./js/react-dom.js"></script>
+		<script src="./js/browser.min.js"></script>
+	</head>
+
+	<body onload="threeStart();">
+		<div id="content" style="width:100%; height:100%"></div>
+		<script>
+			var fps = 100;
+			var balls = [];
+			var w = function() {
+			    return Math.random() / fps;
+			}
+
+			var vb = function(v1, v2, p1, p2) {
+			    var n = {x:p1.x - p2.x, y:p1.y - p2.y, z:p1.z - p2.z};
+			    var l = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
+			    var w1 = (n.x * v1.x + n.y * v1.y + n.z * v1.z) / l;
+                var w2 = (n.x * v2.x + n.y * v2.y + n.z * v2.z) / l;
+				var w = (w1 + w2) / 2;
+				var s1 = w2 - w;
+				var s2 = w1 - w;
+                v1.x += n.x * (s1 - s2) / l;
+                v1.y += n.y * (s1 - s2) / l;
+				v1.z += n.z * (s1 - s2) / l;
+                v2.x += n.x * (s2 - s1) / l;
+                v2.y += n.y * (s2 - s1) / l;
+                v2.z += n.z * (s2 - s1) / l;
+			}
+			var atte = function(v) {
+                v.x = v.x * 99.5 / fps;
+                v.y = v.y * 99.5 / fps;
+                v.z = v.z * 99.5 / fps;
+			}
+            var vd = function(v, p) {
+                var l = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
+                var w = 2 * (p.x * v.x + p.y * v.y + p.z * v.z) / l;
+                v.x -= p.x * w / l;
+                v.y -= p.y * w / l;
+                v.z -= p.z * w / l;
+            }
+			var hit = function(i, j) {
+			    if (i == j)
+			        return;
+			    if (Math.pow(balls[i].p.x - balls[j].p.x, 2) + Math.pow(balls[i].p.y - balls[j].p.y, 2) + Math.pow(balls[i].p.z - balls[j].p.z, 2) <= 4) {
+					vb(balls[i].s, balls[j].s, balls[i].p, balls[j].p);
+				}
+			}
+            var hitBorder = function(i) {
+			    var d = Math.pow(balls[i].p.x, 2) + Math.pow(balls[i].p.y, 2) + Math.pow(balls[i].p.z, 2);
+			    if (!balls[i].in && d < 100)
+                    balls[i].in = true;
+                if (balls[i].in && d >= 100) {
+					vd(balls[i].s, balls[i].p);
+                }
+            }
+			var frame = function() {
+                var canvas = document.getElementById("content");
+                var c = canvas.getContext("2d");
+                c.clearRect(0, 0, 800, 800);
+
+                for (var i = 0; i < balls.length; i++) {
+                    balls[i].p.x += balls[i].s.x;
+                    balls[i].p.y += balls[i].s.y;
+                    balls[i].p.z += balls[i].s.z;
+                    balls[i].s.y += 9.8 / 100 / 25;
+
+					hitBorder(i);
+
+                    for (var j = 0; j < balls.length; j++) {
+						hit(i, j);
+                    }
+
+					atte(balls[i].s);
+
+                    c.fillStyle = "#000000";
+                    c.beginPath();
+                    c.arc(balls[i].p.x * 10 + 400, balls[i].p.y * 10 + 400, 10, 0, 2 * Math.PI);
+                    c.fill();
+                    c.closePath();
+                }
+            }
+			var init = function() {
+                for (var i = 0; i < 10; i++) {
+                    balls.push({
+                        p: {x:0, y:i * 2.5, z:0}, //坐标
+                        s: {x:w(), y:-50 / fps + w(), z:w()}, //速度
+                        r: {x:w(), y:w(), z:w()}, //自旋
+						in: false
+                    })
+                }
+			}
+
+            function initBuffers(gl,shaderProgram) {
+			    var v = [];
+			    var s = 20;
+			    for (var i=0;i<360;i+=20) {
+			        var ss = i % 180;
+			        if (ss <= 60)
+			            s = 20;
+					else if (ss <= 120)
+					    s = 40;
+					else
+					    s = 90;
+                    for (var j=0;j<360;j+=s) {
+                        var p1 = getPoint(i,j);
+                        var p2 = getPoint(i+20,j);
+                        var p3 = getPoint(i,j+s);
+                        var p4 = getPoint(i+20,j+s);
+                        add(v, p1);
+                        add(v, p2);
+                        add(v, p3);
+                        add(v, p3);
+                        add(v, p2);
+                        add(v, p4);
+                    }
+				}
+                var vertices = new Float32Array(v);
+                var n = v.length / 3;
+                //创建缓冲区对象
+                var vertexBuffer = gl.createBuffer();
+                if(!vertexBuffer){
+                    console.log("Failed to create the butter object");
+                    return -1;
+                }
+                //将缓冲区对象绑定到目标
+                gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+                //向缓冲区写入数据
+                gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+                //获取坐标点
+                var a_Position = gl.getAttribLocation(shaderProgram, 'a_Position');
+                //将缓冲区对象分配给a_Position变量
+                gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+                //连接a_Position变量与分配给它的缓冲区对象
+                gl.enableVertexAttribArray(a_Position);
+                return n;
+
+            }
+
+			init();
+			//this.setInterval(frame, 1000 / fps);
+
+            var renderer;
+            var width, height;
+            function initThree() {
+                width = document.getElementById('content').clientWidth;
+                height = document.getElementById('content').clientHeight;
+                renderer = new THREE.WebGLRenderer({
+                    antialias : true
+                });
+                renderer.setSize(width, height);
+                document.getElementById('content').appendChild(renderer.domElement);
+                renderer.setClearColor(0xCCCCCC, 1.0);
+            }
+
+            var camera;
+            function initCamera() {
+/*                camera = new THREE.PerspectiveCamera(75, width / height, 1, 10000);
+*/
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+                camera.position.x = 0;
+                camera.position.y = 0;
+                camera.position.z = 10;
+                camera.up.x = 0;
+                camera.up.y = 0;
+                camera.up.z = 1;
+            }
+
+            var scene;
+            function initScene() {
+                scene = new THREE.Scene();
+            }
+
+            var light;
+            function initLight() {
+                light = new THREE.DirectionalLight(0xFF0000, 1.0, 0);
+                light.position.set(100, 100, 200);
+                scene.add(light);
+            }
+
+            var getPoint = function(i, j) {
+                var x = Math.sin(i%360*Math.PI*2/360);
+                var r = Math.cos(i%360*Math.PI*2/360);
+                var y = Math.sin(j%360*Math.PI*2/360) * r;
+                var z = Math.cos(j%360*Math.PI*2/360) * r;
+                return new THREE.Vector3(x, y, z);
+            }
+
+            var add = function(v, p) {
+                v.push(p.x);
+                v.push(p.y);
+                v.push(p.z);
+            }
+
+            var mesh;
+            function initObject() {
+
+                var geometry = new THREE.Geometry();
+                var c = 0;
+                var s = 20;
+                for (var i=0;i<360;i+=s) {
+                    for (var j=0;j<360;j+=s) {
+                        var p1 = getPoint(i,j);
+                        var p2 = getPoint(i+s,j);
+                        var p3 = getPoint(i,j+s);
+                        var p4 = getPoint(i+s,j+s);
+                        geometry.vertices.push(p1);
+                        geometry.vertices.push(p2);
+                        geometry.vertices.push(p3);
+                        geometry.vertices.push(p4);
+                        geometry.faces.push(new THREE.Face3(c, c+2, c+1));
+                        geometry.faces.push(new THREE.Face3(c+2, c+3, c+1));
+                        c += 4;
+                    }
+                }
+                geometry.computeFaceNormals();
+
+                var materials = [
+				    //new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, flatShading: true}),
+                    new THREE.MeshBasicMaterial({color: 0x0000FF, wireframe: true})
+                ];
+
+                mesh = THREE.SceneUtils.createMultiMaterialObject(geometry, materials);
+                scene.add(mesh);
+            }
+            function render()
+            {
+                renderer.clear();
+
+                rotWorldMatrix = new THREE.Matrix4();
+                rotWorldMatrix.makeRotationAxis({x:0,y:0,z:1}, 0.1);
+                rotWorldMatrix.multiply(mesh.matrix);
+
+                mesh.matrix = rotWorldMatrix;
+                mesh.rotation.setFromRotationMatrix(mesh.matrix);
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(render);
+            }
+
+            function threeStart() {
+                initThree();
+                initCamera();
+                initScene();
+                //initLight();
+                initObject();
+                //camera.position.z = 5;
+                render();
+            }
+
+		</script>
+	</body>
+</html>
