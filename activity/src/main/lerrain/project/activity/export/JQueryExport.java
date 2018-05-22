@@ -74,6 +74,7 @@ public class JQueryExport
 
         root = root.replace("<!-- TITLE -->", doc.getName());
         root = root.replace("<!-- PAGES -->", pages);
+        root = root.replaceAll("<!-- HEIGHT -->", doc.getList().get(0).getH() + "");
         root = root.replace("<!-- JS_START -->", js1);
         root = root.replace("<!-- JS_ENV -->", js2);
         root = root.replace("<!-- JS_TEXT -->", js3);
@@ -95,12 +96,16 @@ public class JQueryExport
                 String id = e.getId();
                 String es = build(tool, e.getChildren());
 
+                String pos = null;
                 String style = "";
                 String className = "";
                 if (e.getFile().size() > 0)
                     style += String.format("background-image:url(%s);", uri(e.getFile().get(0)));
                 if (e.getFontSize() != null)
-                    style += String.format("font-size:%s;", e.getFontSize());
+                {
+                    style += "text-align:center;";
+                    js1 += "fnt('" + id + "'," + e.getH() * 2 / 3 + "," + e.getH() + ");";
+                }
                 if (e.getColor() != null)
                     style += String.format("color:%s;", e.getColor());
                 if (e.getBgColor() != null)
@@ -131,6 +136,8 @@ public class JQueryExport
                             es += "<img class=\"plat10_xx"+(k%4+1)+"\" style=\"z-index: 0;\" id=\""+id+"_"+k+"\">\n";
                         js1 += "star1('"+id+"',"+num+","+e.getW()+","+e.getH()+","+size+");";
                     }
+                    if (e.getStyle().get("fixed") != null)
+                        pos = "fixed";
                 }
 
                 //生成所有事件的js
@@ -173,7 +180,7 @@ public class JQueryExport
                 String eh = String.format("<div id=\"%s\" class=\"%s\" style=\"%s\" %s>%s</div>", id, className, style, ea, es);
                 elements += eh;
 
-                js1 += String.format("pot(\"%s\", %.2f, %.2f, %.2f, %.2f);\n", id, e.getX(), e.getY(), e.getW(), e.getH());
+                js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), e.getY(), e.getW(), e.getH(), pos == null ? "null" : "'" + pos + "'");
             }
         }
 

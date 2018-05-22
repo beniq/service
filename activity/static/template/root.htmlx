@@ -22,41 +22,34 @@
     var ENV = {
         init: {}
     };
-    var zoom = function(size){
-        size = size || 1;
+    var zoom = function(){
         var xx = document.getElementById("ccc");
-        return xx.offsetWidth * size / 750;
+        return xx.offsetWidth / 750;
     };
-    var pot = function(name, x, y, w, h)
+    var zoomY = function(){
+        var xx = document.getElementById("ccc");
+        return xx.offsetHeight / <!-- HEIGHT -->;
+    };
+    var pot = function(name, x, y, w, h, tp)
     {
         var d5 = document.getElementById(name);
-        d5.style.position = "absolute";
+        d5.style.position = tp ? tp : "absolute";
         d5.style.left = zoom() * x;
-        d5.style.top = zoom() * y;
-        poSize(name, w, h);
-    };
-    var pob = function(name, x, fy, w, h)
-    {
-        var d5 = document.getElementById(name);
-        d5.style.position = "absolute";
-        d5.style.left = zoom() * x;
-        d5.style.bottom = zoom() * fy;
+        d5.style.top = zoomY() * y;
         poSize(name, w, h);
     };
     var poSize = function(name, w, h){
         var d5 = document.getElementById(name);
         d5.style.width = zoom() * w;
-        d5.style.height = zoom() * h;
+        d5.style.height = zoomY() * h;
     };
-    var fnt = function(name, size)
+    var fnt = function(name, size1, size2)
     {
         try{
             var obj = document.getElementById(name);
-            var v = zoom() * size;
-            obj.style.fontSize = (v)+'px';
-            obj.style.lineHeight = (v)+'px';
+            obj.style.fontSize = (zoom() * size1)+'px';
+            obj.style.lineHeight = (zoom() * size2)+'px';
         }catch(e){}
-        return v;
     };
     var hidedown = function(e)
     {
