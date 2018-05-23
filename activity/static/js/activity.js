@@ -66,6 +66,7 @@ function Sparks(canvas) {
         sparkPic.src=s+"spark"+i+".png";
         this.sparkPics.push(sparkPic);
     }
+    this.maxFrame = 1000;
     this.pow1=new Audio(s+"pow1.ogg");
     this.pow2=new Audio(s+"pow2.ogg");
     this.pow3=new Audio(s+"pow3.ogg");
@@ -177,7 +178,7 @@ function Sparks(canvas) {
         pow.play();
     };
     this.doLogic = () => {
-        if(this.seedTimer<this.frames){
+        if(this.seedTimer<this.frames && this.frames<this.maxFrame-this.seedLife*2){
             this.seedTimer=this.frames+this.seedInterval*Math.random()*10;
             this.spawnSeed();
         }
@@ -292,7 +293,7 @@ function Sparks(canvas) {
         }
     };
     this.frame = () => {
-        if (this.frames < 0 || this.frames > 300){
+        if (this.frames < 0 || this.frames > this.maxFrame){
             return;
         }
         this.frames++;
