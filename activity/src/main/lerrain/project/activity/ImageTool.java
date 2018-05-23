@@ -10,7 +10,9 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -53,6 +55,44 @@ public class ImageTool
             e.printStackTrace();
 
             return copy(src, path, dest);
+        }
+    }
+
+    public static void cut(File dst, File src, float dw, float dh, float x, float y, float w, float h)
+    {
+        try
+        {
+            BufferedImage bi = ImageIO.read(src);
+
+            int xx = Math.round(x * bi.getWidth() / dw);
+            int yy = Math.round(y * bi.getHeight() / dh);
+            int ww = Math.round(w * bi.getWidth() / dw);
+            int hh = Math.round(h * bi.getHeight() / dh);
+
+            ColorModel cm = bi.getColorModel();
+            BufferedImage n = new BufferedImage(cm, cm.createCompatibleWritableRaster(ww, hh), cm.isAlphaPremultiplied(), null);
+
+            Graphics2D g = n.createGraphics();
+            g.drawImage(bi, 0, 0, ww, hh, xx, yy, xx + ww, yy + hh, null);
+
+            try (FileOutputStream fos = new FileOutputStream(dst); ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
+            {
+                JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpg").next();
+                imageWriter.setOutput(ios);
+
+                IIOMetadata imageMetaData = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(n), null);
+
+                JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
+                jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+                jpegParams.setCompressionQuality(0.6f);
+
+                imageWriter.write(imageMetaData, new IIOImage(n, null, null), null);
+                imageWriter.dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

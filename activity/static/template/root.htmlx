@@ -19,46 +19,7 @@
 </body>
 
 <script>
-    var ENV = {
-        init: {}
-    };
-    var zoom = function(){
-        var xx = document.getElementById("ccc");
-        return xx.offsetWidth / 750;
-    };
-    var zoomY = function(){
-        var xx = document.getElementById("ccc");
-        return xx.offsetHeight / <!-- HEIGHT -->;
-    };
-    var pot = function(name, x, y, w, h, tp)
-    {
-        var d5 = document.getElementById(name);
-        d5.style.position = tp ? tp : "absolute";
-        d5.style.left = zoom() * x;
-        d5.style.top = zoomY() * y;
-        poSize(name, w, h);
-    };
-    var poSize = function(name, w, h){
-        var d5 = document.getElementById(name);
-        d5.style.width = zoom() * w;
-        d5.style.height = zoomY() * h;
-    };
-    var fnt = function(name, size1, size2)
-    {
-        try{
-            var obj = document.getElementById(name);
-            obj.style.fontSize = (zoom() * size1)+'px';
-            obj.style.lineHeight = (zoom() * size2)+'px';
-        }catch(e){}
-    };
-    var hidedown = function(e)
-    {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-</script>
-
-<script>
+    ENV.H = <!-- HEIGHT -->;
     var gotoPrd = function(p) {
         var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         stat("GoProduct", dest, p.productId)
@@ -86,20 +47,23 @@
         if (r != null) return unescape(r[2]); return null; //返回参数值
     };
     gpo.runJS = function() {
-        // https://gpo.iyunbao.com
-        $.ajax({url:"/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/open', accountId:gpo.accountId, url:window.location.href}), contentType:'application/json;charset=UTF-8', dataType:"json"});
+        stat("open", window.location.href, null);
         gpo.refreshAct();
     };
-    gpo.refreshAct = function(){
+    gpo.refreshAct = function() {
+        gpo.ask("init", null, function(r) {
+            ENV.init = r;
+            refreshText();
+        });
+    };
+    gpo.ask = function(code, val, succ){
         try{
-            gpo.post("/npo/temp.json", {activity:'<!-- ACT_CODE -->', event:'init', account:gpo.accountId}, function(r){
+            gpo.post("/npo/temp.json", {activity:'<!-- ACT_CODE -->', event:code, account:gpo.accountId, value:val}, function(r){
                 if (r != null && r.result == "success") {
-                    var c = r.content;
-                    ENV.init = c;
-                    refreshText();
+                    if (succ) succ(r.content);
                 }
             });
-        }catch(e){console.log('refreshAcc-err', e);}
+        }catch(e){console.log('post-err', e);}
     };
     var refreshText = function() {
         <!-- JS_TEXT -->

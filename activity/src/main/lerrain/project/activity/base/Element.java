@@ -1,6 +1,7 @@
 package lerrain.project.activity.base;
 
 import com.alibaba.fastjson.JSONArray;
+import lerrain.project.activity.DocTool;
 
 import java.util.*;
 
@@ -8,10 +9,14 @@ public class Element
 {
     String id;
 
+    Element parent;
+    Page page;
+
     float x, y;
     float w, h;
 
     int z = 1;
+    int xs, ys, ws, hs;
 
     String bgColor;
 
@@ -31,6 +36,8 @@ public class Element
 
     int display = 1;
 
+    String input; //是否为输入框
+
     public Element()
     {
         setId(UUID.randomUUID().toString());
@@ -47,6 +54,16 @@ public class Element
             this.id = id.replaceAll("[-]", "");;
     }
 
+    public String getInput()
+    {
+        return input;
+    }
+
+    public void setInput(String input)
+    {
+        this.input = input;
+    }
+
     public List<String> getFile()
     {
         return file;
@@ -56,6 +73,66 @@ public class Element
     {
         this.file.clear();
         this.file.add(file);
+    }
+
+    public int getXs()
+    {
+        return xs;
+    }
+
+    public void setXs(int xs)
+    {
+        this.xs = xs;
+    }
+
+    public int getYs()
+    {
+        return ys;
+    }
+
+    public void setYs(int ys)
+    {
+        this.ys = ys;
+    }
+
+    public int getWs()
+    {
+        return ws;
+    }
+
+    public void setWs(int ws)
+    {
+        this.ws = ws;
+    }
+
+    public Element getParent()
+    {
+        return parent;
+    }
+
+    public void setParent(Element parent)
+    {
+        this.parent = parent;
+    }
+
+    public Page getPage()
+    {
+        return page;
+    }
+
+    public void setPage(Page page)
+    {
+        this.page = page;
+    }
+
+    public int getHs()
+    {
+        return hs;
+    }
+
+    public void setHs(int hs)
+    {
+        this.hs = hs;
     }
 
     public void addFile(String file)
@@ -131,6 +208,13 @@ public class Element
     public List<Element> getChildren()
     {
         return children;
+    }
+
+    public void addElement(Element e)
+    {
+        e.setParent(this);
+        e.setPage(this.getPage());
+        children.add(e);
     }
 
     public void setChildren(List<Element> children)
@@ -227,5 +311,33 @@ public class Element
     public void setDisplay(int display)
     {
         this.display = display;
+    }
+
+    public float getRealH()
+    {
+        float h;
+        if (this.getHs() == 1) //满屏
+            h = DocTool.DEVICE_H;
+        else
+            h = this.getH();
+
+        return h;
+    }
+
+    public float getRealY()
+    {
+        float y = 0;
+
+        if (this.getYs() == 1) //居中
+        {
+            if (this.getParent() != null)
+                y = (this.getParent().getRealH() - this.getRealH()) / 2;
+            else if (this.getPage() != null)
+                y = (this.getPage().getH() - this.getRealH()) / 2;
+        }
+        else
+            y = this.getY();
+
+        return y;
     }
 }

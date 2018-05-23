@@ -8,6 +8,7 @@ import lerrain.project.activity.base.Page;
 import lerrain.tool.Common;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,10 @@ public class JQueryExport
     String pages = "";
     String css = "";
 
+    List<String> input = new ArrayList<>();
     Map<String, String> xcss = new HashMap();
+
+    List<Runnable> finish = new ArrayList<>();
 
     public JQueryExport(String env)
     {
@@ -82,6 +86,9 @@ public class JQueryExport
         root = root.replaceAll("<!-- ACT_CODE -->", doc.getCode());
         root = root.replaceAll("<!-- SERVER -->", server);
 
+        for (Runnable r : finish)
+            r.run();
+
         return root;
     }
 
@@ -93,10 +100,15 @@ public class JQueryExport
         {
             for (Element e : list)
             {
-                String id = e.getId();
+                final String id = e.getId();
+
+                String pos = "null";
+                if (e.getStyle() != null && e.getStyle().get("fixed") != null)
+                    pos = "'fixed'";
+                js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), (e.getYs() == 1 ? -10000 : e.getY()), e.getW(), (e.getHs() == 1 ? -1 : e.getH()), pos);
+
                 String es = build(tool, e.getChildren());
 
-                String pos = null;
                 String style = "";
                 String className = "";
                 if (e.getFile().size() > 0)
@@ -116,14 +128,18 @@ public class JQueryExport
                 {
                     if (e.getStyle().get("hide") != null)
                         style += "display:none; overflow:hidden;";
+                    if (e.getStyle().get("shake1") != null)
+                        className += "shake1";
+                    if (e.getStyle().get("shake2") != null)
+                        className += "shake2";
                     if (e.getStyle().get("popup") != null)
                     {
                         css += JQueryExport.popupCss;
                         //style += String.format("transform: translateZ(%dpx);", 400);
                         className += "plat10_xz";
                     }
-                    if (e.getStyle().get("sparks") != null) {
-                        es += "<canvas id='CV" + id + "' style='width:100%;height:100%;'></canvas>";
+                    if (e.getStyle().get("canvas") != null) {
+                        es = "<canvas id='CV" + id + "' style='width:100%;height:100%;z-index:100'></canvas>" + es;
                     }
                     if (e.getStyle().get("alpha50") != null)
                         style += "opacity:0.5;";
@@ -139,8 +155,14 @@ public class JQueryExport
                             es += "<img class=\"plat10_xx"+(k%4+1)+"\" style=\"z-index: 0;\" id=\""+id+"_"+k+"\">\n";
                         js1 += "star1('"+id+"',"+num+","+e.getW()+","+e.getH()+","+size+");";
                     }
-                    if (e.getStyle().get("fixed") != null)
-                        pos = "fixed";
+                }
+
+                if (!Common.isEmpty(e.getInput()))
+                {
+                    String inputId = Common.trimStringOf(e.getInput());
+                    es += "<input id='INPUT" + inputId + "'/>";
+                    js3 += "$('#INPUT" + inputId + "').val(ENV.init." + inputId + ");";
+                    input.add(inputId);
                 }
 
                 //生成所有事件的js
@@ -165,6 +187,31 @@ public class JQueryExport
                         {
                             ec += "document.location.href = " + act.getString("param") + ";\n";
                         }
+                        else if ("submit".equals(type))
+                        {
+                            finish.add(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    String ec = "var formInput = {";
+                                    for (String str : input)
+                                        ec += str + ": document.getElementById('INPUT"+str+"').value,";
+                                    ec += "formTag: null };";
+
+                                    root = root.replace("<!-- SUBMIT" + id + " -->", ec);
+                                }
+                            });
+
+                            String eventId = act.getString("param");
+                            String str = "";
+                            if (eventId != null)
+                            {
+                                Event event = tool.doc.findEvent(eventId);
+                                str = tool.getJs(event);
+                            }
+                            ec += "<!-- SUBMIT" + id + " --> gpo.ask('submit', formInput, function(EVENT) { "+str+" });";
+                        }
                         else if ("event".equals(type))
                         {
                             String eventId = act.getString("param");
@@ -182,8 +229,6 @@ public class JQueryExport
 
                 String eh = String.format("<div id=\"%s\" class=\"%s\" style=\"%s\" %s>%s</div>", id, className, style, ea, es);
                 elements += eh;
-
-                js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), e.getY(), e.getW(), e.getH(), pos == null ? "null" : "'" + pos + "'");
             }
         }
 

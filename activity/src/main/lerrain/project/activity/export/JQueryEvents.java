@@ -83,7 +83,8 @@ public class JQueryEvents
         }
         else if ("close".equals(event.getType()))
         {
-            return "$('#" + id + "').hide();\n";
+            //return "$('#" + id + "').hide();\n";
+            return "document.getElementById('" + id + "').style.display = 'none';";
         }
         else if ("play".equals(event.getType()))
         {

@@ -22,10 +22,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class ActivityController
 {
+	String root = "./static";
+
 	@Autowired
 	ActivityService act;
 
@@ -200,6 +203,30 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/adjust_element.json")
+	@ResponseBody
+	public JSONObject adjust(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String elementId = json.getString("elementId");
+		String parentId = json.getString("parentId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Element element = doc.find(elementId);
+		Element parent = doc.find(parentId);
+
+		element.getPage().remove(elementId);
+		parent.addElement(element);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
 	@RequestMapping("/del_element.json")
 	@ResponseBody
 	public JSONObject delElement(@RequestBody JSONObject json)
@@ -210,6 +237,69 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		for (Page page : doc.getList())
 			page.remove(elementId);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/cut_bg.json")
+	@ResponseBody
+	public JSONObject cutBg(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String elementId = json.getString("elementId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Element element = doc.find(elementId);
+
+		float x = element.getX(), y = element.getY();
+		float dw, dh;
+
+		String file = null;
+		Element e = element.getParent();
+		while (e != null)
+		{
+			if (file == null && e.getFile() != null && e.getFile().size() > 0)
+				file = e.getFile().get(0);
+
+			x += e.getX();
+			y += e.getY();
+
+			e = e.getParent();
+		}
+
+		if (file == null)
+			file = element.getPage().getBackground();
+
+		if (file != null)
+		{
+			String oriFile = (String)doc.getFiles().get(file);
+			if (oriFile != null)
+				file = oriFile;
+
+			if (e != null)
+			{
+				dw = e.getW();
+				dh = e.getH();
+			}
+			else
+			{
+				dw = element.getPage().getW();
+				dh = element.getPage().getH();
+			}
+
+			String newFile = "/act/" + actId + "/" + elementId + ".jpg";
+			File src = new File(Common.pathOf(root, file));
+			File dst = new File(Common.pathOf(root, newFile));
+			ImageTool.cut(dst, src, dw, dh, x, y, element.getW(), element.getH());
+
+			element.setFile(newFile);
+		}
 
 		queue.add(doc);
 
@@ -286,13 +376,13 @@ public class ActivityController
 			e = new Element();
 			if (parentId == null)
 			{
-				page.getList().add(e);
+				page.addElement(e);
 			}
 			else
 			{
 				Element parent = page.find(parentId);
 				if (parent != null)
-					parent.getChildren().add(e);
+					parent.addElement(e);
 			}
 		}
 		else
@@ -305,8 +395,11 @@ public class ActivityController
 		e.setZ(Common.intOf(o.getInteger("z"), 0));
 		e.setW(o.getFloat("w"));
 		e.setH(o.getFloat("h"));
-		e.setDisplay(Common.intOf(o.getInteger("display"), 1));
+		e.setYs(Common.intOf(o.get("ys"), 0));
+		e.setHs(Common.intOf(o.get("hs"), 0));
 
+		e.setDisplay(Common.intOf(o.getInteger("display"), 1));
+		e.setInput(o.getString("input"));
 		e.setAction(o.getJSONArray("action"));
 
 		if (o.containsKey("image"))
@@ -349,8 +442,6 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		Page page = doc.getList().get(index);
 
-		String root = "./static";
-
 		File dir = new File(Common.pathOf(root, "/act/" + actId));
 		dir.mkdirs();
 		dir = new File(Common.pathOf(root, "/temp/" + actId));
@@ -377,7 +468,7 @@ public class ActivityController
 			else
 			{
 				parent = page.find(parentId);
-				parent.getChildren().add(img);
+				parent.addElement(img);
 			}
 		}
 
@@ -388,11 +479,14 @@ public class ActivityController
 			{
 				try (InputStream is = file.getInputStream())
 				{
-					File src = new File(Common.pathOf(dir.getPath(), fileName));
+					String srcFile = "/temp/" + actId + "/" + fileName;
+					File src = new File(Common.pathOf(root, srcFile));
 					Disk.saveToDisk(is, src);
 
 					File dst = ImageTool.compress(src, root, "act/" + actId + "/" + act.getDestFile(file.getOriginalFilename()));
 					String uriName = "act/" + actId + "/" + dst.getName();
+
+					doc.getFiles().put(uriName, srcFile);
 
 					BufferedImage bi = ImageIO.read(dst);
 					int w = bi.getWidth();
@@ -512,40 +606,40 @@ public class ActivityController
 		}
 	}
 
-	@RequestMapping("/upload.json")
-	@ResponseBody
-	public JSONObject upload(@RequestBody JSONObject req)
-	{
-		String key = req.getString("password");
-		if (!Common.md5Of(Common.getString(new Date()) + "_ACT").equals(key))
-			throw new RuntimeException("error");
-
-		String root = req.getString("root");
-		JSONArray list = req.getJSONArray("files");
-
-		for (int i=0;i<list.size();i++)
-		{
-			JSONObject f = list.getJSONObject(i);
-			String fileName = f.getString("fileName");
-			String content = f.getString("content");
-
-			try
-			{
-				File file = new File(Common.pathOf(root, fileName));
-				file.getParentFile().mkdirs();
-
-				byte[] b = Common.decodeBase64ToByte(content);
-				Disk.saveToDisk(new ByteArrayInputStream(b), file);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
-
-		return res;
-	}
+//	@RequestMapping("/upload.json")
+//	@ResponseBody
+//	public JSONObject upload(@RequestBody JSONObject req)
+//	{
+//		String key = req.getString("password");
+//		if (!Common.md5Of(Common.getString(new Date()) + "_ACT").equals(key))
+//			throw new RuntimeException("error");
+//
+//		String root = req.getString("root");
+//		JSONArray list = req.getJSONArray("files");
+//
+//		for (int i=0;i<list.size();i++)
+//		{
+//			JSONObject f = list.getJSONObject(i);
+//			String fileName = f.getString("fileName");
+//			String content = f.getString("content");
+//
+//			try
+//			{
+//				File file = new File(Common.pathOf(root, fileName));
+//				file.getParentFile().mkdirs();
+//
+//				byte[] b = Common.decodeBase64ToByte(content);
+//				Disk.saveToDisk(new ByteArrayInputStream(b), file);
+//			}
+//			catch (Exception e)
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		JSONObject res = new JSONObject();
+//		res.put("result", "success");
+//
+//		return res;
+//	}
 }

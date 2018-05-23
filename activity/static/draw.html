@@ -35,8 +35,10 @@
 				},
 				style: {
 			        hide: "隐藏",
+                    shake1: "缩放抖动",
+                    shake2: "摇摆抖动",
                     fixed: "浮动固定",
-                    sparks: "烟花",
+                    canvas: "画板背景(烟花等)",
                     play: "背景轮播",
                     popup: "弹出动效",
                     alpha50: "50%透明",
@@ -104,7 +106,7 @@
 
             ENV.drawElement = function(c, e) {
                 if (e.bgColor != null && e.bgColor != "") {
-                    c.fillStyle = "#" + e.bgColor;
+                    c.fillStyle = ENV.color(e.bgColor);
                     c.fillRect(e.cx, e.cy, e.w, e.h);
                 }
                 if (e.image != null && e.image.length > 0) {
@@ -112,13 +114,16 @@
                 }
 			}
 
+			ENV.color = function(c) {
+                if (c.startsWith("rgb"))
+                    return c;
+                else
+                    return "#" + c;
+ 			}
+
             ENV.in = function(px, py, x, y, w, h) {
                 return px > x && py > y && px < x + w && py < y + h;
 			}
-
-            ENV.inRect = function(x, y, e) {
-                return ENV.in(x, y, e.x, e.y, e.w, e.h);
-            }
 
             ENV.inRC = function(x, y, e) {
                 return ENV.in(x, y, e.cx, e.cy, e.w, e.h);
@@ -160,8 +165,13 @@
                     });
                 },
                 onEventLink: function(e, ev) {
-                    ev.dataTransfer.setData("fromEventId", e.id);
+                    ev.dataTransfer.setData("dragType", "event");
+                    ev.dataTransfer.setData("srcId", e.id);
 				},
+                onAdjust: function(e, ev) {
+                    ev.dataTransfer.setData("dragType", "element");
+                    ev.dataTransfer.setData("srcId", e.id);
+                },
                 display: function(e) {
                     if (e.display == 1)
                         e.display = 0;
@@ -170,12 +180,13 @@
                     ENV.selected = e;
                     this.saveElement();
 				},
-				toDivs: function(self, elements) {
+				toDivs: function(self, elements, parent) {
                 	return elements == null ? null : elements.map(e => {
+                        e.p = parent;
                         return (
 							<div className="ml-3" key={e.id}>
-								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)}>
-									<div className="mr-auto">元素 [{Math.round(e.x)},{Math.round(e.y)}] [{Math.round(e.w)},{Math.round(e.h)}] {e.image != null ? " [图片]" : null}</div>
+								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
+									<div id={e.id} className="mr-auto">元素 [{Math.round(e.x)},{Math.round(e.y)}] [{Math.round(e.w)},{Math.round(e.h)}] {e.image != null ? " [图片]" : null}</div>
 									<div onClick={Element.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
 									<div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 								</div>
@@ -187,7 +198,7 @@
 										</div>
 									})}
 								</div>
-								{ Element.toDivs(self, e.children) }
+								{ Element.toDivs(self, e.children, e) }
 							</div>
                         );
                     });
@@ -232,7 +243,7 @@
                                     let s = c.offset();
                                     let x = (e.clientX - s.left) * ENV.W / c.width();
                                     let y = (e.clientY - s.top) * ENV.H / c.height();
-                                    if (ENV.inRect(x, y, ENV.selected))
+                                    if (ENV.inRC(x, y, ENV.selected))
                                         fd.append("parentId", ENV.selected.id);
                                 }
                                 fd.append("type", "element");
@@ -245,19 +256,35 @@
                                 xhr.send(fd);
                             }
                         } else {
-                            let srcId = e.dataTransfer.getData("fromEventId");
 							let dstId = e.target.id;
-							if (dstId == "eAction") {
-							    ENV.selected.action.push({type:"event", param:srcId})
-								this.saveElement();
-							} else {
-                                this.link(srcId, dstId);
+                            let srcId = e.dataTransfer.getData("srcId");
+                            let type = e.dataTransfer.getData("dragType");
+                            if (srcId != null && srcId != "" && dstId != null && dstId != "") {
+                                if (type == "event") {
+                                    if (dstId == "eAction") {
+                                        ENV.selected.action.push({type: "event", param: srcId})
+                                        this.saveElement();
+                                    } else {
+                                        this.link(srcId, dstId);
+									}
+                                } else if (type == "element") {
+									this.adjust(srcId, dstId);
+                                }
                             }
 						}
                     };
 
                     document.getElementById('content').addEventListener("drop", drop, false);
                 },
+				adjust(e1, e2) {
+                    common.req("adjust_element.json", {
+                        actId: ENV.actId,
+                        elementId: e1,
+                        parentId: e2
+                    }, r => {
+                        this.refresh(r);
+                    });
+				},
 				link(e1, e2) {
                     common.req("link_event.json", {
                         actId: ENV.actId,
@@ -307,6 +334,17 @@
                     ENV.selected = e;
                     this.refresh();
                 },
+                selectById(eId) {
+                    let page = ENV.doc.pages[ENV.index];
+                    page.elements.map((e) => {
+                        if (e.id == eId) {
+                            ENV.selected = e;
+                        } else if (e.children != null) e.children.map(e => {
+                            if (e.id == eId)
+                                ENV.selected = e;
+                        });
+                    });
+                },
 				drag(e) {
                     let f = ENV.selected;
                     if (f == null)
@@ -332,9 +370,9 @@
                             ENV.drag.mode = 4;
                         } else if (ENV.in(x, y, f.cx + f.w, f.cy, 20, f.h)) {
                             ENV.drag.mode = 6;
-                        } else if (ENV.in(x, y, f.cx - 20, f.cy + f.h, 20, 20)) {
+                        } else if (ENV.in(x, y, f.cx - 20, f.cy + f.h), 20, 20) {
                             ENV.drag.mode = 1;
-                        } else if (ENV.in(x, y, f.cx, f.cy + f.h, f.w, 20)) {
+                        } else if (ENV.in(x, y, f.cx, f.cy + f.h), f.w, 20) {
                             ENV.drag.mode = 2;
                         } else if (ENV.in(x, y, f.cx + f.w, f.cy + f.h, 20, 20)) {
                             ENV.drag.mode = 3;
@@ -393,7 +431,9 @@
 								}
                                 ENV.selected = ENV.cursorRect;
                                 ENV.cursorRect = null;
-                            } else {
+                            } else if (ENV.selected != null && ENV.drag.mode != null) {
+                                ENV.selected.hs = 0;
+                                ENV.selected.ys = 0;
                                 ENV.selected.x = ENV.selected.x;
                                 ENV.selected.y = ENV.selected.y;
                                 ENV.selected.w = ENV.selected.w;
@@ -428,6 +468,10 @@
                         pageIndex: ENV.index,
 						element: ENV.selected
                     }, r => {
+                        if (ENV.selected.id)
+                            this.selectById(ENV.selected.id);
+                        else
+                            ENV.selected = null;
                         this.refresh(r);
                     });
                 },
@@ -503,6 +547,11 @@
                     e.image = [];
                     this.saveElement();
 				},
+                cutBg(e) {
+                    common.req("cut_bg.json", {actId: ENV.actId, elementId:e.id}, r => {
+                        this.refresh(r);
+                    });
+                },
                 setZIndex(e, k) {
                     if (k == 0) {
                         e.z = 0;
@@ -581,12 +630,18 @@
 										<div className="btn btn-primary" style={{width:"100px"}}>X</div>
 									</div>
 									<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
+									<div className="input-group-append">
+										<div className="btn btn-outline-primary" onClick={v => {e.x = ((e.p ? e.p.w : ENV.W) - e.w) / 2; this.refs.eX.value = e.x; this.saveElement();}}>居中</div>
+									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
 									</div>
-									<input type="text" className="form-control" ref="eY" defaultValue={e.y} onChange={v => {e.y = v.target.value}} onBlur={this.saveElement}/>
+									<input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.y} onChange={v => {e.ys = 0; e.y = v.target.value;}} onFocus={v => {this.refs.eY.value = e.y}} onBlur={this.saveElement}/>
+									<div className="input-group-append">
+										<div className="btn btn-outline-primary" onClick={v => {e.ys = 1; this.saveElement();}}>居中</div>
+									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
@@ -604,12 +659,18 @@
 										<div className="btn btn-primary" style={{width:"100px"}}>宽</div>
 									</div>
 									<input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
+									<div className="input-group-append">
+										<div className="btn btn-outline-primary" onClick={v => {e.w = 750; this.refs.eW.value = e.w; this.saveElement();}}>满屏</div>
+									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>高</div>
 									</div>
-									<input type="text" className="form-control" ref="eH" defaultValue={e.h} onChange={v => {e.h = v.target.value}} onBlur={this.saveElement}/>
+									<input type="text" className="form-control" ref="eH" defaultValue={e.hs == 1 ? "满屏" : e.h} onChange={v => {e.hs = 0; e.h = v.target.value;}} onFocus={v => {this.refs.eH.value = e.h}} onBlur={this.saveElement}/>
+									<div className="input-group-append">
+										<div className="btn btn-outline-primary" onClick={v => {e.hs = 1; this.saveElement();}}>满屏</div>
+									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
@@ -627,6 +688,7 @@
 									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ JSON.stringify(e.style) } readOnly="true"/>
 									<div className="dropdown-menu" aria-labelledby="eStyle">
                                         { Object.keys(ENV.style).map(v => {
+                                            if (e.style == null) e.style = {};
 											return <div className="dropdown-item" key={v}>
 												<div className="input-group pl-1 pr-1 pt-1 pb-1">
 													<div className="input-group-prepend">
@@ -644,7 +706,7 @@
 									</div>
 									<input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
 									<div className="input-group-append">
-										<div className="btn btn-success" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
+										<div className="btn btn-outline-primary" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -689,7 +751,8 @@
 									</div>
 									<input type="text" className="form-control" id="eImage" ref="eImage" value={JSON.stringify(e.image)} readOnly="true"/>
 									<div className="input-group-append">
-										<div className="btn btn-success" onClick={this.removeBg.bind(this, e)}>清除</div>
+										<div className="btn btn-outline-primary" onClick={this.removeBg.bind(this, e)}>清除</div>
+										<div className="btn btn-outline-primary" onClick={this.cutBg.bind(this, e)}>截取</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -701,10 +764,11 @@
 											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "js")}>JS方法</a>
 											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "toProduct")}>跳转产品</a>
 											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "shareProduct")}>转发产品</a>
+											<a className="dropdown-item" onClick={Element.addAction.bind(this, e, "submit")}>提交</a>
 										</div>
 									</div>
-									<div className="form-control">
-										<div id="eAction" ref="eAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{JSON.stringify(e.action)}</div>
+									<div className="form-control p-0 m-0 border-0">
+										<input className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
 										<div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
 											{ e.action.map(act => {
                                                 return <div className="dropdown-item">
@@ -714,6 +778,12 @@
 											})}
 										</div>
 									</div>
+								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>输入框</div>
+									</div>
+									<input type="text" className="form-control" id="eInput" ref="eInput" defaultValue={e.input} onChange={v => {e.input = v.target.value}} onBlur={this.saveElement}/>
 								</div>
 							</div>
                         } else {

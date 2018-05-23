@@ -1,7 +1,9 @@
 package lerrain.project.activity.base;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ActivityDoc
 {
@@ -11,6 +13,8 @@ public class ActivityDoc
     String name;
 
     List<Page> list = new ArrayList<>();
+
+    Map<String, Object> files = new HashMap(); //压缩后的文件与源文件的mapping
 
     public String getCode()
     {
@@ -74,5 +78,17 @@ public class ActivityDoc
         }
 
         return null;
+    }
+
+    public Map<String, Object> getFiles()
+    {
+        return files;
+    }
+
+    public void setFiles(Map<String, Object> files)
+    {
+        if (files == null)
+            files = new HashMap<>();
+        this.files = files;
     }
 }

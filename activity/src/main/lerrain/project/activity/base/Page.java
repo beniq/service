@@ -18,6 +18,7 @@ public class Page
 
     public void addElement(Element e)
     {
+        e.setPage(this);
         list.add(e);
     }
 
