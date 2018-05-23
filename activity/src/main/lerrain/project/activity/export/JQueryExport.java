@@ -122,6 +122,9 @@ public class JQueryExport
                         //style += String.format("transform: translateZ(%dpx);", 400);
                         className += "plat10_xz";
                     }
+                    if (e.getStyle().get("sparks") != null) {
+                        es += "<canvas id='CV" + id + "' style='width:100%;height:100%;'></canvas>";
+                    }
                     if (e.getStyle().get("alpha50") != null)
                         style += "opacity:0.5;";
                     if (e.getStyle().get("alpha") != null)

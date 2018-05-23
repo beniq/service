@@ -33,6 +33,9 @@ public class JQueryEvents
         {
             envJs += "ENV.tiger = new Tiger1();\n";
         }
+        else if ("sparks".equals(event.getType()))
+        {
+        }
         else if ("play".equals(event.getType()))
         {
             List<String> list = event.getElement().getFile();
@@ -76,7 +79,7 @@ public class JQueryEvents
         }
         else if ("open".equals(event.getType()))
         {
-            return "$('#" + id + "').show();\n";
+            return "$('#" + id + "').show();\n" + (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
         }
         else if ("close".equals(event.getType()))
         {
@@ -85,6 +88,15 @@ public class JQueryEvents
         else if ("play".equals(event.getType()))
         {
             return null;
+        }
+        else if ("sparks".equals(event.getType()))
+        {
+            String js = "var canvas = document.getElementById('CV"+event.getElement().getId()+"');\n" +
+                    "    canvas.width=canvas.clientWidth;\n" +
+                    "    canvas.height=canvas.clientHeight;\n" +
+                    "    var sp = new Sparks(canvas);\n" +
+                    "    sp.start();";
+            return js;
         }
 
         return null;
