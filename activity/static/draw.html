@@ -184,14 +184,14 @@
                         return (
 							<div className="ml-3" key={e.id}>
 								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == self.state.element ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
-									<div id={e.id} className="mr-auto">元素 [{Math.round(e.x)},{Math.round(e.y)}] [{Math.round(e.w)},{Math.round(e.h)}] {e.image != null ? " [图片]" : null}</div>
+									<div data-drop="true" id={e.id} className="mr-auto">元素 [{Math.round(e.x)},{Math.round(e.y)}] [{Math.round(e.w)},{Math.round(e.h)}] {e.image != null ? " [图片]" : null}</div>
 									<div onClick={self.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
 									<div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 								</div>
 								<div className="ml-3">
 									{ e.events == null ? null : e.events.map(ev => {
 										return <div key={ev.id} className="form-row pl-2 pr-2 pt-1 pb-1" draggable="true" onDragStart={this.onEventLink.bind(self, ev)}>
-											<div id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " → " + ev.onFinish.type}</div>
+											<div data-drop="true" id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " → " + ev.onFinish.type}</div>
 											<div onClick={self.deleteEvent.bind(self, e.id, ev.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 										</div>
 									})}
@@ -334,6 +334,9 @@
                                 xhr.send(fd);
                             }
                         } else {
+                            if (!e.target.getAttribute("data-drop"))
+                                return;
+                            e.target.style.border = ENV.mapping[e.target];
 							let dstId = e.target.id;
                             let srcId = e.dataTransfer.getData("srcId");
                             let type = e.dataTransfer.getData("dragType");
@@ -356,7 +359,20 @@
 						}
                     };
 
-                    document.getElementById('content').addEventListener("drop", drop, false);
+					let dragEnter = e => {
+                        if (e.target.getAttribute("data-drop")) {
+                            ENV.mapping[e.target] = e.target.style.border;
+                            e.target.style.border = "3px dashed red";
+                        }
+					}
+                    let dragLeave = e => {
+                        if (e.target.getAttribute("data-drop"))
+	                        e.target.style.border = ENV.mapping[e.target];
+                    }
+
+                    document.getElementById('content').addEventListener("drop", drop);
+                    document.getElementById('content').addEventListener("dragenter", dragEnter);
+                    document.getElementById('content').addEventListener("dragleave", dragLeave);
                 },
                 display: function(e) {
                     if (e.display == 1)
@@ -673,7 +689,7 @@
                     let tree = ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3" key={i}>
-                                <div id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
+                                <div data-drop="true" id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
                                 { Element.toDivs(this, page.elements) }
                             </div>
                         )
@@ -850,7 +866,7 @@
 										</div>
 									</div>
 									<div className="form-control p-0 m-0 border-0">
-										<input className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
+										<input data-drop="true" className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
 										<div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
 											{ e.action.map(act => {
                                                 return <div className="dropdown-item">
@@ -968,6 +984,8 @@
                 ReactDOM.render(<Main/>, document.getElementById("content"));
 
                 setInterval(function() {
+                    if (Object.keys(ENV.ready).length <= 0)
+                        return;
                     let ready = ENV.ready;
                     ENV.ready = {};
 					common.req("element.json", {
