@@ -34,6 +34,7 @@ public class ActivityService
 		JQueryExport.popupCss = Disk.load(new File("./static/template/popup.cssx"), "utf-8");
 		JQueryExport.playCss = Disk.load(new File("./static/template/play.cssx"), "utf-8");
 		JQueryExport.starCss = Disk.load(new File("./static/template/star.cssx"), "utf-8");
+		JQueryExport.textCss = Disk.load(new File("./static/template/text.cssx"), "utf-8");
 	}
 
 	public String getDestFile(String dest)

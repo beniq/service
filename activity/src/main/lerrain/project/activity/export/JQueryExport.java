@@ -20,6 +20,7 @@ public class JQueryExport
     public static String popupCss;
     public static String playCss;
     public static String starCss;
+    public static String textCss;
 
     String server;
 
@@ -134,6 +135,16 @@ public class JQueryExport
                         className += "ani_shake2";
                     if (e.getStyle().get("rotate") != null)
                         className += "ani_rotate";
+                    if (e.getStyle().get("textin") != null)
+                    {
+                        String ncss = textCss.replaceAll("<!-- ID -->", id);
+                        ncss = ncss.replaceAll("<!-- X -->", -Math.round(75000 / e.getW()) + "%");
+                        ncss = ncss.replaceAll("<!-- Y -->", Math.round(75000 / e.getW()) + "0%");
+                        ncss = ncss.replaceAll("<!-- START -->", "0");
+
+                        css += ncss;
+                        className += "text_in" + id;
+                    }
                     if (e.getStyle().get("popup") != null)
                     {
                         css += JQueryExport.popupCss;
