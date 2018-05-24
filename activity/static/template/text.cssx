@@ -1,22 +1,29 @@
 @-moz-keyframes text_in<!-- ID --> {
-    from {-moz-transform:translate(<!-- X -->, <!-- Y -->);}
-    to   {-moz-transform:translate(0, 0);}
+    from {-moz-transform:translate(<!-- X -->, <!-- Y -->); -moz-opacity:0;}
+    30% {-moz-opacity:1;}
+    to   {-moz-transform:translate(0, 0); -moz-opacity:1;}
 }
 @-webkit-keyframes text_in<!-- ID --> {
-    from {-webkit-transform:translate(<!-- X -->, <!-- Y -->);}
-    to   {-webkit-transform:translate(0, 0);}
+    from {-webkit-transform:translate(<!-- X -->, <!-- Y -->); -khtml-opacity:0; opacity:0;}
+    30% {-khtml-opacity:1; opacity:1;}
+    to   {-webkit-transform:translate(0, 0); -khtml-opacity:1; opacity:1;}
 }
 @-o-keyframes text_in<!-- ID --> {
-    from {-o-transform:translate(<!-- X -->, <!-- Y -->);}
-    to   {-o-transform:translate(0, 0);}
+    from {-o-transform:translate(<!-- X -->, <!-- Y -->); opacity:0;}
+    30% {opacity:1;}
+    to   {-o-transform:translate(0, 0); opacity:1;}
 }
 @keyframes text_in<!-- ID --> {
-    from {transform:translate(<!-- X -->, <!-- Y -->);}
-    to   {transform:translate(0, 0);}
+    from {transform:translate(<!-- X -->, <!-- Y -->); opacity:0;}
+    30% {opacity:1;}
+    to   {transform:translate(0, 0); opacity:1;}
 }
 .text_in<!-- ID --> {
-    -moz-animation:text_in<!-- ID --> 0.5s cubic-bezier(0.95, 0, 1, 1) <!-- START -->s 1 normal forwards;
-    -webkit-animation:text_in<!-- ID --> 0.5s cubic-bezier(0.95, 0, 1, 1) <!-- START -->s 1 normal forwards;
-    -o-animation:text_in<!-- ID --> 0.5s cubic-bezier(0.95, 0, 1, 1) <!-- START -->s 1 normal forwards;
-    animation:text_in<!-- ID --> 0.5s cubic-bezier(0.95, 0, 1, 1) <!-- START -->s 1 normal forwards;
+    -moz-opacity: 0;
+    -khtml-opacity:0;
+    opacity: 0;
+    -moz-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
+    -webkit-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
+    -o-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
+    animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
 }

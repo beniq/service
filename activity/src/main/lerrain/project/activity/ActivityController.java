@@ -19,10 +19,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Date;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class ActivityController
@@ -121,32 +122,6 @@ public class ActivityController
 		Page page = doc.getList().get(pageIndex);
 		page.setW(json.getIntValue("w"));
 		page.setH(json.getIntValue("h"));
-
-		queue.add(doc);
-
-		JSONObject res = new JSONObject();
-		res.put("result", "success");
-		res.put("content", DocTool.toJson(doc));
-
-		return res;
-	}
-
-	@RequestMapping("/new_element.json")
-	@ResponseBody
-	public JSONObject newElement(@RequestBody JSONObject json)
-	{
-		Long actId = json.getLong("actId");
-		int index = json.getInteger("pageIndex");
-
-		ActivityDoc doc = act.getAct(actId);
-		Page page = doc.getList().get(index);
-
-		String file = json.getString("file");
-
-		Element img = new Element();
-		img.setFile(file);
-
-		page.addElement(img);
 
 		queue.add(doc);
 
@@ -366,39 +341,81 @@ public class ActivityController
 		return res;
 	}
 
+	@RequestMapping("/new_element.json")
+	@ResponseBody
+	public JSONObject newElement(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		int index = json.getInteger("pageIndex");
+
+		JSONObject o = json.getJSONObject("element");
+		String parentId = o.getString("parentId");
+
+		ActivityDoc doc = act.getAct(actId);
+		Page page = doc.getList().get(index);
+
+		Element e = new Element();
+		if (parentId == null)
+		{
+			page.addElement(e);
+		}
+		else
+		{
+			Element parent = page.find(parentId);
+			if (parent != null)
+				parent.addElement(e);
+		}
+
+		fillElement(e, o);
+
+//		String file = json.getString("file");
+//		if (file != null)
+//			e.setFile(file);
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
 	@RequestMapping("/element.json")
 	@ResponseBody
 	public JSONObject element(@RequestBody JSONObject json)
 	{
 		Long actId = json.getLong("actId");
-		int pageIndex = json.getIntValue("pageIndex");
-		JSONObject o = json.getJSONObject("element");
-		String elementId = o.getString("id");
-		String parentId = o.getString("parentId");
-
 		ActivityDoc doc = act.getAct(actId);
-		Page page = doc.getList().get(pageIndex);
 
-		Element e;
-		if (elementId == null)
+		JSONObject elements = json.getJSONObject("elements");
+		if (elements != null && elements.size() > 0)
 		{
-			e = new Element();
-			if (parentId == null)
+			for (String elementId : elements.keySet())
 			{
-				page.addElement(e);
-			}
-			else
-			{
-				Element parent = page.find(parentId);
-				if (parent != null)
-					parent.addElement(e);
+				Element e = doc.find(elementId);
+				fillElement(e, elements.getJSONObject(elementId));
 			}
 		}
-		else
+
+		JSONObject element = json.getJSONObject("element");
+		if (element != null)
 		{
-			e = page.find(elementId);
+			String elementId = element.getString("id");
+			Element e = doc.find(elementId);
+			fillElement(e, element);
 		}
 
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+
+		return res;
+	}
+
+	private void fillElement(Element e, JSONObject o)
+	{
 		e.setX(o.getFloat("x"));
 		e.setY(o.getFloat("y"));
 		e.setZ(Common.intOf(o.getInteger("z"), 0));
@@ -409,6 +426,7 @@ public class ActivityController
 
 		e.setDisplay(Common.intOf(o.getInteger("display"), 1));
 		e.setInput(o.getString("input"));
+		e.setInputVerify(o.getJSONObject("inputVerify"));
 		e.setAction(o.getJSONArray("action"));
 
 		if (o.containsKey("image"))
@@ -433,12 +451,24 @@ public class ActivityController
 
 		if (o.containsKey("style"))
 			e.setStyle(o.getJSONObject("style"));
+	}
+
+	@RequestMapping("/style.json")
+	@ResponseBody
+	public JSONObject style(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		String elementId = json.getString("elementId");
+		JSONObject style = json.getJSONObject("style");
+
+		ActivityDoc doc = act.getAct(actId);
+		Element e = doc.find(elementId);
+		e.setStyle(style);
 
 		queue.add(doc);
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", DocTool.toJson(doc));
 
 		return res;
 	}
@@ -588,7 +618,7 @@ public class ActivityController
 		for (File f : dir.listFiles())
 			Disk.copy(f, new File(Common.pathOf("./static/" + env, actId.toString(), f.getName())), true);
 
-		String html = new JQueryExport(env).export(doc);
+		String html = new JQueryExport(doc, env).export();
 		try (OutputStream os = new FileOutputStream(dest))
 		{
 			os.write(html.getBytes("utf-8"));
@@ -608,7 +638,7 @@ public class ActivityController
 	{
 		ActivityDoc doc = act.getAct(actId);
 
-		String html = new JQueryExport(env).export(doc);
+		String html = new JQueryExport(doc, env).export();
 		try (OutputStream os = res.getOutputStream())
 		{
 			os.write(html.getBytes("utf-8"));

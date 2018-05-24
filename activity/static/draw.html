@@ -30,23 +30,35 @@
 			    W: 750,
 				H: 1200,
 				index: 0,
+                ready: {},
                 mapping: {},
 				doc: {
 			        pages: []
 				},
 				style: {
-			        hide: "隐藏",
-                    shake1: "缩放抖动",
-                    shake2: "摇摆抖动",
-                    rotate: "旋转",
-                    fixed: "浮动固定",
-                    textin: "文字入场",
-                    canvas: "画板背景(烟花等)",
-                    play: "背景轮播",
-                    popup: "弹出动效",
-                    alpha50: "50%透明",
-                    bgSwitch: "背景切换",
-                    stars: "金色星星",
+			        hide: {text: "隐藏"},
+                    shake1: {text: "缩放抖动"},
+                    shake2: {text: "摇摆抖动"},
+                    rotate: {text: "旋转"},
+                    fixed: {text: "浮动固定"},
+                    textin: {
+			            text: "文字入场",
+						comp: [
+                            {label: "开始", code: "begin", type: "input"},
+							{label: "方向", code: "direct", type: "select", value: [
+							    {code:"1", text:"左侧进入"},
+                                {code:"2", text:"上侧进入"},
+                                {code:"3", text:"右侧进入"},
+                                {code:"4", text:"下侧进入"},
+							]},
+						]
+                    },
+                    canvas: {text: "画板背景(烟花等)"},
+                    play: {text: "背景轮播"},
+                    popup: {text: "弹出动效"},
+                    alpha50: {text: "50%透明"},
+                    bgSwitch: {text: "背景切换"},
+                    stars: {text: "金色星星"},
 				},
 				images: {},
 				imagesOnload: {}
@@ -82,7 +94,7 @@
                 }
             }
 
-            ENV.draw = function() {
+            ENV.draw = function(now) {
                 let canvas = document.getElementById("canvas");
                 let c = canvas.getContext("2d");
                 c.fillStyle = "black";
@@ -97,9 +109,9 @@
                         ENV.drawElement(c, e);
                     });
                 })
-                if (ENV.selected) {
+                if (now) {
                     c.fillStyle = "rgba(100%,60%,60%,0.5)";
-                    c.fillRect(ENV.selected.cx, ENV.selected.cy, ENV.selected.w, ENV.selected.h);
+                    c.fillRect(now.cx, now.cy, now.w, now.h);
                 }
                 if (ENV.cursorRect) {
                     c.fillStyle = "rgba(100%,60%,60%,0.5)";
@@ -158,15 +170,6 @@
 					}
 					this.saveElement();
 				},
-                addEvent: function(type) {
-                    common.req("event.json", {
-                        actId: ENV.actId,
-                        elementId: ENV.selected.id,
-						type: type
-                    }, r => {
-                        this.refresh(r);
-                    });
-                },
                 onEventLink: function(e, ev) {
                     ev.dataTransfer.setData("dragType", "event");
                     ev.dataTransfer.setData("srcId", e.id);
@@ -175,22 +178,14 @@
                     ev.dataTransfer.setData("dragType", "element");
                     ev.dataTransfer.setData("srcId", e.id);
                 },
-                display: function(e) {
-                    if (e.display == 1)
-                        e.display = 0;
-                    else
-                        e.display = 1;
-                    ENV.selected = e;
-                    this.saveElement();
-				},
 				toDivs: function(self, elements, parent) {
                 	return elements == null ? null : elements.map(e => {
                         ENV.mapping[e.id] = parent;
                         return (
 							<div className="ml-3" key={e.id}>
-								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
+								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == self.state.element ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
 									<div id={e.id} className="mr-auto">元素 [{Math.round(e.x)},{Math.round(e.y)}] [{Math.round(e.w)},{Math.round(e.h)}] {e.image != null ? " [图片]" : null}</div>
-									<div onClick={Element.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
+									<div onClick={self.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
 									<div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
 								</div>
 								<div className="ml-3">
@@ -208,16 +203,96 @@
                 }
             }
 
+            var Style = React.createClass({
+                getInitialState() {
+                    return {};
+                },
+                componentDidMount() {
+                    this.setState(this.props.element.style);
+                },
+                delete(k) {
+                    let m = this.state;
+                    delete m[k];
+                    this.setState(m);
+                },
+                save() {
+                    common.req("style.json", {
+                        actId: ENV.actId,
+                        elementId: this.props.element.id,
+						style: this.props.element.style
+                    }, r => {});
+                },
+				add(type) {
+                    let p = {};
+                    p[type] = {};
+                    this.setState(p, () => {
+                        this.props.element.style = this.state;
+                        this.save();
+                    });
+                },
+				render() {
+                    return <div>
+                        { Object.keys(this.state).map(s => {
+                            let style = ENV.style[s];
+                            let comps = !style || !style.comp ? null : style.comp.map(c => {
+                                let p = this.state[s];
+                                let func = v => {
+                                    let q = {};
+                                    p[c.code] = v.target.value;
+                                    q[s] = p;
+                                    this.setState(q, () => {
+                                        this.props.element.style = this.state;
+                                        this.save();
+                                    });
+                                };
+                                let comp = null;
+                                if (c.type == "select") {
+                                    comp = <select className="form-control" value={p[c.code]} onChange={func}>
+                                        { c.value.map(o => <option value={o.code}>{o.text}</option>) }
+									</select>;
+                                } else if (c.type == "input") {
+                                    comp = <input className="form-control" value={p[c.code]} onChange={func}/>;
+                                }
+                                return (
+									<div className="input-group pl-2 pr-2 pt-1 pb-1">
+										<div className="input-group-prepend">
+											<div className="btn btn-primary" style={{width:"100px"}}>{c.label}</div>
+										</div>
+										{comp}
+									</div>
+                                );
+                            });
+                            return (
+								<div className="card mt-2 mb-1" id={"style" + s} key={s}>
+									<div className="card-header input-group">
+										<div className="mr-auto">{s}</div>
+										<div onClick={this.delete.bind(this, s)}>X</div>
+									</div>
+									<div className="card-body">
+										{comps}
+									</div>
+								</div>
+                            )
+                        })}
+						<div className="input-group pl-2 pr-2 pt-1 pb-1">
+							<button id="eStyle" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 样式</button>
+							<div className="dropdown-menu" aria-labelledby="eStyle">
+                                { Object.entries(ENV.style).map(v => <a className="dropdown-item" onClick={this.add.bind(this, v[0])}>{v[1].text}</a>) }
+							</div>
+						</div>
+					</div>
+				}
+            });
 
             var Main = React.createClass({
                 getInitialState() {
-                    return {w:90, h:160, mode:1};
+                    return {w:90, h:160, mode:1, element:null};
                 },
                 componentDidMount() {
 					if (ENV.actId == null || ENV.actId == "") {
-						common.req("new_act.json", {}, r => this.refresh(r));
+						common.req("new_act.json", {}, r => this.rebuild(r));
 					} else {
-						common.req("view_act.json", {actId:ENV.actId}, r => this.refresh(r));
+						common.req("view_act.json", {actId:ENV.actId}, r => this.rebuild(r));
 					}
 
                     let drop = e => {
@@ -229,7 +304,7 @@
                             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                             xhr.onreadystatechange = r => {
                                 if (xhr.readyState == 4 && xhr.status == 200) {
-                                    this.refresh(JSON.parse(xhr.responseText).content);
+                                    this.rebuild(JSON.parse(xhr.responseText).content);
                                 }
                             };
                             var fd = new FormData();
@@ -238,16 +313,16 @@
                             if (e.target.id == 'pBg') {
                                 fd.append("type", "desk");
                             } else if (e.target.id == 'eImage') {
-                                fd.append("elementId", ENV.selected.id);
+                                fd.append("elementId", this.state.element.id);
                                 fd.append("type", "image");
                             } else if (e.target.id == 'canvas') {
-                                if (ENV.selected != null) {
+                                if (this.state.element != null) {
                                     let c = $("#canvas");
                                     let s = c.offset();
                                     let x = (e.clientX - s.left) * ENV.W / c.width();
                                     let y = (e.clientY - s.top) * ENV.H / c.height();
-                                    if (ENV.inRC(x, y, ENV.selected))
-                                        fd.append("parentId", ENV.selected.id);
+                                    if (ENV.inRC(x, y, this.state.element))
+                                        fd.append("parentId", this.state.element.id);
                                 }
                                 fd.append("type", "element");
                             } else {
@@ -265,7 +340,7 @@
                             if (srcId != null && srcId != "" && dstId != null && dstId != "") {
                                 if (type == "event") {
                                     if (dstId == "eAction") {
-                                        ENV.selected.action.push({type: "event", param: srcId})
+                                        this.state.element.action.push({type: "event", param: srcId})
                                         this.saveElement();
                                     } else {
                                         this.link(srcId, dstId);
@@ -283,6 +358,22 @@
 
                     document.getElementById('content').addEventListener("drop", drop, false);
                 },
+                display: function(e) {
+                    if (e.display == 1)
+                        e.display = 0;
+                    else
+                        e.display = 1;
+                    this.saveElement();
+                },
+                addEvent: function(type) {
+                    common.req("event.json", {
+                        actId: ENV.actId,
+                        elementId: this.state.element.id,
+                        type: type
+                    }, r => {
+                        this.rebuild(r);
+                    });
+                },
 				adjust(e1, page, e2) {
                     common.req("adjust_element.json", {
                         actId: ENV.actId,
@@ -290,7 +381,7 @@
                         elementId: e1,
                         parentId: e2
                     }, r => {
-                        this.refresh(r);
+                        this.rebuild(r);
                     });
 				},
 				link(e1, e2) {
@@ -299,7 +390,7 @@
                         fromEventId: e2,
 						invokeEventId: e1
                     }, r => {
-                        this.refresh(r);
+                        this.rebuild(r);
                     });
 				},
                 saveEvent(ev) {
@@ -307,20 +398,21 @@
                         actId: ENV.actId,
                         event: ev
                     }, r => {
-                        this.refresh(r);
+                        this.rebuild(r);
                     });
                 },
-                refresh(doc) {
-                    if (document.activeElement)
-                    	document.activeElement.blur();
-                    if (doc != null) ENV.doc = doc;
-                    let page = ENV.doc.pages[ENV.index];
-                    ENV.W = page.w;
-                    ENV.H = page.h;
-                    let w = document.getElementById('desk').clientWidth;
-                    this.setState({w: w, h: ENV.H * w / ENV.W}, () => {
-                        ENV.draw();
-                    })
+                rebuild(doc) {
+                    if (doc != null) {
+                        ENV.doc = doc;
+						let page = ENV.doc.pages[ENV.index];
+						ENV.W = page.w;
+						ENV.H = page.h;
+						let w = document.getElementById('desk').clientWidth;
+						this.setState({w: w, h: ENV.H * w / ENV.W, element: null}, () => { ENV.draw(this.state.element) })
+					}
+                },
+                refresh(element) {
+					this.setState({element: element}, () => { ENV.draw(this.state.element) })
                 },
 				clickSelect(e) {
                     let c = $("#canvas");
@@ -328,33 +420,34 @@
 					let x = (e.clientX - s.left) * ENV.W / c.width();
                     let y = (e.clientY - s.top) * ENV.H / c.height();
                     let page = ENV.doc.pages[ENV.index];
+                    let element;
                     page.elements.map((e, i) => {
                         if (ENV.inRC(x, y, e))
-                            ENV.selected = e;
+                            element = e;
                         if (e.children != null) e.children.map(e => {
                             if (ENV.inRC(x, y, e))
-                                ENV.selected = e;
+                                element = e;
                         });
                     });
-                    this.refresh();
+                    if (element != null)
+                    	this.refresh(element);
 				},
                 select(e) {
-                    ENV.selected = e;
-                    this.refresh();
+                    this.refresh(e);
                 },
                 selectById(eId) {
                     let page = ENV.doc.pages[ENV.index];
                     page.elements.map((e) => {
                         if (e.id == eId) {
-                            ENV.selected = e;
+                            this.refresh(e);
                         } else if (e.children != null) e.children.map(e => {
                             if (e.id == eId)
-                                ENV.selected = e;
+                                this.refresh(e);
                         });
                     });
                 },
 				drag(e) {
-                    let f = ENV.selected;
+                    let f = this.state.element;
                     if (f == null)
                         f = {};
                     let c = $("#canvas");
@@ -390,64 +483,64 @@
                             if (ENV.drag.mode == 10) {
                                 ENV.cursorRect = {x:ENV.drag.sx, y:ENV.drag.sy, z:1, w:x - ENV.drag.sx, h:y - ENV.drag.sy};
                             } else if (ENV.drag.mode == 5) {
-                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
-                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                                this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                                this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
                             } else if (ENV.drag.mode == 7) {
-                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
-                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
-                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
-                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                                this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                                this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                                this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
+                                this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
                             } else if (ENV.drag.mode == 8) {
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
-                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                                this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                                this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
                             } else if (ENV.drag.mode == 9) {
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
-                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
-                                ENV.selected.h = ENV.drag.eh + ENV.drag.sy - y;
+                                this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                                this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
+                                this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
                             } else if (ENV.drag.mode == 4) {
-                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
-                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
-                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
+                                this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                                this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
                             } else if (ENV.drag.mode == 6) {
-                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
+                                this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
                             } else if (ENV.drag.mode == 1) {
-                                ENV.selected.x = ENV.drag.ex + x - ENV.drag.sx;
-                                ENV.selected.cx = ENV.drag.cx + x - ENV.drag.sx;
-                                ENV.selected.w = ENV.drag.ew + ENV.drag.sx - x;
-                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
+                                this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                                this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                                this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
+                                this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
                             } else if (ENV.drag.mode == 2) {
-                                ENV.selected.y = ENV.drag.ey + y - ENV.drag.sy;
-                                ENV.selected.cy = ENV.drag.cy + y - ENV.drag.sy;
-                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
+                                this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                                this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                                this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
                             } else if (ENV.drag.mode == 3) {
-                                ENV.selected.w = ENV.drag.ew + x - ENV.drag.sx;
-                                ENV.selected.h = ENV.drag.eh + y - ENV.drag.sy;
+                                this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
+                                this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
                             }
-                            ENV.draw();
+                            ENV.draw(this.state.element);
 						} else if (e.type == "dragend") {
                             if (ENV.drag.mode == 10) {
-                                if (ENV.selected != null && ENV.in(ENV.drag.sx, ENV.drag.sy, ENV.selected.x, ENV.selected.y, ENV.selected.w, ENV.selected.h)) {
-                                    ENV.cursorRect.parentId = ENV.selected.id;
-                                    ENV.cursorRect.x = ENV.cursorRect.x - ENV.selected.cx;
-                                    ENV.cursorRect.y = ENV.cursorRect.y - ENV.selected.cy;
+                                if (this.state.element != null && ENV.in(ENV.drag.sx, ENV.drag.sy, this.state.element.x, this.state.element.y, this.state.element.w, this.state.element.h)) {
+                                    ENV.cursorRect.parentId = this.state.element.id;
+                                    ENV.cursorRect.x = ENV.cursorRect.x - this.state.element.cx;
+                                    ENV.cursorRect.y = ENV.cursorRect.y - this.state.element.cy;
 								}
-                                ENV.selected = ENV.cursorRect;
+                                this.newElement(ENV.cursorRect);
                                 ENV.cursorRect = null;
-                            } else if (ENV.selected != null && ENV.drag.mode != null) {
-                                ENV.selected.hs = 0;
-                                ENV.selected.ys = 0;
-                                ENV.selected.x = ENV.selected.x;
-                                ENV.selected.y = ENV.selected.y;
-                                ENV.selected.w = ENV.selected.w;
-                                ENV.selected.h = ENV.selected.h;
+                            } else if (this.state.element != null && ENV.drag.mode != null) {
+                                this.state.element.hs = 0;
+                                this.state.element.ys = 0;
+                                this.state.element.x = this.state.element.x;
+                                this.state.element.y = this.state.element.y;
+                                this.state.element.w = this.state.element.w;
+                                this.state.element.h = this.state.element.h;
+                                this.saveElement();
                             }
-                            this.saveElement();
                         }
                     }
 				},
@@ -458,7 +551,7 @@
 						name: ENV.doc.name,
 						onStart: ENV.doc.startJs
                     }, r => {
-                        this.refresh(r);
+                        this.rebuild(r);
                     });
                 },
                 saveDPage() {
@@ -467,32 +560,31 @@
                         pageIndex: ENV.index,
                         page: ENV.doc.pages[ENV.index]
                     }, r => {
-                        this.refresh(r);
+                        this.rebuild(r);
                     });
+                },
+                newElement(element) {
+					common.req("new_element.json", {
+						actId: ENV.actId,
+						pageIndex: ENV.index,
+						element: element
+					}, r => {
+                        this.rebuild(r);
+					});
                 },
                 saveElement() {
-                    common.req("element.json", {
-                        actId: ENV.actId,
-                        pageIndex: ENV.index,
-						element: ENV.selected
-                    }, r => {
-                        if (ENV.selected.id)
-                            this.selectById(ENV.selected.id);
-                        else
-                            ENV.selected = null;
-                        this.refresh(r);
-                    });
+                    if (this.state.element != null) {
+    	                this.refresh(this.state.element);
+	                    ENV.ready[this.state.element.id] = this.state.element;
+                    }
                 },
-                element() {
-
-				},
 				delete(elementId) {
 					if (confirm("删除？")) {
                         common.req("del_element.json", {
                             actId: ENV.actId,
                             elementId: elementId
                         }, r => {
-                            this.refresh(r);
+                            this.rebuild(r);
                         });
 					}
 				},
@@ -503,7 +595,7 @@
                             elementId: elementId,
 							eventId: eventId
                         }, r => {
-                            this.refresh(r);
+                            this.rebuild(r);
                         });
                     }
                 },
@@ -557,7 +649,7 @@
 				},
                 cutBg(e) {
                     common.req("cut_bg.json", {actId: ENV.actId, elementId:e.id}, r => {
-                        this.refresh(r);
+                        this.refresh(this.state.element);
                     });
                 },
                 setZIndex(e, k) {
@@ -581,13 +673,13 @@
                     let tree = ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3" key={i}>
-                                <div id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
+                                <div id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
                                 { Element.toDivs(this, page.elements) }
                             </div>
                         )
                     });
                     let detail;
-                    if (ENV.selected == null && ENV.doc.pages.length > ENV.index) {
+                    if (this.state.element == null && ENV.doc.pages.length > ENV.index) {
                         let p = ENV.doc.pages[ENV.index];
                         detail = <div key={"page" + ENV.index}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1">
@@ -628,8 +720,8 @@
 								<input type="text" className="form-control" id="pBg" ref="pBg" value={p.background} readOnly="true"/>
 							</div>
 						</div>
-                    } else if (ENV.selected != null) {
-                        let e = ENV.selected;
+                    } else if (this.state.element != null) {
+                        let e = this.state.element;
                         let divs;
                         if (this.state.mode == 1) {
 							divs = <div>
@@ -637,16 +729,16 @@
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>X</div>
 									</div>
-									<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
+									<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => { e.x = v.target.value; this.saveElement(); }}/>
 									<div className="input-group-append">
-										<div className="btn btn-outline-primary" onClick={v => {e.x = ((ENV.mapping[e.id] ? ENV.mapping[e.id].w : ENV.W) - e.w) / 2; this.refs.eX.value = e.x; this.saveElement();}}>居中</div>
+										<div className="btn btn-outline-primary" onClick={v => { e.x = ((ENV.mapping[e.id] ? ENV.mapping[e.id].w : ENV.W) - e.w) / 2; this.saveElement(); }}>居中</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
 									</div>
-									<input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.ys == 2 ? "置底" : e.y} onChange={v => {e.ys = 0; e.y = v.target.value;}} onFocus={v => {this.refs.eY.value = e.y}} onBlur={this.saveElement}/>
+									<input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.ys == 2 ? "置底" : e.y} onChange={ v => {e.ys = 0; e.y = v.target.value; this.saveElement(); }} onFocus={v => {this.refs.eY.value = e.y}}/>
 									<div className="input-group-append">
 										<div className="btn btn-outline-primary" onClick={v => {e.ys = 1; this.saveElement();}}>居中</div>
 										<div className="btn btn-outline-primary" onClick={v => {e.ys = 2; this.saveElement();}}>置底</div>
@@ -689,25 +781,6 @@
 										<option value="Y">自由</option>
 										<option value="N">按图片锁定</option>
 									</select>
-								</div>
-								<div className="input-group pl-2 pr-2 pt-1 pb-1">
-									<div className="input-group-prepend">
-										<div className="btn btn-primary" style={{width:"100px"}}>样式</div>
-									</div>
-									<input id="eStyle" type="text" className="form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="eStyle" value={ JSON.stringify(e.style) } readOnly="true"/>
-									<div className="dropdown-menu" aria-labelledby="eStyle">
-                                        { Object.keys(ENV.style).map(v => {
-                                            if (e.style == null) e.style = {};
-											return <div className="dropdown-item" key={v}>
-												<div className="input-group pl-1 pr-1 pt-1 pb-1">
-													<div className="input-group-prepend">
-														<div className={e.style[v]?"btn btn-success":"btn btn-secondary"} style={{width:"100px"}} onClick={Element.setStyle.bind(this, e, v)}>{ENV.style[v]}</div>
-													</div>
-													<input type="text" className="form-control text-center" defaultValue={e.style[v]} onChange={c => {e.style[v] = c.target.value}} onBlur={this.forceUpdate}/>
-												</div>
-											</div>
-                                        })}
-									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
@@ -793,9 +866,17 @@
 										<div className="btn btn-primary" style={{width:"100px"}}>输入框</div>
 									</div>
 									<input type="text" className="form-control" id="eInput" ref="eInput" defaultValue={e.input} onChange={v => {e.input = v.target.value}} onBlur={this.saveElement}/>
+									<div className="input-group-append">
+										<div className={e.inputVerify && e.inputVerify.require ? "btn btn-primary" : "btn btn-outline-primary"} onClick={() => {
+										    if (e.inputVerify == null)
+                                                e.inputVerify = {};
+                                            e.inputVerify.require = !e.inputVerify.require;
+                                            this.saveElement();
+										}}>非空</div>
+									</div>
 								</div>
 							</div>
-                        } else {
+                        } else if (this.state.mode == 2) {
 							divs = <div>
                                 { e.events == null ? null : e.events.map(ev => {
                                     return <div className="card mt-2 mb-1" id={ev.id} key={ev.id}>
@@ -822,21 +903,26 @@
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
 									<div className="dropdown-menu" aria-labelledby="eEvent">
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "open")}>图层显示</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "close")}>图层关闭</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "play")}>背景轮播</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "bgSwitch")}>背景切换</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "tiger")}>抽奖机</a>
-										<a className="dropdown-item" onClick={Element.addEvent.bind(this, "sparks")}>烟花</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "open")}>图层显示</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "close")}>图层关闭</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "play")}>背景轮播</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "bgSwitch")}>背景切换</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "tiger")}>抽奖机</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "sparks")}>烟花</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "scroll")}>滚动至此</a>
+										<a className="dropdown-item" onClick={this.addEvent.bind(this, "submit")}>提交表单</a>
 									</div>
 								</div>
 							</div>
+                        } else if (this.state.mode == 3) {
+                            divs = <Style element={e}/>;
                         }
                         detail = <div key={e.id}>
 							<div className="input-group pl-2 pr-2 pt-1 pb-1 text-center">
 								<div className="btn-group ml-auto mr-auto">
 									<button type="button" className={"btn " + (this.state.mode == 1 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 1)}>&nbsp;&nbsp;组件&nbsp;&nbsp;</button>
 									<button type="button" className={"btn " + (this.state.mode == 2 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 2)}>&nbsp;&nbsp;事项&nbsp;&nbsp;</button>
+									<button type="button" className={"btn " + (this.state.mode == 3 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 3)}>&nbsp;&nbsp;样式&nbsp;&nbsp;</button>
 								</div>
 							</div>
 							{divs}
@@ -851,9 +937,9 @@
 								<div className="col-sm-8 m-0">
 									<div className="navbar navbar-expand-lg navbar-light bg-light m-0">
 										<div className="mr-auto">
-											<button type="button" className="btn btn-success mr-2" onClick={ENV.draw}>刷新</button>
+											<button type="button" className="btn btn-success mr-2" onClick={ENV.draw.bind(this, this.state.element)}>刷新</button>
 											<button type="button" className="btn btn-success mr-2">页面</button>
-											<button type="button" className="btn btn-success mr-2" onClick={this.element.bind(this, 0)}>元素</button>
+											<button type="button" className="btn btn-success mr-2">元素</button>
 										</div>
 										<div className="text-right">
 											<button type="button" className="btn btn-danger mr-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
@@ -880,6 +966,19 @@
             $(document).ready( function() {
                 ENV.actId = common.param("actId");
                 ReactDOM.render(<Main/>, document.getElementById("content"));
+
+                setInterval(function() {
+                    let ready = ENV.ready;
+                    ENV.ready = {};
+					common.req("element.json", {
+						actId: ENV.actId,
+						elements: ready
+					}, r => {
+					    for (let x in ready)
+					        if (ENV.ready[x] == null)
+					        	ENV.ready[x] = ready[x];
+					});
+                }, 10000);
 
                 $(document).on({
                     dragleave:function(e){    //拖离

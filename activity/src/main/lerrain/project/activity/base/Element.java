@@ -37,6 +37,7 @@ public class Element
     int display = 1;
 
     String input; //是否为输入框
+    Map inputVerify;
 
     public Element()
     {
@@ -62,6 +63,16 @@ public class Element
     public void setInput(String input)
     {
         this.input = input;
+    }
+
+    public Map getInputVerify()
+    {
+        return inputVerify;
+    }
+
+    public void setInputVerify(Map inputVerify)
+    {
+        this.inputVerify = inputVerify;
     }
 
     public List<String> getFile()
@@ -280,7 +291,7 @@ public class Element
         this.events = events;
     }
 
-    public Map getStyle()
+    public Map<String, Object> getStyle()
     {
         return style;
     }
@@ -334,6 +345,13 @@ public class Element
                 y = (this.getParent().getRealH() - this.getRealH()) / 2;
             else if (this.getPage() != null)
                 y = (this.getPage().getH() - this.getRealH()) / 2;
+        }
+        else if (this.getYs() == 2) //居底
+        {
+            if (this.getParent() != null)
+                y = this.getParent().getRealH() - this.getRealH();
+            else if (this.getPage() != null)
+                y = this.getPage().getH() - this.getRealH();
         }
         else
             y = this.getY();

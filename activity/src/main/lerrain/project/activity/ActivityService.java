@@ -75,7 +75,7 @@ public class ActivityService
 	public String deploy(ActivityDoc doc, String env)
 	{
 		String url = null;
-		String html = new JQueryExport(env).export(doc);
+		String html = new JQueryExport(doc, env).export();
 
 		JSONObject req = new JSONObject();
 

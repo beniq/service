@@ -63,6 +63,7 @@ public class DocTool
             e.put("fontSize", element.getFontSize());
             e.put("style", element.getStyle());
             e.put("input", element.getInput());
+            e.put("inputVerify", element.getInputVerify());
 
             e.put("cx", x + element.getX());
             e.put("cy", y + element.getRealY());
@@ -149,6 +150,7 @@ public class DocTool
             element.setColor(e.getString("color"));
             element.setStyle(e.getJSONObject("style"));
             element.setInput(e.getString("input"));
+            element.setInputVerify(e.getJSONObject("inputVerify"));
 
             if (e.containsKey("image"))
             {

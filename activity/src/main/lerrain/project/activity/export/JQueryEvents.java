@@ -3,20 +3,24 @@ package lerrain.project.activity.export;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Event;
+import lerrain.tool.Common;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class JQueryEvents
 {
+    JQueryExport jqe;
     ActivityDoc doc;
 
     String envJs = "";
     String envCss = "";
 
-    public JQueryEvents(ActivityDoc doc)
+    public JQueryEvents(JQueryExport jqe)
     {
-        this.doc = doc;
+        this.jqe = jqe;
+        this.doc = jqe.doc;
     }
 
     public void initiate(Event event)
@@ -98,6 +102,36 @@ public class JQueryEvents
                     "    var sp = new Sparks(canvas);\n" +
                     "    sp.start();";
             return js;
+        }
+        else if ("scroll".equals(event.getType()))
+        {
+            return "document.location.href= '#" + event.getElement().getId() + "';";
+        }
+        else if ("submit".equals(event.getType()))
+        {
+            jqe.finish.add(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    String ec = "var formInput = {";
+                    for (String str : jqe.input.keySet())
+                        ec += str + ": document.getElementById('INPUT" + str + "').value,";
+                    ec += "formTag: null };";
+
+                    for (String str : jqe.input.keySet())
+                    {
+                        Map verify = jqe.input.get(str);
+                        if (verify != null && Common.boolOf(verify.get("require"), false))
+                            ec += "if (formInput." + str + " == '') { Life.Dialog.alert('部分字段必填，请补充'); return; }";
+                    }
+
+                    jqe.root = jqe.root.replace("<!-- SUBMIT" + id + " -->", ec);
+                }
+            });
+
+            String finishJs = event.getFinish() == null ? "" : "finish" + event.getId() + "()";
+            return "<!-- SUBMIT" + id + " --> gpo.ask('submit', formInput, function(RES) { if (RES.flag == 'success') { " + finishJs + " } else { Life.Dialog.alert(RES.reason) } });";
         }
 
         return null;

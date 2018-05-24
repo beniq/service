@@ -1,5 +1,6 @@
 package lerrain.project.activity.export;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Element;
@@ -8,10 +9,7 @@ import lerrain.project.activity.base.Page;
 import lerrain.tool.Common;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JQueryExport
 {
@@ -22,6 +20,10 @@ public class JQueryExport
     public static String starCss;
     public static String textCss;
 
+    ActivityDoc doc;
+
+    JQueryEvents tool;
+
     String server;
 
     String root = JQueryExport.rootHtml;
@@ -29,13 +31,17 @@ public class JQueryExport
     String pages = "";
     String css = "";
 
-    List<String> input = new ArrayList<>();
+    Map<String, Map> input = new LinkedHashMap<>();
     Map<String, String> xcss = new HashMap();
 
     List<Runnable> finish = new ArrayList<>();
 
-    public JQueryExport(String env)
+    public JQueryExport(ActivityDoc doc, String env)
     {
+        this.doc = doc;
+
+        this.tool = new JQueryEvents(this);
+
         if ("test".equalsIgnoreCase(env))
         {
             server = "https://gpo-test.iyunbao.com";
@@ -50,10 +56,8 @@ public class JQueryExport
         }
     }
 
-    public String export(ActivityDoc doc)
+    public String export()
     {
-        JQueryEvents tool = new JQueryEvents(doc);
-
         js1 += "var xx = document.getElementById(\"ccc\");";
 
         for (Page p : doc.getList())
@@ -67,7 +71,7 @@ public class JQueryExport
                 style += String.format("background-image:url(%s);", uri(p.getBackground()));
 
             ph = ph.replace("<!-- STYLE -->", style);
-            ph = ph.replace("<!-- ELEMENTS -->", build(tool, p.getList()));
+            ph = ph.replace("<!-- ELEMENTS -->", build(p.getList()));
 
             pages += ph;
         }
@@ -93,7 +97,7 @@ public class JQueryExport
         return root;
     }
 
-    private String build(JQueryEvents tool, List<Element> list)
+    private String build(List<Element> list)
     {
         String elements = "";
 
@@ -108,7 +112,7 @@ public class JQueryExport
                     pos = "'fixed'";
                 js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), (e.getYs() == 1 ? -10000 : e.getYs() == 2 ? -20000 : e.getY()), e.getW(), (e.getHs() == 1 ? -1 : e.getH()), pos);
 
-                String es = build(tool, e.getChildren());
+                String es = build(e.getChildren());
 
                 String style = "";
                 String className = "";
@@ -125,40 +129,74 @@ public class JQueryExport
                     style += String.format("background-color:%s;", e.getBgColor());
                 if (e.getZ() > 0)
                     style += String.format("z-index:%d;", e.getZ());
-                if (e.getStyle() != null)
+                if (e.getStyle() != null) for (Map.Entry<String, Object> et : e.getStyle().entrySet())
                 {
-                    if (e.getStyle().get("hide") != null)
+                    String key = et.getKey();
+                    Object value = et.getValue();
+
+                    if ("hide".equals(key))
                         style += "display:none; overflow:hidden;";
-                    if (e.getStyle().get("shake1") != null)
+
+                    if ("shake1".equals(key))
                         className += "ani_shake1";
-                    if (e.getStyle().get("shake2") != null)
+                    if ("shake2".equals(key))
                         className += "ani_shake2";
-                    if (e.getStyle().get("rotate") != null)
+                    if ("rotate".equals(key))
                         className += "ani_rotate";
-                    if (e.getStyle().get("textin") != null)
+
+                    if ("textin".equals(key))
                     {
+                        JSONObject val = (JSONObject)JSON.toJSON(value);
+
+                        int d = Common.intOf(val.get("direct"), 1);
+                        double s = Common.doubleOf(val.get("begin"), 0);
+
+                        int x = 0, y = 0;
+                        if (d == 1)
+                        {
+                            x = -Math.round(75000 / e.getW());
+                            y = 0;
+                        }
+                        else if (d == 2)
+                        {
+                            x = 0;
+                            y = -Math.round(75000 / e.getW());
+                        }
+                        else if (d == 3)
+                        {
+                            x = Math.round(75000 / e.getW());
+                            y = 0;
+                        }
+                        else if (d == 4)
+                        {
+                            x = 0;
+                            y = Math.round(75000 / e.getW());
+                        }
+
                         String ncss = textCss.replaceAll("<!-- ID -->", id);
-                        ncss = ncss.replaceAll("<!-- X -->", -Math.round(75000 / e.getW()) + "%");
-                        ncss = ncss.replaceAll("<!-- Y -->", Math.round(75000 / e.getW()) + "0%");
-                        ncss = ncss.replaceAll("<!-- START -->", "0");
+                        ncss = ncss.replaceAll("<!-- X -->",  x + "%");
+                        ncss = ncss.replaceAll("<!-- Y -->", y + "%");
+                        ncss = ncss.replaceAll("<!-- START -->", String.format("%.4f", s));
 
                         css += ncss;
                         className += "text_in" + id;
                     }
-                    if (e.getStyle().get("popup") != null)
+
+                    if ("popup".equals(key))
                     {
                         css += JQueryExport.popupCss;
-                        //style += String.format("transform: translateZ(%dpx);", 400);
                         className += "plat10_xz";
                     }
-                    if (e.getStyle().get("canvas") != null) {
+
+                    if ("canvas".equals(key))
                         es = "<canvas id='CV" + id + "' style='width:100%;height:100%;z-index:100'></canvas>" + es;
-                    }
-                    if (e.getStyle().get("alpha50") != null)
+
+                    if ("alpha50".equals(key))
                         style += "opacity:0.5;";
-                    if (e.getStyle().get("alpha") != null)
+                    if ("alpha".equals(key))
                         style += "opacity:"+(Common.doubleOf(e.getStyle().get("alpha"), 1))+";";
-                    if (e.getStyle().get("stars") != null)
+
+                    if ("stars".equals(key))
                     {
                         xcss.put("star", JQueryExport.starCss);
                         int sq = (int)(e.getW()*e.getH());
@@ -175,7 +213,7 @@ public class JQueryExport
                     String inputId = Common.trimStringOf(e.getInput());
                     es += "<input id='INPUT" + inputId + "'/>";
                     js3 += "$('#INPUT" + inputId + "').val(ENV.init." + inputId + ");";
-                    input.add(inputId);
+                    input.put(inputId, e.getInputVerify());
                 }
 
                 //生成所有事件的js
@@ -208,9 +246,16 @@ public class JQueryExport
                                 public void run()
                                 {
                                     String ec = "var formInput = {";
-                                    for (String str : input)
-                                        ec += str + ": document.getElementById('INPUT"+str+"').value,";
+                                    for (String str : input.keySet())
+                                        ec += str + ": document.getElementById('INPUT" + str + "').value,";
                                     ec += "formTag: null };";
+
+                                    for (String str : input.keySet())
+                                    {
+                                        Map verify = input.get(str);
+                                        if (verify != null && Common.boolOf(verify.get("require"), false))
+                                            ec += "if (formInput." + str + " == '') { Life.Dialog.alert('部分字段必填，请补充'); return; }";
+                                    }
 
                                     root = root.replace("<!-- SUBMIT" + id + " -->", ec);
                                 }
@@ -223,7 +268,7 @@ public class JQueryExport
                                 Event event = tool.doc.findEvent(eventId);
                                 str = tool.getJs(event);
                             }
-                            ec += "<!-- SUBMIT" + id + " --> gpo.ask('submit', formInput, function(EVENT) { "+str+" });";
+                            ec += "<!-- SUBMIT" + id + " --> gpo.ask('submit', formInput, function(RES) { if (RES.flag == 'success') { "+str+" } else { Life.Dialog.alert(RES.reason) } });";
                         }
                         else if ("event".equals(type))
                         {
