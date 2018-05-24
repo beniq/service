@@ -21,6 +21,12 @@ var pot = function(name, x, y, w, h, tp)
     d5.setAttribute("h", rh);
     if (y == -10000) {
         d5.style.top = (Number(d5.parentNode.getAttribute("h")) - rh) / 2;
+    } else if (y == -20000) {
+        if (tp == "fixed") {
+            d5.style.top = window.innerHeight - rh;
+        } else {
+            d5.style.top = (Number(d5.parentNode.getAttribute("h")) - rh);
+        }
     } else {
         d5.style.top = zoomY() * y;
     }

@@ -30,6 +30,7 @@
 			    W: 750,
 				H: 1200,
 				index: 0,
+                mapping: {},
 				doc: {
 			        pages: []
 				},
@@ -37,6 +38,7 @@
 			        hide: "隐藏",
                     shake1: "缩放抖动",
                     shake2: "摇摆抖动",
+                    rotate: "旋转",
                     fixed: "浮动固定",
                     canvas: "画板背景(烟花等)",
                     play: "背景轮播",
@@ -182,7 +184,7 @@
 				},
 				toDivs: function(self, elements, parent) {
                 	return elements == null ? null : elements.map(e => {
-                        e.p = parent;
+                        ENV.mapping[e.id] = parent;
                         return (
 							<div className="ml-3" key={e.id}>
 								<div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == ENV.selected ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
@@ -268,7 +270,11 @@
                                         this.link(srcId, dstId);
 									}
                                 } else if (type == "element") {
-									this.adjust(srcId, dstId);
+                                    if (dstId.startsWith("page")) {
+                                        this.adjust(srcId, dstId.substr(4), null);
+                                    } else {
+                                        this.adjust(srcId, null, dstId);
+                                    }
                                 }
                             }
 						}
@@ -276,9 +282,10 @@
 
                     document.getElementById('content').addEventListener("drop", drop, false);
                 },
-				adjust(e1, e2) {
+				adjust(e1, page, e2) {
                     common.req("adjust_element.json", {
                         actId: ENV.actId,
+						page: page,
                         elementId: e1,
                         parentId: e2
                     }, r => {
@@ -573,7 +580,7 @@
                     let tree = ENV.doc.pages.map((page, i) => {
                         return (
                             <div className="ml-3" key={i}>
-                                <div className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
+                                <div id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (ENV.selected == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
                                 { Element.toDivs(this, page.elements) }
                             </div>
                         )
@@ -631,16 +638,17 @@
 									</div>
 									<input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => {e.x = v.target.value}} onBlur={this.saveElement}/>
 									<div className="input-group-append">
-										<div className="btn btn-outline-primary" onClick={v => {e.x = ((e.p ? e.p.w : ENV.W) - e.w) / 2; this.refs.eX.value = e.x; this.saveElement();}}>居中</div>
+										<div className="btn btn-outline-primary" onClick={v => {e.x = ((ENV.mapping[e.id] ? ENV.mapping[e.id].w : ENV.W) - e.w) / 2; this.refs.eX.value = e.x; this.saveElement();}}>居中</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">
 									<div className="input-group-prepend">
 										<div className="btn btn-primary" style={{width:"100px"}}>Y</div>
 									</div>
-									<input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.y} onChange={v => {e.ys = 0; e.y = v.target.value;}} onFocus={v => {this.refs.eY.value = e.y}} onBlur={this.saveElement}/>
+									<input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.ys == 2 ? "置底" : e.y} onChange={v => {e.ys = 0; e.y = v.target.value;}} onFocus={v => {this.refs.eY.value = e.y}} onBlur={this.saveElement}/>
 									<div className="input-group-append">
 										<div className="btn btn-outline-primary" onClick={v => {e.ys = 1; this.saveElement();}}>居中</div>
+										<div className="btn btn-outline-primary" onClick={v => {e.ys = 2; this.saveElement();}}>置底</div>
 									</div>
 								</div>
 								<div className="input-group pl-2 pr-2 pt-1 pb-1">

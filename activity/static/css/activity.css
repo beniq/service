@@ -62,18 +62,42 @@ body { margin:0;padding:0; }
     to   {transform:rotateZ(0deg);}
 }
 
-.shake1 {
+.ani_shake1 {
     -moz-animation:shake1 1s linear 0s infinite alternate forwards;
     -webkit-animation:shake1 1s linear 0s infinite alternate forwards;
     -o-animation:shake1 1s linear 0s infinite alternate forwards;
     animation:shake1 1s linear 0s infinite alternate forwards;
 }
 
-.shake2 {
+.ani_shake2 {
     -moz-animation:shake2 1s linear 0s infinite alternate forwards;
     -webkit-animation:shake2 1s linear 0s infinite alternate forwards;
     -o-animation:shake2 1s linear 0s infinite alternate forwards;
     animation:shake2 1s linear 0s infinite alternate forwards;
+}
+
+@-moz-keyframes ani_rotate {
+    from {-moz-transform:rotateZ(0deg);}
+    to   {-moz-transform:rotateZ(180deg);}
+}
+@-webkit-keyframes ani_rotate {
+    from {-webkit-transform:rotateZ(0deg);}
+    to   {-webkit-transform:rotateZ(180deg);}
+}
+@-o-keyframes ani_rotate {
+    from {-o-transform:rotateZ(0deg);}
+    to   {-o-transform:rotateZ(180deg);}
+}
+@keyframes ani_rotate {
+    from {transform:rotateZ(0deg);}
+    to   {transform:rotateZ(180deg);}
+}
+
+.ani_rotate {
+    -moz-animation:ani_rotate 10s linear 0s infinite alternate forwards;
+    -webkit-animation:ani_rotate 10s linear 0s infinite alternate forwards;
+    -o-animation:ani_rotate 10s linear 0s infinite alternate forwards;
+    animation:ani_rotate 10s linear 0s infinite alternate forwards;
 }
 
 div {

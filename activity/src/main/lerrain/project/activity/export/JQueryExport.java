@@ -105,7 +105,7 @@ public class JQueryExport
                 String pos = "null";
                 if (e.getStyle() != null && e.getStyle().get("fixed") != null)
                     pos = "'fixed'";
-                js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), (e.getYs() == 1 ? -10000 : e.getY()), e.getW(), (e.getHs() == 1 ? -1 : e.getH()), pos);
+                js1 += String.format("pot(\"%s\", %.4f, %.4f, %.4f, %.4f, %s);\n", id, e.getX(), (e.getYs() == 1 ? -10000 : e.getYs() == 2 ? -20000 : e.getY()), e.getW(), (e.getHs() == 1 ? -1 : e.getH()), pos);
 
                 String es = build(tool, e.getChildren());
 
@@ -129,9 +129,11 @@ public class JQueryExport
                     if (e.getStyle().get("hide") != null)
                         style += "display:none; overflow:hidden;";
                     if (e.getStyle().get("shake1") != null)
-                        className += "shake1";
+                        className += "ani_shake1";
                     if (e.getStyle().get("shake2") != null)
-                        className += "shake2";
+                        className += "ani_shake2";
+                    if (e.getStyle().get("rotate") != null)
+                        className += "ani_rotate";
                     if (e.getStyle().get("popup") != null)
                     {
                         css += JQueryExport.popupCss;

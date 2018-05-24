@@ -210,13 +210,22 @@ public class ActivityController
 		Long actId = json.getLong("actId");
 		String elementId = json.getString("elementId");
 		String parentId = json.getString("parentId");
+		int page = Common.intOf(json.get("page"), -1);
 
 		ActivityDoc doc = act.getAct(actId);
 		Element element = doc.find(elementId);
-		Element parent = doc.find(parentId);
 
-		element.getPage().remove(elementId);
-		parent.addElement(element);
+		if (parentId != null)
+		{
+			Element parent = doc.find(parentId);
+			element.getPage().remove(elementId);
+			parent.addElement(element);
+		}
+		else if (page >= 0)
+		{
+			element.getPage().remove(elementId);
+			doc.getList().get(page).addElement(element);
+		}
 
 		queue.add(doc);
 
