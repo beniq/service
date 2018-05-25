@@ -33,6 +33,9 @@ public class ImageTool
                 return copy(src, path, dest);
 
             File dst = new File(Common.pathOf(path, dest + ".jpg"));
+            if (dst.exists())
+                dst.delete();
+
             try (FileOutputStream fos = new FileOutputStream(dst); ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
             {
                 JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpg").next();
@@ -102,7 +105,7 @@ public class ImageTool
         suffix = suffix.substring(suffix.length() - 4);
 
         File dst = new File(Common.pathOf(path, dest + suffix));
-        Disk.copy(src, dst);
+        Disk.copy(src, dst, true);
 
         return dst;
     }
