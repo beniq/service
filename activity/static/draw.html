@@ -891,6 +891,12 @@
 										}}>非空</div>
 									</div>
 								</div>
+								<div className="input-group pl-2 pr-2 pt-1 pb-1">
+									<div className="input-group-prepend">
+										<div className="btn btn-primary" style={{width:"100px"}}>可见</div>
+									</div>
+									<input type="text" className="form-control" ref="eVisible" defaultValue={e.visible} onChange={v => { e.visible = v.target.value; this.saveElement(); }}/>
+								</div>
 							</div>
                         } else if (this.state.mode == 2) {
 							divs = <div>

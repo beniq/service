@@ -30,6 +30,7 @@ public class JQueryExport
     String js1 = "", js2 = "", js3 = "";
     String pages = "";
     String css = "";
+    String images = null;
 
     Map<String, Map> input = new LinkedHashMap<>();
     Map<String, String> xcss = new HashMap();
@@ -90,6 +91,7 @@ public class JQueryExport
         root = root.replace("<!-- CSS -->", css + tool.envCss);
         root = root.replaceAll("<!-- ACT_CODE -->", doc.getCode());
         root = root.replaceAll("<!-- SERVER -->", server);
+        root = root.replaceAll("<!-- IMAGES -->", images);
 
         for (Runnable r : finish)
             r.run();
@@ -226,6 +228,12 @@ public class JQueryExport
                         className += " play" + ev.getId();
                 }
 
+                if (e.getVisible() != null)
+                {
+                    style += "display:none;";
+                    js3 += "if (" + e.getVisible() + ") { $(\"#" + id + "\").show(); }";
+                }
+
                 String ea = "";
                 if (e.getAction().size() > 0)
                 {
@@ -296,6 +304,8 @@ public class JQueryExport
     private String uri(String path)
     {
         if (path == null) return null;
-        return "./" + new File(path).getName();
+        String uri = "./" + new File(path).getName();
+        images = (images == null ? "" : images + ",") + "\"" + uri + "\"";
+        return uri;
     }
 }

@@ -88,7 +88,7 @@ public class JQueryEvents
         else if ("close".equals(event.getType()))
         {
             //return "$('#" + id + "').hide();\n";
-            return "document.getElementById('" + id + "').style.display = 'none';";
+            return "document.getElementById('" + id + "').style.display = 'none';" + (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
         }
         else if ("play".equals(event.getType()))
         {

@@ -2,6 +2,7 @@ package lerrain.project.activity.base;
 
 import com.alibaba.fastjson.JSONArray;
 import lerrain.project.activity.DocTool;
+import lerrain.tool.Common;
 
 import java.util.*;
 
@@ -19,6 +20,8 @@ public class Element
     int xs, ys, ws, hs;
 
     String bgColor;
+
+    String visible;
 
     List<Event> events = new ArrayList<>();
 
@@ -53,6 +56,18 @@ public class Element
     {
         if (id != null)
             this.id = id.replaceAll("[-]", "");;
+    }
+
+    public String getVisible()
+    {
+        return visible;
+    }
+
+    public void setVisible(String visible)
+    {
+        if (Common.isEmpty(visible))
+            visible = null;
+        this.visible = visible;
     }
 
     public String getInput()

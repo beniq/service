@@ -15,6 +15,7 @@
     <script src="../../js/activity.js"></script>
 </head>
 <body>
+<div id="aaa"></div>
 <!-- PAGES -->
 </body>
 
@@ -70,8 +71,6 @@
     };
     <!-- JS_ENV -->
     $(document).ready( function() {
-        <!-- JS_START -->
-        refreshText();
         gpo.accountId = gpo.param("accountId");
         if (gpo.accountId != null && gpo.accountId != "") {
             gpo.runJS();
@@ -99,6 +98,26 @@
                 });
             }
         }
+
+        var imgloader = new resLoader({
+            baseUrl: './',
+            resources : [<!-- IMAGES -->],
+            onStart : function(total){
+            },
+            onProgress : function(current, total){
+                var percent = current/total*100;
+                $("#aaa").html(percent + "%");
+            },
+            onComplete : function(total) {
+                console.log(total);
+                document.getElementById("aaa").style.display = "none";
+                document.getElementById("ccc").style.display = "block";
+                <!-- JS_START -->
+                refreshText();
+            }
+        });
+        imgloader.start();
+
     });
 </script>
 

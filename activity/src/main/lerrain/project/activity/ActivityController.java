@@ -428,6 +428,7 @@ public class ActivityController
 		e.setInput(o.getString("input"));
 		e.setInputVerify(o.getJSONObject("inputVerify"));
 		e.setAction(o.getJSONArray("action"));
+		e.setVisible(o.getString("visible"));
 
 		if (o.containsKey("image"))
 		{
@@ -624,11 +625,9 @@ public class ActivityController
 			os.write(html.getBytes("utf-8"));
 		}
 
-		String append = "prd".equalsIgnoreCase(env) ? "" : "-" + env;
-
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", "https://gpo" + append + ".iyunbao.com/" + env + "/" + actId + "/main.html");
+		res.put("content", "https://act.iyb.tm/" + env + "/" + actId + "/main.html");
 
 		return res;
 	}

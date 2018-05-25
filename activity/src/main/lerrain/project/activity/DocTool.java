@@ -63,6 +63,7 @@ public class DocTool
             e.put("fontSize", element.getFontSize());
             e.put("style", element.getStyle());
             e.put("input", element.getInput());
+            e.put("visible", element.getVisible());
             e.put("inputVerify", element.getInputVerify());
 
             e.put("cx", x + element.getX());
@@ -149,6 +150,7 @@ public class DocTool
             element.setText(e.getString("text"));
             element.setColor(e.getString("color"));
             element.setStyle(e.getJSONObject("style"));
+            element.setVisible(e.getString("visible"));
             element.setInput(e.getString("input"));
             element.setInputVerify(e.getJSONObject("inputVerify"));
 
