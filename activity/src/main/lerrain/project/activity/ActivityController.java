@@ -429,6 +429,8 @@ public class ActivityController
 		e.setInputVerify(o.getJSONObject("inputVerify"));
 		e.setAction(o.getJSONArray("action"));
 		e.setVisible(o.getString("visible"));
+		e.setName(o.getString("name"));
+		e.setList(o.getString("list"));
 
 		if (o.containsKey("image"))
 		{
@@ -443,6 +445,8 @@ public class ActivityController
 
 		String fontSize = o.getString("fontSize");
 		e.setFontSize(Common.isEmpty(fontSize) ? null : fontSize);
+		e.setLineHeight(o.getString("lineHeight"));
+		e.setAlign(Common.intOf(o.get("align"), 5));
 
 		String text = o.getString("text");
 		e.setText(Common.isEmpty(text) ? null : text);
@@ -563,8 +567,8 @@ public class ActivityController
 								img.setH(h);
 							}
 
-							img.setX(0);
-							img.setY(0);
+							img.setX(Common.intOf(req.getParameter("x"), (int)parent.getW() / 2));
+							img.setY(Common.intOf(req.getParameter("y"), (int)parent.getH() / 2));
 						}
 						else
 						{
@@ -574,8 +578,8 @@ public class ActivityController
 								h = 1200;
 							}
 
-							img.setX(750 / 2 - w / 2);
-							img.setY(1200 / 2 - h / 2);
+							img.setX(Common.intOf(req.getParameter("x"), 750 / 2 - w / 2));
+							img.setY(Common.intOf(req.getParameter("y"), 1200 / 2 - h / 2));
 							img.setW(w);
 							img.setH(h);
 						}

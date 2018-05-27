@@ -22,7 +22,7 @@
     -moz-opacity: 0;
     -khtml-opacity:0;
     opacity: 0;
-    -moz-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
+    -moz-animation:text_in<!-- ID --> 0.3s <!-- SPEED --> <!-- START -->s 1 normal forwards;
     -webkit-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
     -o-animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;
     animation:text_in<!-- ID --> 0.3s ease-out <!-- START -->s 1 normal forwards;

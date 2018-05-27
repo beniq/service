@@ -15,15 +15,36 @@
     <script src="../../js/activity.js"></script>
 </head>
 <body>
-<div id="aaa"></div>
+<div id="aaa" style="width:100%;height:100%;text-align:center;">
+    <div class="loader loader-12" style="margin:200px auto 0 auto;">
+      <svg class="loader-star star1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+      <svg class="loader-star star2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+      <svg class="loader-star star3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+      <svg class="loader-star star4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+      <svg class="loader-star star5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+      <svg class="loader-star star6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="35px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+            <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+         </svg>
+     </div>
+</div>
 <!-- PAGES -->
 </body>
 
 <script>
     ENV.H = <!-- HEIGHT -->;
-    var gotoPrd = function(p) {
-        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
-        stat("GoProduct", dest, p.productId)
+    var gotoPrd = function(prdId) {
+        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        stat("GoProduct", dest, prdId)
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
@@ -35,9 +56,6 @@
     var stat = function(code, dest, productId) {
         $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
     }
-</script>
-
-<script>
     var gpo = {};
     gpo.post = function(url, val, callback, failcall) {
         $.ajax({url:"<!-- SERVER -->" + url, type:"POST", data:JSON.stringify(val), contentType:'application/json;charset=UTF-8', success:callback, error:failcall, dataType:"json"});
@@ -106,14 +124,11 @@
             },
             onProgress : function(current, total){
                 var percent = current/total*100;
-                $("#aaa").html(percent + "%");
             },
             onComplete : function(total) {
-                console.log(total);
                 document.getElementById("aaa").style.display = "none";
                 document.getElementById("ccc").style.display = "block";
                 <!-- JS_START -->
-                refreshText();
             }
         });
         imgloader.start();

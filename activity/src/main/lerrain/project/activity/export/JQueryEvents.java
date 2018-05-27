@@ -1,5 +1,6 @@
 package lerrain.project.activity.export;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
 import lerrain.project.activity.base.Event;
@@ -55,7 +56,7 @@ public class JQueryEvents
         }
     }
 
-    public String getJs(Event event)
+    public String getJs(Event event, String exp)
     {
         if (event == null)
             return null;
@@ -133,6 +134,30 @@ public class JQueryEvents
             String finishJs = event.getFinish() == null ? "" : "finish" + event.getId() + "()";
             return "<!-- SUBMIT" + id + " --> gpo.ask('submit', formInput, function(RES) { if (RES.flag == 'success') { " + finishJs + " } else { Life.Dialog.alert(RES.reason) } });";
         }
+        else if ("redirect".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String text = event.getParam().getString("value");
+            return "document.location.href = " + jqe.expOf(text, exp) + ";\n";
+        }
+        else if ("toProduct".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String text = event.getParam().getString("value");
+            return "gotoPrd('"+text+"');\n";
+        }
+        else if ("shareProduct".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String text = JSON.toJSONString(event.getParam());
+            return "shareProduct("+text+");\n";
+        }
 
         return null;
     }
@@ -146,7 +171,7 @@ public class JQueryEvents
         {
             String eventId = of.getString("eventId");
             Event event = doc.findEvent(eventId);
-            return getJs(event);
+            return getJs(event, null);
         }
 
         return null;

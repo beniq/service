@@ -54,6 +54,7 @@ public class DocTool
             e.put("h", element.getRealH());
             e.put("ys", element.getYs());
             e.put("hs", element.getHs());
+            e.put("name", element.getName());
             e.put("display", element.getDisplay());
             e.put("image", element.getFile());
             e.put("bgColor", element.getBgColor());
@@ -61,10 +62,13 @@ public class DocTool
             e.put("color", element.getColor());
             e.put("text", element.getText());
             e.put("fontSize", element.getFontSize());
+            e.put("lineHeight", element.getLineHeight());
+            e.put("align", element.getAlign());
             e.put("style", element.getStyle());
             e.put("input", element.getInput());
-            e.put("visible", element.getVisible());
             e.put("inputVerify", element.getInputVerify());
+            e.put("visible", element.getVisible());
+            e.put("list", element.getList());
 
             e.put("cx", x + element.getX());
             e.put("cy", y + element.getRealY());
@@ -143,16 +147,20 @@ public class DocTool
             element.setH(e.getFloat("h"));
             element.setYs(Common.intOf(e.get("ys"), 0));
             element.setHs(Common.intOf(e.get("hs"), 0));
+            element.setName(e.getString("name"));
             element.setDisplay(Common.intOf(e.getInteger("display"), 1));
             element.setBgColor(e.getString("bgColor"));
             element.setAction(e.getJSONArray("action"));
             element.setFontSize(e.getString("fontSize"));
+            element.setLineHeight(e.getString("lineHeight"));
+            element.setAlign(Common.intOf(e.get("align"), 5));
             element.setText(e.getString("text"));
             element.setColor(e.getString("color"));
             element.setStyle(e.getJSONObject("style"));
             element.setVisible(e.getString("visible"));
             element.setInput(e.getString("input"));
             element.setInputVerify(e.getJSONObject("inputVerify"));
+            element.setList(e.getString("list"));
 
             if (e.containsKey("image"))
             {

@@ -1,5 +1,69 @@
 body { margin:0;padding:0; }
 
+.loader { position: relative; width: 60px; height: 60px; border-radius: 50%; margin: 0px; display: inline-block; vertical-align: middle; }
+.loader-star { position: absolute; top: calc(50% - 12px); }
+.loader-12 { -webkit-animation: stars-rotate-reverse 2s ease infinite; animation: stars-rotate-reverse 2s ease infinite; }
+.loader-12 polygon { fill: #00a9ff !important; }
+.loader-12 .loader-star { position: absolute; }
+.loader-12 .star1 { top: 0px; right: -7px; }
+.loader-12 .star2 { right: 9px; top: -12px; position: absolute; -webkit-transform: scale(0.8); transform: scale(0.8); -webkit-animation: stars-catch 2s 0.1s ease infinite; animation: stars-catch 2s 0.1s ease infinite; }
+.loader-12 .star3 { right: 27px; top: -11px; position: absolute; -webkit-transform: scale(0.7); transform: scale(0.7); -webkit-animation: stars-catch 2s 0.15s ease infinite; animation: stars-catch 2s 0.15s ease infinite; }
+.loader-12 .star4 { right: 41px; top: -2px; position: absolute; -webkit-transform: scale(0.6); transform: scale(0.6); -webkit-animation: stars-catch 2s 0.2s ease infinite; animation: stars-catch 2s 0.2s ease infinite; }
+.loader-12 .star5 { right: 47px; top: 10px; position: absolute; -webkit-transform: scale(0.5); transform: scale(0.5); -webkit-animation: stars-catch 2s 0.25s ease infinite; animation: stars-catch 2s 0.25s ease infinite; }
+.loader-12 .star6 { right: 47px; top: 21px; position: absolute; -webkit-transform: scale(0.4); transform: scale(0.4); -webkit-animation: stars-catch 2s 0.3s ease infinite; animation: stars-catch 2s 0.3s ease infinite; }
+
+@-webkit-keyframes stars-rotate-reverse {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes stars-rotate-reverse {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes stars-catch {
+    0% {
+    }
+    25% {
+    }
+    50% {
+    }
+    75% {
+        top: -2px;
+        right: -11px;
+        opacity: 0;
+    }
+    100% {
+    }
+}
+@keyframes stars-catch {
+    0% {
+    }
+    25% {
+    }
+    50% {
+    }
+    75% {
+        top: -2px;
+        right: -11px;
+        opacity: 0;
+    }
+    100% {
+    }
+}
+
+
 @-moz-keyframes shake1 {
     from {-moz-transform:scale(1, 1);}
     8%   {-moz-transform:scale(0.95, 0.95);}
@@ -76,21 +140,43 @@ body { margin:0;padding:0; }
     animation:shake2 1s linear 0s infinite alternate forwards;
 }
 
+@keyframes shake3 {
+    from {transform:rotateZ(0deg);}
+    3%   {transform:rotateZ(-30deg);}
+    6%   {transform:rotateZ(0deg);}
+    50%   {transform:rotateZ(0deg);}
+    53%   {transform:rotateZ(30deg);}
+    56%   {transform:rotateZ(0deg);}
+    to   {transform:rotateZ(0deg);}
+}
+.ani_shake3 {
+    animation:shake3 3s linear 0s infinite forwards;
+}
+
+@keyframes ani_float {
+    from {transform:translate(0, -10%);}
+    to   {transform:translate(0, 10%);}
+}
+
+.ani_float {
+    animation:ani_float 1.5s ease-in-out 0s infinite alternate forwards;
+}
+
 @-moz-keyframes ani_rotate {
     from {-moz-transform:rotateZ(0deg);}
-    to   {-moz-transform:rotateZ(180deg);}
+    to   {-moz-transform:rotateZ(360deg);}
 }
 @-webkit-keyframes ani_rotate {
     from {-webkit-transform:rotateZ(0deg);}
-    to   {-webkit-transform:rotateZ(180deg);}
+    to   {-webkit-transform:rotateZ(360deg);}
 }
 @-o-keyframes ani_rotate {
     from {-o-transform:rotateZ(0deg);}
-    to   {-o-transform:rotateZ(180deg);}
+    to   {-o-transform:rotateZ(360deg);}
 }
 @keyframes ani_rotate {
     from {transform:rotateZ(0deg);}
-    to   {transform:rotateZ(180deg);}
+    to   {transform:rotateZ(360deg);}
 }
 
 .ani_rotate {
@@ -98,6 +184,32 @@ body { margin:0;padding:0; }
     -webkit-animation:ani_rotate 10s linear 0s infinite alternate forwards;
     -o-animation:ani_rotate 10s linear 0s infinite alternate forwards;
     animation:ani_rotate 10s linear 0s infinite alternate forwards;
+}
+
+@keyframes ani_scroll {
+    from {transform:translate(0, 0%);}
+    10% {transform:translate(0, 0%);}
+    11% {transform:translate(0, -10%);}
+    21% {transform:translate(0, -10%);}
+    22% {transform:translate(0, -20%);}
+    32% {transform:translate(0, -20%);}
+    33% {transform:translate(0, -30%);}
+    43% {transform:translate(0, -30%);}
+    44% {transform:translate(0, -40%);}
+    54% {transform:translate(0, -40%);}
+    55% {transform:translate(0, -50%);}
+    65% {transform:translate(0, -50%);}
+    66% {transform:translate(0, -60%);}
+    76% {transform:translate(0, -60%);}
+    77% {transform:translate(0, -70%);}
+    87% {transform:translate(0, -70%);}
+    88% {transform:translate(0, -80%);}
+    98% {transform:translate(0, -80%);}
+    to {transform:translate(0, -90%);}
+}
+
+.ani_scroll {
+    animation:ani_scroll 30s ease-in-out 0s infinite forwards;
 }
 
 div {

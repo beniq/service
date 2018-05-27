@@ -9,6 +9,7 @@ import java.util.*;
 public class Element
 {
     String id;
+    String name;
 
     Element parent;
     Page page;
@@ -25,15 +26,18 @@ public class Element
 
     List<Event> events = new ArrayList<>();
 
-    List<String> file = new ArrayList<>();
+    List<String> file = new ArrayList<>(); //固定背景
 
     List<Element> children = new ArrayList<>();
 
     JSONArray action = new JSONArray();
 
     String fontSize;
+    String lineHeight;
     String text;
     String color;
+
+    int align;
 
     Map style = new HashMap();
 
@@ -41,6 +45,8 @@ public class Element
 
     String input; //是否为输入框
     Map inputVerify;
+
+    String list; //把该元素复制N份列表排列
 
     public Element()
     {
@@ -58,6 +64,26 @@ public class Element
             this.id = id.replaceAll("[-]", "");;
     }
 
+    public int getAlign()
+    {
+        return align;
+    }
+
+    public void setAlign(int align)
+    {
+        this.align = align;
+    }
+
+    public String getList()
+    {
+        return list;
+    }
+
+    public void setList(String list)
+    {
+        this.list = list;
+    }
+
     public String getVisible()
     {
         return visible;
@@ -68,6 +94,16 @@ public class Element
         if (Common.isEmpty(visible))
             visible = null;
         this.visible = visible;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public String getInput()
@@ -219,6 +255,16 @@ public class Element
     public void setZ(int z)
     {
         this.z = z;
+    }
+
+    public String getLineHeight()
+    {
+        return lineHeight;
+    }
+
+    public void setLineHeight(String lineHeight)
+    {
+        this.lineHeight = lineHeight;
     }
 
     public String getBgColor()
@@ -373,4 +419,62 @@ public class Element
 
         return y;
     }
+
+    public Element copy()
+    {
+        return copy(null);
+    }
+
+    private Element copy(Element parent)
+    {
+        Element e = this;
+        Element c = new Element();
+
+        c.setId(UUID.randomUUID().toString());
+        c.name = e.name;
+
+        c.parent = parent == null ? e.parent : parent;
+        c.page = e.page;
+
+        c.x = e.x;
+        c.y = e.y;
+        c.z = e.z;
+        c.w = e.w;
+        c.h = e.h;
+        c.xs = e.xs;
+        c.ys = e.ys;
+        c.ws = e.ws;
+        c.hs = e.hs;
+
+        c.bgColor = e.bgColor;
+        c.visible = e.visible;
+
+        c.events = e.events;
+
+        c.file = e.file;
+
+        c.children = new ArrayList<>();
+        for (Element child : e.children)
+            c.children.add(child.copy(c));
+
+        c.action = e.action;
+
+        c.fontSize = e.fontSize;
+        c.lineHeight = e.lineHeight;
+        c.text = e.text;
+        c.color = e.color;
+        c.align = e.align;
+
+        c.style = e.style;
+
+        c.display = e.display;
+
+        c.input = e.input;
+        c.inputVerify = e.inputVerify;
+
+        c.list = e.list;
+
+        return c;
+    }
+
 }

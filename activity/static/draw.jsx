@@ -1,0 +1,1129 @@
+var ENV = {
+    W: 750,
+    H: 1200,
+    index: 0,
+    ready: {},
+    mapping: {},
+    doc: {
+        pages: []
+    },
+    event: {
+        toProduct: [
+            {text: "尊享e生旗舰版升级", code: {value: 1021043}},
+            {text: "尊享e生旗舰版", code: {value: 1012745}},
+            {text: "万元保住院医疗", code: {value: 1022555}},
+            {text: "孝心保老人防癌险升级", code: {value: 1021554}},
+        ],
+        shareProduct: [
+            {text: "尊享e生旗舰版升级", code: {productId: 1021043, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
+            {text: "尊享e生旗舰版", code: {productId: 1012745, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
+            {text: "万元保住院医疗", code: {productId: 1022555, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
+            {text: "孝心保老人防癌险升级", code: {productId: 1021554, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
+        ]
+    },
+    style: {
+        hide: {text: "隐藏"},
+        fixed: {
+            text: "浮动固定",
+        },
+        shake1: {
+            text: "缩放抖动",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        shake2: {
+            text: "摇摆抖动",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        shake3: {
+            text: "大摇摆抖动",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        rotate: {
+            text: "旋转",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        float: {
+            text: "上下漂浮",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        textin: {
+            text: "文字入场",
+            comp: [
+                {label: "开始", code: "begin", type: "input"},
+                {label: "方向", code: "direct", type: "select", value: [
+                    {code:"1", text:"左侧进入"},
+                    {code:"2", text:"上侧进入"},
+                    {code:"3", text:"右侧进入"},
+                    {code:"4", text:"下侧进入"},
+                ]},
+                {label: "加速度", code: "spd", type: "select", value: [
+                    {code:"linear", text:"线性"},
+                    {code:"ease", text:"慢快慢"},
+                    {code:"ease-in", text:"慢快"},
+                    {code:"ease-out", text:"快慢"},
+                ]},
+            ]
+        },
+        canvas: {text: "画板背景(烟花等)"},
+        play: {text: "背景轮播"},
+        popup: {text: "弹出动效"},
+        alpha50: {text: "50%透明"},
+        bgSwitch: {
+            text: "背景(序号)",
+            comp: [
+                {label: "序号", code: "index", type: "input"}
+            ]
+        },
+        bgUrl: {
+            text: "背景(表达式)",
+            comp: [
+                {label: "URL", code: "url", type: "input"}
+            ]
+        },
+        stars: {text: "金色星星"},
+        autoScroll: {text: "滚动字幕"},
+        scroll: {text: "可卷动"},
+    },
+    images: {},
+    imagesOnload: {}
+};
+
+ENV.saveQueue = function() {
+    if (Object.keys(ENV.ready).length <= 0)
+        return;
+    let ready = ENV.ready;
+    ENV.ready = {};
+    common.req("element.json", {
+        actId: ENV.actId,
+        elements: ready
+    }, r => {
+        for (let x in ready)
+            if (ENV.ready[x] == null)
+                ENV.ready[x] = ready[x];
+    });
+};
+
+ENV.getImage = function(url) {
+    let img = ENV.images[url];
+    if (img == null) {
+        img = new Image();
+        img.src = common.server() + "/" + url;
+        img.onload = function() {
+            img.succ = true;
+            let listeners = ENV.imagesOnload[url];
+            listeners.map(l => { l() });
+        }
+        img.onerror = function() {
+        }
+        ENV.imagesOnload[url] = [];
+        ENV.images[url] = img;
+    }
+    return img;
+}
+
+ENV.drawImage = function(c, src, x, y, w, h) {
+    let img = ENV.getImage(src);
+    if (img.complete && img.succ) {
+        c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
+    } else {
+        let ll = ENV.imagesOnload[src];
+        ll.push(function() {
+            c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
+        });
+    }
+}
+
+ENV.draw = function(now) {
+    let canvas = document.getElementById("canvas");
+    let c = canvas.getContext("2d");
+    c.fillStyle = "black";
+    c.fillRect(0, 0, ENV.W, ENV.H);
+    let page = ENV.doc.pages[ENV.index];
+    if (page.background != null)
+        ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
+    page.elements.map(e => {
+        if (e.display == 0) return;
+        ENV.drawElement(c, e);
+        if (e.children != null) e.children.map(e => {
+            ENV.drawElement(c, e);
+        });
+    })
+    if (now) {
+        c.fillStyle = "rgba(100%,60%,60%,0.5)";
+        c.fillRect(now.cx, now.cy, now.w, now.h);
+    }
+    if (ENV.cursorRect) {
+        c.fillStyle = "rgba(100%,60%,60%,0.5)";
+        c.fillRect(ENV.cursorRect.x, ENV.cursorRect.y, ENV.cursorRect.w, ENV.cursorRect.h);
+    }
+}
+
+ENV.drawElement = function(c, e) {
+    if (e.bgColor != null && e.bgColor != "") {
+        c.fillStyle = ENV.color(e.bgColor);
+        c.fillRect(e.cx, e.cy, e.w, e.h);
+    }
+    if (e.image != null && e.image.length > 0) {
+        ENV.drawImage(c, e.image[0], e.cx, e.cy, e.w, e.h);
+    }
+}
+
+ENV.color = function(c) {
+    if (c.startsWith("rgb"))
+        return c;
+    else
+        return "#" + c;
+}
+
+ENV.in = function(px, py, x, y, w, h) {
+    return px > x && py > y && px < x + w && py < y + h;
+}
+
+ENV.inRC = function(x, y, e) {
+    return ENV.in(x, y, e.cx, e.cy, e.w, e.h);
+}
+
+var Element = {
+    setStyle: function(e, style) {
+        if (e.style == null)
+            e.style = {};
+        if (e.style[style] == null)
+            e.style[style] = "";
+        else
+            delete e.style[style];
+        this.saveElement();
+    },
+    getStyle: function(e) {
+        let r = "";
+        if (e.style != null) for (let x in e.style) {
+            if (e.style[x])
+                r += x + ",";
+        }
+        return r;
+    },
+    addAction: function(e, action) {
+        if (action == null) {
+            e.action = [];
+        } else {
+            e.action.push({type:action});
+        }
+        this.saveElement();
+    },
+    onEventLink: function(e, ev) {
+        ev.dataTransfer.setData("dragType", "event");
+        ev.dataTransfer.setData("srcId", e.id);
+    },
+    onAdjust: function(e, ev) {
+        ev.dataTransfer.setData("dragType", "element");
+        ev.dataTransfer.setData("srcId", e.id);
+    },
+    toDivs: function(self, elements, parent) {
+        return elements == null ? null : elements.map(e => {
+            ENV.mapping[e.id] = parent;
+            let text = "元素 <" + Math.round(e.x) + "," + Math.round(e.y) + "><" + Math.round(e.w) + "," + Math.round(e.h) + ">" + (e.name ? e.name : "");
+            return (
+                <div className="ml-3" key={e.id}>
+                    <div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == self.state.element ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
+                        <div data-drop="true" id={e.id} className="mr-auto">{text}</div>
+                        <div onClick={self.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
+                        <div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
+                    </div>
+                    <div className="ml-3">
+                        { e.events == null ? null : e.events.map(ev => {
+                            return <div key={ev.id} className="form-row pl-2 pr-2 pt-1 pb-1" draggable="true" onDragStart={this.onEventLink.bind(self, ev)}>
+                                <div data-drop="true" id={ev.id} className="mr-auto">事件 [{ev.type}]{ev.onFinish == null ? "" : " → " + ev.onFinish.type}</div>
+                                <div onClick={self.deleteEvent.bind(self, e.id, ev.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
+                            </div>
+                        })}
+                    </div>
+                    { Element.toDivs(self, e.children, e) }
+                </div>
+            );
+        });
+    }
+}
+
+var Style = React.createClass({
+    getInitialState() {
+        return {};
+    },
+    componentDidMount() {
+        this.setState(this.props.element.style);
+    },
+    delete(k) {
+        let m = this.state;
+        delete m[k];
+        this.setState(m, () => {
+            this.props.element.style = this.state;
+            this.save();
+        });
+    },
+    save() {
+        common.req("style.json", {
+            actId: ENV.actId,
+            elementId: this.props.element.id,
+            style: this.props.element.style
+        }, r => {});
+    },
+    add(type) {
+        let p = {};
+        p[type] = {};
+        this.setState(p, () => {
+            this.props.element.style = this.state;
+            this.save();
+        });
+    },
+    render() {
+        return <div>
+            { Object.keys(this.state).map(s => {
+                let style = ENV.style[s];
+                let comps = !style || !style.comp ? null : style.comp.map(c => {
+                    let p = this.state[s];
+                    let func = v => {
+                        let q = {};
+                        p[c.code] = v.target.value;
+                        q[s] = p;
+                        this.setState(q, () => {
+                            this.props.element.style = this.state;
+                            this.save();
+                        });
+                    };
+                    let comp = null;
+                    if (c.type == "select") {
+                        comp = <select className="form-control" value={p[c.code]} onChange={func}>
+                            { c.value.map(o => <option value={o.code}>{o.text}</option>) }
+                        </select>;
+                    } else if (c.type == "input") {
+                        comp = <input className="form-control" value={p[c.code]} onChange={func}/>;
+                    }
+                    return (
+                        <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                            <div className="input-group-prepend">
+                                <div className="btn btn-primary" style={{width:"120px"}}>{c.label}</div>
+                            </div>
+                            {comp}
+                        </div>
+                    );
+                });
+                return (
+                    <div className="card mt-2 mb-1" id={"style" + s} key={s}>
+                        <div className="card-header input-group">
+                            <div className="mr-auto">{s}</div>
+                            <div onClick={this.delete.bind(this, s)}>X</div>
+                        </div>
+                        <div className="card-body">
+                            {comps}
+                        </div>
+                    </div>
+                )
+            })}
+            <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                <button id="eStyle" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 样式</button>
+                <div className="dropdown-menu" aria-labelledby="eStyle">
+                    { Object.entries(ENV.style).map(v => <a className="dropdown-item" onClick={this.add.bind(this, v[0])}>{v[1].text}</a>) }
+                </div>
+            </div>
+        </div>
+    }
+});
+
+var Main = React.createClass({
+    getInitialState() {
+        return {w:90, h:160, mode:1, element:null};
+    },
+    reload() {
+        if (ENV.actId == null || ENV.actId == "") {
+            common.req("new_act.json", {}, r => this.rebuild(r));
+        } else {
+            ENV.saveQueue();
+            common.req("view_act.json", {actId:ENV.actId}, r => this.rebuild(r));
+        }
+    },
+    componentDidMount() {
+        this.reload();
+        let drop = e => {
+            e.preventDefault();
+            var fileList = e.dataTransfer.files;
+            if(fileList.length > 0) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("post", common.url("file.do"), true);
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                xhr.onreadystatechange = r => {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        this.rebuild(JSON.parse(xhr.responseText).content);
+                    }
+                };
+                var fd = new FormData();
+                fd.append("pageIndex", 0);
+                fd.append("actId", ENV.doc.actId);
+                if (e.target.id == 'pBg') {
+                    fd.append("type", "desk");
+                } else if (e.target.id == 'eImage') {
+                    fd.append("elementId", this.state.element.id);
+                    fd.append("type", "image");
+                } else if (e.target.id == 'canvas') {
+                    let c = $("#canvas");
+                    let s = c.offset();
+                    let x = (e.clientX - s.left) * ENV.W / c.width();
+                    let y = (e.clientY - s.top) * ENV.H / c.height();
+                    fd.append("x", x);
+                    fd.append("y", y);
+                    if (this.state.element != null) {
+                        if (ENV.inRC(x, y, this.state.element)) {
+                            fd.append("x", x - this.state.element.cx);
+                            fd.append("y", y - this.state.element.cy);
+                            fd.append("parentId", this.state.element.id);
+                        }
+                    }
+                    fd.append("type", "element");
+                } else {
+                    fd = null;
+                }
+                if (fd != null) {
+                    for (var i = 0; i < fileList.length; i++)
+                        fd.append("file", fileList[i]);
+                    xhr.send(fd);
+                }
+            } else {
+                if (!e.target.getAttribute("data-drop"))
+                    return;
+                e.target.style.border = ENV.mapping[e.target];
+                let dstId = e.target.id;
+                let srcId = e.dataTransfer.getData("srcId");
+                let type = e.dataTransfer.getData("dragType");
+                if (srcId != null && srcId != "" && dstId != null && dstId != "") {
+                    if (type == "event") {
+                        if (dstId == "eAction") {
+                            this.state.element.action.push({type: "event", param: srcId})
+                            this.saveElement();
+                        } else {
+                            this.link(srcId, dstId);
+                        }
+                    } else if (type == "element") {
+                        if (dstId.startsWith("page")) {
+                            this.adjust(srcId, dstId.substr(4), null);
+                        } else {
+                            this.adjust(srcId, null, dstId);
+                        }
+                    }
+                }
+            }
+        };
+
+        let dragEnter = e => {
+            if (e.target.getAttribute("data-drop")) {
+                ENV.mapping[e.target] = e.target.style.border;
+                e.target.style.border = "3px dashed red";
+            }
+        }
+        let dragLeave = e => {
+            if (e.target.getAttribute("data-drop"))
+                e.target.style.border = ENV.mapping[e.target];
+        }
+
+        document.getElementById('content').addEventListener("drop", drop);
+        document.getElementById('content').addEventListener("dragenter", dragEnter);
+        document.getElementById('content').addEventListener("dragleave", dragLeave);
+
+        $(document).on({
+            keydown: this.onKeyDown,
+            dragleave:function(e){    //拖离
+                e.preventDefault();
+            },
+            drop:function(e){  //拖后放
+                e.preventDefault();
+            },
+            dragenter:function(e){    //拖进
+                e.preventDefault();
+            },
+            dragover:function(e){    //拖来拖去
+                e.preventDefault();
+            }
+        });
+    },
+    display: function(e) {
+        if (e.display == 1)
+            e.display = 0;
+        else
+            e.display = 1;
+        this.saveElement();
+    },
+    addEvent: function(type) {
+        common.req("event.json", {
+            actId: ENV.actId,
+            elementId: this.state.element.id,
+            type: type
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    adjust(e1, page, e2) {
+        common.req("adjust_element.json", {
+            actId: ENV.actId,
+            page: page,
+            elementId: e1,
+            parentId: e2
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    link(e1, e2) {
+        common.req("link_event.json", {
+            actId: ENV.actId,
+            fromEventId: e2,
+            invokeEventId: e1
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    saveEvent(ev) {
+        common.req("save_event.json", {
+            actId: ENV.actId,
+            event: ev
+        }, r => {
+            this.refresh(this.state.element);
+        });
+    },
+    rebuild(doc) {
+        if (doc != null) {
+            ENV.doc = doc;
+            let page = ENV.doc.pages[ENV.index];
+            ENV.W = page.w;
+            ENV.H = page.h;
+            let w = document.getElementById('desk').clientWidth;
+            this.setState({w: w, h: ENV.H * w / ENV.W, element: null}, () => { ENV.draw(this.state.element) })
+        }
+    },
+    refresh(element) {
+        this.setState({element: element}, () => { ENV.draw(this.state.element) })
+    },
+    clickSelect(e) {
+        let c = $("#canvas");
+        let s = c.offset();
+        let x = (e.clientX - s.left) * ENV.W / c.width();
+        let y = (e.clientY - s.top) * ENV.H / c.height();
+        let page = ENV.doc.pages[ENV.index];
+        let element;
+        page.elements.map((e, i) => {
+            if (ENV.inRC(x, y, e))
+                element = e;
+            if (e.children != null) e.children.map(e => {
+                if (ENV.inRC(x, y, e))
+                    element = e;
+                if (e.children != null) e.children.map(e => {
+                    if (ENV.inRC(x, y, e))
+                        element = e;
+                });
+            });
+        });
+        if (element != null)
+            this.refresh(element);
+    },
+    select(e) {
+        this.refresh(e);
+    },
+    selectById(eId) {
+        let page = ENV.doc.pages[ENV.index];
+        page.elements.map((e) => {
+            if (e.id == eId) {
+                this.refresh(e);
+            } else if (e.children != null) e.children.map(e => {
+                if (e.id == eId)
+                    this.refresh(e);
+            });
+        });
+    },
+    drag(e) {
+        let f = this.state.element;
+        if (f == null)
+            f = {};
+        let c = $("#canvas");
+        let s = c.offset();
+        let x = (e.clientX - s.left) * ENV.W / c.width();
+        let y = (e.clientY - s.top) * ENV.H / c.height();
+        if (e.type == "dragstart") {
+            ENV.drag = {sx:x, sy:y, ex:f.x, ey:f.y, cx:f.cx, cy:f.cy, ew:f.w, eh:f.h};
+            ENV.cursorRect = null;
+            if (e.altKey || e.ctrlKey) {
+                ENV.drag.mode = 10;
+            } else if (ENV.inRC(x, y, f)) {
+                ENV.drag.mode = 5;
+            } else if (ENV.in(x, y, f.cx - 20, f.cy - 20, 20, 20)) {
+                ENV.drag.mode = 7;
+            } else if (ENV.in(x, y, f.cx, f.cy - 20, f.w, 20)) {
+                ENV.drag.mode = 8;
+            } else if (ENV.in(x, y, f.cx + f.w, f.cy - 20, 20, 20)) {
+                ENV.drag.mode = 9;
+            } else if (ENV.in(x, y, f.cx - 20, f.cy, 20, f.h)) {
+                ENV.drag.mode = 4;
+            } else if (ENV.in(x, y, f.cx + f.w, f.cy, 20, f.h)) {
+                ENV.drag.mode = 6;
+            } else if (ENV.in(x, y, f.cx - 20, f.cy + f.h, 20, 20)) {
+                ENV.drag.mode = 1;
+            } else if (ENV.in(x, y, f.cx, f.cy + f.h, f.w, 20)) {
+                ENV.drag.mode = 2;
+            } else if (ENV.in(x, y, f.cx + f.w, f.cy + f.h, 20, 20)) {
+                ENV.drag.mode = 3;
+            }
+        } else if (ENV.drag.mode != null) {
+            if (e.type == "drag") {
+                if (ENV.drag.mode == 10) {
+                    ENV.cursorRect = {x:ENV.drag.sx, y:ENV.drag.sy, z:1, w:x - ENV.drag.sx, h:y - ENV.drag.sy};
+                } else if (ENV.drag.mode == 5) {
+                    this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                    this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                    this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                    this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                } else if (ENV.drag.mode == 7) {
+                    this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                    this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                    this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                    this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                    this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
+                    this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
+                } else if (ENV.drag.mode == 8) {
+                    this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                    this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                    this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
+                } else if (ENV.drag.mode == 9) {
+                    this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                    this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                    this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
+                    this.state.element.h = ENV.drag.eh + ENV.drag.sy - y;
+                } else if (ENV.drag.mode == 4) {
+                    this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                    this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                    this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
+                } else if (ENV.drag.mode == 6) {
+                    this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
+                } else if (ENV.drag.mode == 1) {
+                    this.state.element.x = ENV.drag.ex + x - ENV.drag.sx;
+                    this.state.element.cx = ENV.drag.cx + x - ENV.drag.sx;
+                    this.state.element.w = ENV.drag.ew + ENV.drag.sx - x;
+                    this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
+                } else if (ENV.drag.mode == 2) {
+                    this.state.element.y = ENV.drag.ey + y - ENV.drag.sy;
+                    this.state.element.cy = ENV.drag.cy + y - ENV.drag.sy;
+                    this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
+                } else if (ENV.drag.mode == 3) {
+                    this.state.element.w = ENV.drag.ew + x - ENV.drag.sx;
+                    this.state.element.h = ENV.drag.eh + y - ENV.drag.sy;
+                }
+                ENV.draw(this.state.element);
+            } else if (e.type == "dragend") {
+                if (ENV.drag.mode == 10) {
+                    if (this.state.element != null && ENV.in(ENV.drag.sx, ENV.drag.sy, this.state.element.x, this.state.element.y, this.state.element.w, this.state.element.h)) {
+                        ENV.cursorRect.parentId = this.state.element.id;
+                        ENV.cursorRect.x = ENV.cursorRect.x - this.state.element.cx;
+                        ENV.cursorRect.y = ENV.cursorRect.y - this.state.element.cy;
+                    }
+                    this.newElement(ENV.cursorRect);
+                    ENV.cursorRect = null;
+                } else if (this.state.element != null && ENV.drag.mode != null) {
+                    this.state.element.hs = 0;
+                    this.state.element.ys = 0;
+                    this.saveElement();
+                }
+            }
+        }
+    },
+    saveDoc() {
+        common.req("save_act.json", {
+            actId: ENV.actId,
+            code: ENV.doc.code,
+            name: ENV.doc.name,
+            onStart: ENV.doc.startJs
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    saveDPage() {
+        common.req("save_page.json", {
+            actId: ENV.actId,
+            pageIndex: ENV.index,
+            page: ENV.doc.pages[ENV.index]
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    newElement(element) {
+        common.req("new_element.json", {
+            actId: ENV.actId,
+            pageIndex: ENV.index,
+            element: element
+        }, r => {
+            this.rebuild(r);
+        });
+    },
+    saveElement() {
+        if (this.state.element != null) {
+            this.refresh(this.state.element);
+            ENV.ready[this.state.element.id] = this.state.element;
+        }
+    },
+    delete(elementId) {
+        if (confirm("删除？")) {
+            common.req("del_element.json", {
+                actId: ENV.actId,
+                elementId: elementId
+            }, r => {
+                this.rebuild(r);
+            });
+        }
+    },
+    deleteEvent(elementId, eventId) {
+        if (confirm("删除？")) {
+            common.req("del_event.json", {
+                actId: ENV.actId,
+                elementId: elementId,
+                eventId: eventId
+            }, r => {
+                this.rebuild(r);
+            });
+        }
+    },
+    fillBgColor(e) { //以element的四个角的颜色平均值填充背景色
+        let img = ENV.getImage(ENV.doc.pages[ENV.index].background);
+        let canvas = document.getElementById("canvas");
+        let c = canvas.getContext("2d");
+
+        let x1 = e.x - 1;
+        let y1 = e.y - 1;
+        let x2 = e.x + e.w + 1;
+        let y2 = e.y + e.h + 1;
+
+        let rgb = [0, 0, 0, 0];
+        if (x1 >= 0 && y1 >= 0 && x1 < ENV.W && y1 < ENV.H) {
+            let d1 = c.getImageData(x1, y1, 1, 1).data;
+            rgb[0] += d1[0];
+            rgb[1] += d1[1];
+            rgb[2] += d1[2];
+            rgb[3]++;
+        }
+        if (x1 >= 0 && y2 >= 0 && x1 < ENV.W && y2 < ENV.H) {
+            let d1 = c.getImageData(x1, y2, 1, 1).data;
+            rgb[0] += d1[0];
+            rgb[1] += d1[1];
+            rgb[2] += d1[2];
+            rgb[3]++;
+        }
+        if (x2 >= 0 && y1 >= 0 && x2 < ENV.W && y1 < ENV.H) {
+            let d1 = c.getImageData(x2, y1, 1, 1).data;
+            rgb[0] += d1[0];
+            rgb[1] += d1[1];
+            rgb[2] += d1[2];
+            rgb[3]++;
+        }
+        if (x2 >= 0 && y2 >= 0 && x2 < ENV.W && y2 < ENV.H) {
+            let d1 = c.getImageData(x2, y2, 1, 1).data;
+            rgb[0] += d1[0];
+            rgb[1] += d1[1];
+            rgb[2] += d1[2];
+            rgb[3]++;
+        }
+        if (rgb[3] > 0) {
+            e.bgColor = "#" + Math.round(rgb[0] / rgb[3]).toString(16) + Math.round(rgb[1] / rgb[3]).toString(16) + Math.round(rgb[2] / rgb[3]).toString(16);
+        }
+        this.saveElement();
+    },
+    removeBg(e) {
+        e.image = [];
+        this.saveElement();
+    },
+    cutBg(e) {
+        common.req("cut_bg.json", {actId: ENV.actId, elementId:e.id}, r => {
+            this.refresh(this.state.element);
+        });
+    },
+    setZIndex(e, k) {
+        if (k == 0) {
+            e.z = 0;
+        } else {
+            e.z += k;
+        }
+        this.saveElement();
+    },
+    deploy(env) {
+        common.req("deploy.json", {actId: ENV.actId, env:env}, r => {
+            console.log(r);
+            alert(r);
+        });
+    },
+    setDetailMode(mode) {
+        this.setState({mode:mode});
+    },
+    onKeyDown(e) {
+        if ((e.ctrlKey || e.altKey) && (e.keyCode >= 37 && e.keyCode <= 40)){
+            this.state.element.hs = 0;
+            this.state.element.ys = 0;
+            if (e.keyCode == 37) {
+                this.state.element.cx--;
+                this.state.element.x--;
+            } else if (e.keyCode == 38) {
+                this.state.element.cy--;
+                this.state.element.y--;
+            } else if (e.keyCode == 39) {
+                this.state.element.cx++;
+                this.state.element.x++;
+            } else if (e.keyCode == 40) {
+                this.state.element.cy++;
+                this.state.element.y++;
+            }
+            this.state.element.x = Math.round(this.state.element.x);
+            this.state.element.y = Math.round(this.state.element.y);
+            this.state.element.cx = Math.round(this.state.element.cx);
+            this.state.element.cy = Math.round(this.state.element.cy);
+            this.saveElement();
+        }
+    },
+    render() {
+        let tree = ENV.doc.pages.map((page, i) => {
+            return (
+                <div className="ml-3" key={i}>
+                    <div data-drop="true" id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
+                    { Element.toDivs(this, page.elements) }
+                </div>
+            )
+        });
+        let detail;
+        if (this.state.element == null && ENV.doc.pages.length > ENV.index) {
+            let p = ENV.doc.pages[ENV.index];
+            detail = <div key={"page" + ENV.index}>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>活动CODE</div>
+                    </div>
+                    <input type="text" className="form-control" ref="actCode" defaultValue={ENV.doc.code} onChange={v => {ENV.doc.code = v.target.value}} onBlur={this.saveDoc}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>活动名</div>
+                    </div>
+                    <input type="text" className="form-control" ref="actName" defaultValue={ENV.doc.name} onChange={v => {ENV.doc.name = v.target.value}} onBlur={this.saveDoc}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>启动JS</div>
+                    </div>
+                    <input type="text" className="form-control" ref="actName" defaultValue={ENV.doc.startJs} onChange={v => {ENV.doc.startJs = v.target.value}} onBlur={this.saveDoc}/>
+                </div>
+                <br/>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>宽</div>
+                    </div>
+                    <input type="text" className="form-control" ref="pW" defaultValue={p.w} onChange={v => {p.w = v.target.value}} onBlur={this.savePage}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>高</div>
+                    </div>
+                    <input type="text" className="form-control" ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}} onBlur={this.savePage}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>背景</div>
+                    </div>
+                    <input type="text" className="form-control" id="pBg" ref="pBg" value={p.background} readOnly="true"/>
+                </div>
+            </div>
+        } else if (this.state.element != null) {
+            let e = this.state.element;
+            let divs;
+            if (this.state.mode == 1) {
+                divs = <div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>名称</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eName" defaultValue={e.name} onChange={v => { e.name = v.target.value; this.saveElement(); }}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>X</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eX" defaultValue={e.x} onChange={v => { e.x = v.target.value; this.saveElement(); }}/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={v => { e.x = ((ENV.mapping[e.id] ? ENV.mapping[e.id].w : ENV.W) - e.w) / 2; this.saveElement(); }}>居中</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>Y</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eY" defaultValue={e.ys == 1 ? "居中" : e.ys == 2 ? "置底" : e.y} onChange={ v => {e.ys = 0; e.y = v.target.value; this.saveElement(); }} onFocus={v => {this.refs.eY.value = e.y}}/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={v => {e.ys = 1; this.saveElement();}}>居中</div>
+                            <div className="btn btn-outline-primary" onClick={v => {e.ys = 2; this.saveElement();}}>置底</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>Z</div>
+                        </div>
+                        <input type="text" className="form-control text-center" ref="eZ" value={e.z} readOnly="true"/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, 1)}>↑</div>
+                            <div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, -1)}>↓</div>
+                            <div className="btn btn-outline-primary" onClick={this.setZIndex.bind(this, e, 0)}>RESET</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>宽</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={v => {e.w = 750; this.refs.eW.value = e.w; this.saveElement();}}>满屏</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>高</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eH" defaultValue={e.hs == 1 ? "满屏" : e.h} onChange={v => {e.hs = 0; e.h = v.target.value;}} onFocus={v => {this.refs.eH.value = e.h}} onBlur={this.saveElement}/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={v => {e.hs = 1; this.saveElement();}}>满屏</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>纵横比</div>
+                        </div>
+                        <select className="form-control" ref="eKeep">
+                            <option value="Y">自由</option>
+                            <option value="N">按图片锁定</option>
+                        </select>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>背景色</div>
+                        </div>
+                        <input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>颜色</div>
+                        </div>
+                        <input type="text" className="form-control" id="eColor" ref="eColor" defaultValue={e.color} onChange={v => {e.color = v.target.value; this.saveElement(); }}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>文字</div>
+                        </div>
+                        <select className="form-control" ref="eFontSize" defaultValue={e.fontSize} onChange={v => {e.fontSize = v.target.value; this.saveElement(); }}>
+                            <option value="0">无</option>
+                            <option value="7">7px</option>
+                            <option value="8">8px</option>
+                            <option value="9">9px</option>
+                            <option value="10">10px</option>
+                            <option value="11">11px</option>
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="22">22px</option>
+                            <option value="24">24px</option>
+                            <option value="28">28px</option>
+                            <option value="32">32px</option>
+                        </select>
+                        <div className="input-group-append">
+                            <select className="form-control" ref="eLineHeight" defaultValue={e.lineHeight} onChange={v => { e.lineHeight = v.target.value; this.saveElement(); }}>
+                                <option value="0">无</option>
+                                <option value="10">10px</option>
+                                <option value="16">16px</option>
+                                <option value="20">20px</option>
+                                <option value="24">24px</option>
+                                <option value="30">30px</option>
+                                <option value="40">40px</option>
+                                <option value="50">50px</option>
+                            </select>
+                            <select className="form-control" ref="eAlign" defaultValue={e.align} onChange={v => { e.align = v.target.value; this.saveElement(); }}>
+                                <option value="5">居中</option>
+                                <option value="1">左下</option>
+                                <option value="2">下</option>
+                                <option value="3">右下</option>
+                                <option value="4">左</option>
+                                <option value="6">右</option>
+                                <option value="7">左上</option>
+                                <option value="8">上</option>
+                                <option value="9">右上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>文本</div>
+                        </div>
+                        <input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value}} onBlur={this.saveElement}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>背景</div>
+                        </div>
+                        <input type="text" className="form-control" id="eImage" ref="eImage" value={JSON.stringify(e.image)} readOnly="true"/>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={this.removeBg.bind(this, e)}>清除</div>
+                            <div className="btn btn-outline-primary" onClick={this.cutBg.bind(this, e)}>截取</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}} id="eActionSel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">onClick</div>
+                            <div className="dropdown-menu" aria-labelledby="eActionSel">
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, null)}>清空</a>
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "redirect")}>跳转</a>
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "js")}>JS方法</a>
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "toProduct")}>跳转产品</a>
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "shareProduct")}>转发产品</a>
+                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "submit")}>提交</a>
+                            </div>
+                        </div>
+                        <div className="form-control p-0 m-0 border-0">
+                            <input data-drop="true" className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
+                            <div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
+                                { e.action.map(act => {
+                                    return <div className="dropdown-item">
+                                        {act.type}
+                                        <input type="text" className="form-control" defaultValue={act.param} onChange={v => {act.param = v.target.value}} onBlur={this.saveElement}/>
+                                    </div>
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>输入框</div>
+                        </div>
+                        <input type="text" className="form-control" id="eInput" ref="eInput" defaultValue={e.input} onChange={v => {e.input = v.target.value}} onBlur={this.saveElement}/>
+                        <div className="input-group-append">
+                            <div className={e.inputVerify && e.inputVerify.require ? "btn btn-primary" : "btn btn-outline-primary"} onClick={() => {
+                                if (e.inputVerify == null)
+                                    e.inputVerify = {};
+                                e.inputVerify.require = !e.inputVerify.require;
+                                this.saveElement();
+                            }}>非空</div>
+                        </div>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>可见表达式</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eVisible" defaultValue={e.visible} onChange={v => { e.visible = v.target.value; this.saveElement(); }}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>循环表达式</div>
+                        </div>
+                        <input type="text" className="form-control" ref="eList" defaultValue={e.list} onChange={v => { e.list = v.target.value; this.saveElement(); }}/>
+                    </div>
+                </div>
+            } else if (this.state.mode == 2) {
+                divs = <div>
+                    { e.events == null ? null : e.events.map(ev => {
+                        return <div className="card mt-2 mb-1" id={ev.id} key={ev.id}>
+                            <div className="card-header input-group">
+                                <div className="mr-auto">{ev.type}</div>
+                                <div onClick={this.deleteEvent.bind(this, e.id, ev.id)}>X</div>
+                            </div>
+                            <div className="card-body">
+                                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                                    <div className="input-group-prepend">
+                                        <div className="btn btn-primary" style={{width:"120px"}}>参数</div>
+                                    </div>
+                                    <input type="text" className="form-control" ref="evParam" defaultValue={ev.param==null?null:JSON.stringify(ev.param)} onChange={v => {ev.param = eval(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+                                    <div className="input-group-append">
+                                        <button id="eParamUsual" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">常用</button>
+                                        <div className="dropdown-menu" aria-labelledby="eParamUsual">
+                                            { !ENV.event[ev.type] ? null : ENV.event[ev.type].map(u => {
+                                                return <a className="dropdown-item" onClick={v => { ev.param = u.code; this.saveEvent(ev); }}>{u.text}</a>
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                                    <div className="input-group-prepend">
+                                        <div className="btn btn-primary" style={{width:"120px"}}>onFinish</div>
+                                    </div>
+                                    <input type="text" className="form-control" ref="evOnFinish" defaultValue={ev.onFinish==null?null:JSON.stringify(ev.onFinish)} onChange={v => {ev.onFinish = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
+                                </div>
+                            </div>
+                        </div>
+                    })}
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
+                        <div className="dropdown-menu" aria-labelledby="eEvent">
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "open")}>图层显示</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "close")}>图层关闭</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "play")}>背景轮播</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "bgSwitch")}>背景切换</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "tiger")}>抽奖机</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "sparks")}>烟花</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "scroll")}>滚动至此</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "submit")}>提交表单</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "redirect")}>跳转</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "js")}>js表达式</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "toProduct")}>跳转产品</a>
+                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "shareProduct")}>转发产品</a>
+                        </div>
+                    </div>
+                </div>
+            } else if (this.state.mode == 3) {
+                divs = <Style element={e}/>;
+            }
+            detail = <div key={e.id}>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1 text-center">
+                    <div className="btn-group ml-auto mr-auto">
+                        <button type="button" className={"btn " + (this.state.mode == 1 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 1)}>&nbsp;&nbsp;组件&nbsp;&nbsp;</button>
+                        <button type="button" className={"btn " + (this.state.mode == 2 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 2)}>&nbsp;&nbsp;事项&nbsp;&nbsp;</button>
+                        <button type="button" className={"btn " + (this.state.mode == 3 ? "btn-success" : "btn-outline-success")} onClick={this.setDetailMode.bind(this, 3)}>&nbsp;&nbsp;样式&nbsp;&nbsp;</button>
+                    </div>
+                </div>
+                {divs}
+            </div>
+        }
+        return (
+            <div className="form-horizontal">
+                <div className="form-row m-0 p-0">
+                    <div className="col-sm-4 m-0 p-0" id="desk" style={{overflowY:"scroll", overflowX:"hidden", height:window.innerHeight + "px"}}>
+                        <canvas id="canvas" ref="canvas" style={{width:this.state.w + "px", height:this.state.h + "px"}} width={ENV.W} height={ENV.H} onClick={this.clickSelect} draggable="true" onDragStart={this.drag} onDrag={this.drag} onDragEnd={this.drag}></canvas>
+                    </div>
+                    <div className="col-sm-8 m-0 p-0">
+                        <div className="navbar navbar-expand-lg navbar-light bg-light m-0 p-3" style={{height:"60px"}}>
+                            <div className="mr-auto">
+                                <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新</button>
+                                <button type="button" className="btn btn-success mr-2">页面</button>
+                                <button type="button" className="btn btn-success mr-2">元素</button>
+                            </div>
+                            <div className="text-right">
+                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
+                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "uat")}>发布预发</button>
+                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "prd")}>发布生产</button>
+                            </div>
+                        </div>
+                        <div className="form-row m-0 p-0">
+                            <div className="col-sm-6 p-0 m-0" style={{overflowY:"scroll", overflowX:"hidden", height:window.innerHeight - 60 + "px"}}>
+                                <div className="pl-2 pr-2 pt-1 pb-1">活动文档</div>
+                                {tree}
+                            </div>
+                            <div className="col-sm-6 p-3" id="detail">
+                                {detail}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
+$(document).ready( function() {
+    ENV.actId = common.param("actId");
+    ReactDOM.render(<Main/>, document.getElementById("content"));
+
+    setInterval(ENV.saveQueue, 10000);
+});
