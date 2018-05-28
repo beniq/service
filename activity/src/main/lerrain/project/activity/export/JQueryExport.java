@@ -300,7 +300,7 @@ public class JQueryExport
         if (e.getVisible() != null)
         {
             style += "display:none;";
-            js3 += "if (" + e.getVisible() + ") { $(\"#" + id + "\").show(); }";
+            js3 += "if (" + expOf(e.getVisible(), exp) + ") { $(\"#" + id + "\").show(); }";
         }
 
         String ea = "";

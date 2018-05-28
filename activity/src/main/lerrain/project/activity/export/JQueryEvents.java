@@ -34,7 +34,13 @@ public class JQueryEvents
             envJs += "var finish" + event.getId() + " = function() {" + onFinish + "};";
 
         String id = event.getElement().getId();
-        if ("tiger".equals(event.getType()))
+        if ("init".equals(event.getType()))
+        {
+            envJs += "ENV.reqInit = true;";
+            if (onFinish != null)
+                envJs += "ENV.afterInit = finish" + event.getId() + ";";
+        }
+        else if ("tiger".equals(event.getType()))
         {
             envJs += "ENV.tiger = new Tiger1();\n";
         }
@@ -97,12 +103,20 @@ public class JQueryEvents
         }
         else if ("sparks".equals(event.getType()))
         {
-            String js = "var canvas = document.getElementById('CV"+event.getElement().getId()+"');\n" +
+            String js = "";
+            String c = event.getParam() != null ? event.getParam().getString("value") : null;
+            if (c != null)
+                js += "if ("+c+") {";
+            js += "var canvas = document.getElementById('CV" + id + "');\n" +
                     "    canvas.width=canvas.clientWidth;\n" +
                     "    canvas.height=canvas.clientHeight;\n" +
-                    "    var sp = new Sparks(canvas);\n" +
-                    "    sp.start();";
+                    "    ENV.sparks" + id + " = new Sparks(canvas);\n";
+            js += "ENV.sparks" + event.getElement().getId() + ".start(); }";
             return js;
+        }
+        else if ("stopSparks".equals(event.getType()))
+        {
+            return "ENV.sparks" + event.getElement().getId() + ".stop();";
         }
         else if ("scroll".equals(event.getType()))
         {
@@ -140,6 +154,8 @@ public class JQueryEvents
                 return null;
 
             String text = event.getParam().getString("value");
+            if (text.startsWith("http:") || text.startsWith("https:"))
+                text = "\"" + text + "\"";
             return "document.location.href = " + jqe.expOf(text, exp) + ";\n";
         }
         else if ("toProduct".equals(event.getType()))
@@ -157,6 +173,14 @@ public class JQueryEvents
 
             String text = JSON.toJSONString(event.getParam());
             return "shareProduct("+text+");\n";
+        }
+        else if ("js".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String text = event.getParam().getString("value");
+            return "eval("+jqe.expOf(text, exp)+");";
         }
 
         return null;

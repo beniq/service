@@ -8,18 +8,36 @@ var ENV = {
         pages: []
     },
     event: {
-        toProduct: [
-            {text: "尊享e生旗舰版升级", code: {value: 1021043}},
-            {text: "尊享e生旗舰版", code: {value: 1012745}},
-            {text: "万元保住院医疗", code: {value: 1022555}},
-            {text: "孝心保老人防癌险升级", code: {value: 1021554}},
-        ],
-        shareProduct: [
-            {text: "尊享e生旗舰版升级", code: {productId: 1021043, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
-            {text: "尊享e生旗舰版", code: {productId: 1012745, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
-            {text: "万元保住院医疗", code: {productId: 1022555, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
-            {text: "孝心保老人防癌险升级", code: {productId: 1021554, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', thumb: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'}},
-        ]
+        init: {text: "初始化"},
+        open: {text: "显示图层"},
+        close: {text: "关闭图层"},
+        play: {text: "轮播背景"},
+        bgSwitch: {text: "切换背景"},
+        tiger: {text: "转动抽奖机"},
+        sparks: {text: "释放烟花"},
+        stopSparks: {text: "关闭烟花"},
+        scroll: {text: "滚动至此"},
+        submit: {text: "提交表单"},
+        redirect: {
+            text: "跳转至URL",
+            comp: [{label: "URL", code: "value", type: "input"}]
+        },
+        js: {
+            text: "执行js",
+            comp: [{label: "JS", code: "value", type: "input"}]
+        },
+        toProduct: {
+            text: "跳转至产品",
+            comp: [
+                {label: "产品", code: "value", type: "select", value: []}
+            ]
+        },
+        shareProduct: {
+            text: "转发产品",
+            comp: [
+                {label: "产品", code: null, type: "select", value: []}
+            ]
+        }
     },
     style: {
         hide: {text: "隐藏"},
@@ -87,6 +105,21 @@ var ENV = {
     images: {},
     imagesOnload: {}
 };
+
+ENV.products = [
+    {name: "尊享e生旗舰版升级", productId: 1021043, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
+    {name: "尊享e生旗舰版", productId: 1012745, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
+    {name: "万元保住院医疗", productId: 1022555, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
+    {name: "孝心保老人防癌险升级", productId: 1021554, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
+    {name: "童安保儿童兴趣潜力基因检测", productId: 1021044, title: '童安保儿童兴趣潜力基因检测', desc: '检测孩子的空间定位能力、乐感、爆发力和耐力，科学获知孩子的体育、艺术等方面能力。检测结果高达99.99%！让孩子站在天赋的基石上，快乐成长，轻松成才！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000001/xingquqianli_share.png'},
+    {name: "童安保安全用药基因检测", productId: 1021045, title: '童安保安全用药基因检测', desc: '覆盖内科、消化科、呼吸科等六大科室，涉及感冒、哮喘等11种常见儿童用药需求的基因检测。检测结果准确率高达99.99%！父母培养健康成长的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000002/anquanyongyao_share.png'},
+    {name: "童安保学习能力基因检测", productId: 1021046, title: '童安保学习能力基因检测', desc: '检测孩子的理解能力、数学计算能力、记忆力、求知欲、动手能力、阅读能力在内的6种学习能力。基因检测结果准确率高达99.99%！父母因材施教的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000003/xuexinengli_share.png'},
+];
+
+ENV.products.map(x => {
+    ENV.event.toProduct.comp[0].value.push({text: x.name, code: x.productId});
+    ENV.event.shareProduct.comp[0].value.push({text: x.name, code: x});
+});
 
 ENV.saveQueue = function() {
     if (Object.keys(ENV.ready).length <= 0)
@@ -242,6 +275,98 @@ var Element = {
         });
     }
 }
+
+var Event = React.createClass({
+    getInitialState() {
+        return {events:[]};
+    },
+    componentDidMount() {
+        this.setState({events:this.props.element.events});
+    },
+    add: function(type) {
+        common.req("event.json", {
+            actId: ENV.actId,
+            elementId: this.props.element.id,
+            type: type
+        }, r => {
+            this.props.parent.rebuild(r);
+        });
+    },
+    delete(eventId) {
+        if (confirm("删除？")) {
+            common.req("del_event.json", {
+                actId: ENV.actId,
+                elementId: this.props.element.id,
+                eventId: eventId
+            }, r => {
+                this.props.parent.rebuild(r);
+            });
+        }
+    },
+    save(ev) {
+        common.req("save_event.json", {
+            actId: ENV.actId,
+            event: ev
+        }, r => {
+            this.props.parent.refresh(this.props.parent.state.element);
+        });
+    },
+    render() {
+        return <div>
+            { this.state.events.map(s => {
+                let event = ENV.event[s.type];
+                if (s.param == null) s.param = {};
+                let comps = !event || !event.comp ? null : event.comp.map(c => {
+                    let comp = null;
+                    if (c.type == "select") {
+                        comp = <select className="form-control" value={s.param[c.code]} onChange={v => { let val = JSON.parse(v.target.value); if (c.code) { s.param[c.code] = val; } else { s.param = val; } this.save(s); }}>
+                            { c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>) }
+                        </select>;
+                    } else if (c.type == "input") {
+                        comp = <input className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}/>;
+                    }
+                    return (
+                        <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                            <div className="input-group-prepend">
+                                <div className="btn btn-primary" style={{width:"120px"}}>{c.label}</div>
+                            </div>
+                            {comp}
+                        </div>
+                    );
+                });
+                return (
+                    <div className="card mt-2 mb-1" key={s}>
+                        <div className="card-header input-group">
+                            <div className="mr-auto">{s.type}</div>
+                            <div onClick={this.delete.bind(this, s.id)}>X</div>
+                        </div>
+                        <div className="card-body">
+                            {comps}
+                            <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                                <div className="input-group-prepend">
+                                    <div className="btn btn-primary" style={{width:"120px"}}>参数json</div>
+                                </div>
+                                <input type="text" className="form-control" ref="evOnFinish" value={s.param==null?null:JSON.stringify(s.param)} readOnly="true"/>
+                            </div>
+                            <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                                <div className="input-group-prepend">
+                                    <div className="btn btn-primary" style={{width:"120px"}}>结束事件</div>
+                                </div>
+                                <input type="text" className="form-control" ref="evOnFinish" value={s.onFinish==null?null:JSON.stringify(s.onFinish)} readOnly="true"/>
+                            </div>
+                        </div>
+                    </div>
+                )
+            })}
+            <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                <button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
+                <div className="dropdown-menu" aria-labelledby="eEvent">
+                    { Object.entries(ENV.event).map(v => <a className="dropdown-item" onClick={this.add.bind(this, v[0])}>{v[1].text}</a>) }
+                </div>
+            </div>
+        </div>
+    }
+});
 
 var Style = React.createClass({
     getInitialState() {
@@ -448,15 +573,6 @@ var Main = React.createClass({
             e.display = 1;
         this.saveElement();
     },
-    addEvent: function(type) {
-        common.req("event.json", {
-            actId: ENV.actId,
-            elementId: this.state.element.id,
-            type: type
-        }, r => {
-            this.rebuild(r);
-        });
-    },
     adjust(e1, page, e2) {
         common.req("adjust_element.json", {
             actId: ENV.actId,
@@ -476,13 +592,16 @@ var Main = React.createClass({
             this.rebuild(r);
         });
     },
-    saveEvent(ev) {
-        common.req("save_event.json", {
-            actId: ENV.actId,
-            event: ev
-        }, r => {
-            this.refresh(this.state.element);
-        });
+    deleteEvent(elementId, eventId) {
+        if (confirm("删除？")) {
+            common.req("del_event.json", {
+                actId: ENV.actId,
+                elementId: elementId,
+                eventId: eventId
+            }, r => {
+                this.rebuild(r);
+            });
+        }
     },
     rebuild(doc) {
         if (doc != null) {
@@ -671,17 +790,6 @@ var Main = React.createClass({
             });
         }
     },
-    deleteEvent(elementId, eventId) {
-        if (confirm("删除？")) {
-            common.req("del_event.json", {
-                actId: ENV.actId,
-                elementId: elementId,
-                eventId: eventId
-            }, r => {
-                this.rebuild(r);
-            });
-        }
-    },
     fillBgColor(e) { //以element的四个角的颜色平均值填充背景色
         let img = ENV.getImage(ENV.doc.pages[ENV.index].background);
         let canvas = document.getElementById("canvas");
@@ -722,7 +830,7 @@ var Main = React.createClass({
             rgb[3]++;
         }
         if (rgb[3] > 0) {
-            e.bgColor = "#" + Math.round(rgb[0] / rgb[3]).toString(16) + Math.round(rgb[1] / rgb[3]).toString(16) + Math.round(rgb[2] / rgb[3]).toString(16);
+            e.bgColor = "#" + (Math.round(rgb[0] / rgb[3])*65536 + Math.round(rgb[1] / rgb[3])*256 + Math.round(rgb[2] / rgb[3])).toString(16);
         }
         this.saveElement();
     },
@@ -1023,55 +1131,7 @@ var Main = React.createClass({
                     </div>
                 </div>
             } else if (this.state.mode == 2) {
-                divs = <div>
-                    { e.events == null ? null : e.events.map(ev => {
-                        return <div className="card mt-2 mb-1" id={ev.id} key={ev.id}>
-                            <div className="card-header input-group">
-                                <div className="mr-auto">{ev.type}</div>
-                                <div onClick={this.deleteEvent.bind(this, e.id, ev.id)}>X</div>
-                            </div>
-                            <div className="card-body">
-                                <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                                    <div className="input-group-prepend">
-                                        <div className="btn btn-primary" style={{width:"120px"}}>参数</div>
-                                    </div>
-                                    <input type="text" className="form-control" ref="evParam" defaultValue={ev.param==null?null:JSON.stringify(ev.param)} onChange={v => {ev.param = eval(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
-                                    <div className="input-group-append">
-                                        <button id="eParamUsual" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">常用</button>
-                                        <div className="dropdown-menu" aria-labelledby="eParamUsual">
-                                            { !ENV.event[ev.type] ? null : ENV.event[ev.type].map(u => {
-                                                return <a className="dropdown-item" onClick={v => { ev.param = u.code; this.saveEvent(ev); }}>{u.text}</a>
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                                    <div className="input-group-prepend">
-                                        <div className="btn btn-primary" style={{width:"120px"}}>onFinish</div>
-                                    </div>
-                                    <input type="text" className="form-control" ref="evOnFinish" defaultValue={ev.onFinish==null?null:JSON.stringify(ev.onFinish)} onChange={v => {ev.onFinish = v.target.value==""?null:JSON.parse(v.target.value)}} onBlur={this.saveEvent.bind(this, ev)}/>
-                                </div>
-                            </div>
-                        </div>
-                    })}
-                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                        <button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
-                        <div className="dropdown-menu" aria-labelledby="eEvent">
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "open")}>图层显示</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "close")}>图层关闭</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "play")}>背景轮播</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "bgSwitch")}>背景切换</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "tiger")}>抽奖机</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "sparks")}>烟花</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "scroll")}>滚动至此</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "submit")}>提交表单</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "redirect")}>跳转</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "js")}>js表达式</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "toProduct")}>跳转产品</a>
-                            <a className="dropdown-item" onClick={this.addEvent.bind(this, "shareProduct")}>转发产品</a>
-                        </div>
-                    </div>
-                </div>
+                divs = <Event parent={this} element={e}/>;
             } else if (this.state.mode == 3) {
                 divs = <Style element={e}/>;
             }

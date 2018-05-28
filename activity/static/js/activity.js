@@ -381,15 +381,16 @@ function Sparks(canvas) {
         this.ctx.clearRect(0,0,this.cx*2,this.cy*2);
         this.ctx.globalAlpha=1;
         let seeds = this.seeds;
+        let sparks = this.sparks;
         for(let i=0;i<seeds.length;++i){
             let point=this.rasterizePoint(seeds[i].x,seeds[i].y,seeds[i].z);
             if(point.d!=-1){
                 let size=200/(1+point.d);
-                this.ctx.fillRect(point.x-size/2,point.y-size/2,size,size);
+                this.ctx.drawImage(this.sparkPics[0],point.x-size*4,point.y-size*4,size*8,size*8);
+                //this.ctx.fillRect(point.x-size/2,point.y-size/2,size,size);
             }
         }
         let point1=new Object();
-        let sparks = this.sparks;
         for(let i=0;i<sparks.length;++i){
             let point=this.rasterizePoint(sparks[i].x,sparks[i].y,sparks[i].z);
             if(point.d!=-1){
@@ -434,8 +435,7 @@ function Sparks(canvas) {
         if (this.frames < 0 || this.frames > this.maxFrame){
             return;
         }
-        if (!this.isVisible(this.canvas))
-            return;
+        if (!this.isVisible(this.canvas)) return;
         this.frames++;
         this.draw();
         this.doLogic();

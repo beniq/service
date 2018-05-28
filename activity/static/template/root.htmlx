@@ -44,13 +44,20 @@
     ENV.H = <!-- HEIGHT -->;
     var gotoPrd = function(prdId) {
         var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
-        stat("GoProduct", dest, prdId)
+        stat("GoProduct", dest, prdId);
+        goUrl(dest);
+    };
+    var goUrl = function(dest) {
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
         var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         p.link = dest;
-        stat("ShareProduct", dest)
+        stat("ShareProduct", dest);
+        iHealthBridge.doAction("share", JSON.stringify(p));
+    };
+    var shareH5 = function(p){
+        stat("ShareHot", p.link);
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
     var stat = function(code, dest, productId) {
@@ -67,13 +74,15 @@
     };
     gpo.runJS = function() {
         stat("open", window.location.href, null);
-        gpo.refreshAct();
-    };
-    gpo.refreshAct = function() {
-        gpo.ask("init", null, function(r) {
-            ENV.init = r;
-            refreshText();
-        });
+        if (ENV.reqInit) {
+            gpo.ask("init", null, function(r) {
+                ENV.init = r;
+                refreshText();
+                if (ENV.afterInit) {
+                    ENV.afterInit();
+                }
+            });
+        }
     };
     gpo.ask = function(code, val, succ){
         try{
@@ -89,34 +98,6 @@
     };
     <!-- JS_ENV -->
     $(document).ready( function() {
-        gpo.accountId = gpo.param("accountId");
-        if (gpo.accountId != null && gpo.accountId != "") {
-            gpo.runJS();
-        } else {
-            if (typeof iHealthBridge != "undefined") {
-                iHealthBridge.getData("userInfo", "", function(r) {
-                    if (r == null || r.accountId == null) {
-                        Life.Dialog.alert("无法获取APP用户信息");
-                    } else {
-                        gpo.accountId = r.accountId;
-                        gpo.runJS();
-                    }
-                });
-            } else {
-                gpo.post("/iybapi/broker/app/salesmanInfoAjax/getSalemanInfo.json", null, function (r) {
-                    if (r.isSuccess)
-                        gpo.accountId = r.result.accountId;
-                    if (gpo.accountId == null || gpo.accountId == "") {
-                        Life.Dialog.alert("无法获取用户信息");
-                    } else {
-                        gpo.runJS();
-                    }
-                }, function (r) {
-                    Life.Dialog.alert("服务器连接失败，请重试" + JSON.stringify(r));
-                });
-            }
-        }
-
         var imgloader = new resLoader({
             baseUrl: './',
             resources : [<!-- IMAGES -->],
@@ -129,6 +110,34 @@
                 document.getElementById("aaa").style.display = "none";
                 document.getElementById("ccc").style.display = "block";
                 <!-- JS_START -->
+
+                gpo.accountId = gpo.param("accountId");
+                if (gpo.accountId != null && gpo.accountId != "") {
+                    gpo.runJS();
+                } else {
+                    if (typeof iHealthBridge != "undefined") {
+                        iHealthBridge.getData("userInfo", "", function(r) {
+                            if (r == null || r.accountId == null) {
+                                Life.Dialog.alert("无法获取APP用户信息");
+                            } else {
+                                gpo.accountId = r.accountId;
+                                gpo.runJS();
+                            }
+                        });
+                    } else {
+                        gpo.post("/iybapi/broker/app/salesmanInfoAjax/getSalemanInfo.json", null, function (r) {
+                            if (r.isSuccess)
+                                gpo.accountId = r.result.accountId;
+                            if (gpo.accountId == null || gpo.accountId == "") {
+                                Life.Dialog.alert("无法获取用户信息");
+                            } else {
+                                gpo.runJS();
+                            }
+                        }, function (r) {
+                            Life.Dialog.alert("服务器连接失败，请重试" + JSON.stringify(r));
+                        });
+                    }
+                }
             }
         });
         imgloader.start();
