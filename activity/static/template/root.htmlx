@@ -43,7 +43,7 @@
 <script>
     ENV.H = <!-- HEIGHT -->;
     var gotoPrd = function(prdId) {
-        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        var dest = '<!-- IYB_SERVER -->/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         stat("GoProduct", dest, prdId);
         goUrl(dest);
     };
@@ -51,7 +51,7 @@
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
-        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        var dest = '<!-- IYB_SERVER -->/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         p.link = dest;
         stat("ShareProduct", dest);
         iHealthBridge.doAction("share", JSON.stringify(p));

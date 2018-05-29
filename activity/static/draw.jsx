@@ -107,13 +107,21 @@ var ENV = {
 };
 
 ENV.products = [
-    {name: "尊享e生旗舰版升级", productId: 1021043, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
-    {name: "尊享e生旗舰版", productId: 1012745, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
-    {name: "万元保住院医疗", productId: 1022555, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
-    {name: "孝心保老人防癌险升级", productId: 1021554, title: '国民医疗系列，新年投保享体检服务', desc: '高保额，保费实在，涵盖自费药', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51270432/share_zunxiangesheng2017_3.png'},
+    {name: "复星联合康乐e生重大疾病保险", productId: 1004329, title: '复星联合康乐e生重大疾病保险', desc: '80种重疾35种轻症，身故责任可选，保费双豁免，保障缴费期限灵活', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/70000001/share_kangleyisheng.png'},
+    {name: "百年康惠保重大疾病保险", productId: 1014999, title: '百年康惠保重大疾病保险', desc: '最高保额50万，1-6类职业可投保，100种重疾+30种轻症，可保终身。本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/160000001/icon.jpg'},
+    {name: "信美相互爱我宝贝少儿白血病疾病保险", productId: 1020928, title: '信美相互爱我宝贝少儿白血病疾病保险', desc: '保障少儿高发疾病 最高50万保障 一天0.3元起', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/1010000001/share.jpg'},
+    {name: "中信保诚［荣耀祯爱］定期寿险", productId: 1019133, title: '中信保诚［荣耀祯爱］定期寿险', desc: '超短等待期，保障额度高 健告宽松，职业限制少', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/180000001/share.jpg'},
+    {name: "和谐宝贝健康成长计划（升级）", productId: 1023622, title: '和谐宝贝健康成长计划（升级）', desc: '交费灵活，多重保障，月月复利，收益递增', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000002_3_4_5/hexiebaobei_share.png'},
+    {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
+    {name: "和谐健康之享定期重大疾病保险", productId: 1006015, title: '和谐健康之享定期重大疾病保险', desc: '50种重疾最高60万，次年保额翻倍 投保年龄：28天-50周岁 缴费期间：5/10/15/20年 本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000001/share_hexiezhixiang.png'},
+    {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
     {name: "童安保儿童兴趣潜力基因检测", productId: 1021044, title: '童安保儿童兴趣潜力基因检测', desc: '检测孩子的空间定位能力、乐感、爆发力和耐力，科学获知孩子的体育、艺术等方面能力。检测结果高达99.99%！让孩子站在天赋的基石上，快乐成长，轻松成才！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000001/xingquqianli_share.png'},
     {name: "童安保安全用药基因检测", productId: 1021045, title: '童安保安全用药基因检测', desc: '覆盖内科、消化科、呼吸科等六大科室，涉及感冒、哮喘等11种常见儿童用药需求的基因检测。检测结果准确率高达99.99%！父母培养健康成长的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000002/anquanyongyao_share.png'},
     {name: "童安保学习能力基因检测", productId: 1021046, title: '童安保学习能力基因检测', desc: '检测孩子的理解能力、数学计算能力、记忆力、求知欲、动手能力、阅读能力在内的6种学习能力。基因检测结果准确率高达99.99%！父母因材施教的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000003/xuexinengli_share.png'},
+    {name: "万元保住院医疗", productId: 1022555, title: '万元保住院医疗', desc: '保额1万元！0免赔！责任内医疗费用均100%报销!不限进口药、自费药，最高可续保至80周岁！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51339101/share_wanyuanbao.jpg'},
+    {name: "孝欣保老年防癌保险（升级）", productId: 1021554, title: '众安孝欣保老年防癌保险（升级）', desc: '含质子重离子治疗及绿色通道服务！三高人群也可投保，最高可以续保到85岁！恶性肿瘤医疗保险金与质子重离子医疗保险金共享保额！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51337310_11_12_13/laonianfangaixian_share.jpg'},
+    {name: "尊享e生旗舰版（升级）", productId: 1021043, title: '众安尊享e生旗舰版（升级）', desc: '保额600万，癌症无免赔，全家可共享免赔额，提供免费医疗垫付', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51335801_2_3_4/zunxiangyishengqijian_share.jpg'},
+    {name: "尊享e生旗舰版", productId: 1012745, title: '众安尊享e生旗舰版', desc: '保额600万，癌症无免赔，全家可共享免赔额，提供免费医疗垫付', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51321307_8/zunxiangyishengqijian_share.jpg'},
 ];
 
 ENV.products.map(x => {

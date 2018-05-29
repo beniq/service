@@ -25,6 +25,7 @@ public class JQueryExport
     JQueryEvents tool;
 
     String server;
+    String iybServer;
 
     String root = JQueryExport.rootHtml;
     String js1 = "", js2 = "", js3 = "";
@@ -46,14 +47,17 @@ public class JQueryExport
         if ("test".equalsIgnoreCase(env))
         {
             server = "https://gpo-test.iyunbao.com";
+            iybServer = "https://test.iyunbao.com";
         }
         else if ("uat".equalsIgnoreCase(env))
         {
             server = "https://gpo-uat.iyunbao.com";
+            iybServer = "https://uat.iyunbao.com";
         }
         else if ("prd".equalsIgnoreCase(env))
         {
             server = "https://gpo.iyunbao.com";
+            iybServer = "https://www.iyunbao.com";
         }
     }
 
@@ -91,6 +95,7 @@ public class JQueryExport
         root = root.replace("<!-- CSS -->", css + tool.envCss);
         root = root.replaceAll("<!-- ACT_CODE -->", doc.getCode());
         root = root.replaceAll("<!-- SERVER -->", server);
+        root = root.replaceAll("<!-- IYB_SERVER -->", iybServer);
         root = root.replaceAll("<!-- IMAGES -->", images);
 
         for (Runnable r : finish)
