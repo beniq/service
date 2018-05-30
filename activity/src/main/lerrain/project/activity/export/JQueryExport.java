@@ -24,6 +24,7 @@ public class JQueryExport
 
     JQueryEvents tool;
 
+    String env;
     String server;
     String iybServer;
 
@@ -41,7 +42,7 @@ public class JQueryExport
     public JQueryExport(ActivityDoc doc, String env)
     {
         this.doc = doc;
-
+        this.env = env;
         this.tool = new JQueryEvents(this);
 
         if ("test".equalsIgnoreCase(env))
@@ -86,6 +87,7 @@ public class JQueryExport
         for (String cssStr : xcss.values())
             css += cssStr;
 
+        root = root.replaceAll("<!-- ENV -->", env);
         root = root.replace("<!-- TITLE -->", doc.getName());
         root = root.replace("<!-- PAGES -->", pages);
         root = root.replaceAll("<!-- HEIGHT -->", doc.getList().get(0).getH() + "");
@@ -189,11 +191,11 @@ public class JQueryExport
             if ("scroll".equals(key) || "autoScroll".equals(key))
                 style += "overflow-y:scroll;";
 
-            if ("shake1".equals(key) || "shake2".equals(key) || "shake3".equals(key) || "rotate".equals(key) || "float".equals(key))
+            if (key.startsWith("shake") || "rotate".equals(key) || "float".equals(key))
             {
                 double begin = val == null ? 0 : Common.doubleOf(val.get("begin"), 0);
                 if (begin > 0)
-                    js1 += "setTimeout(function() {$('#" + id + "').addClass('ani_" + key + "');}, " + begin * 1000 + ");";
+                    js1 += "setTimeout(function() { $('#" + id + "').removeClass(); $('#" + id + "').addClass('ani_" + key + "'); }, " + begin * 1000 + ");";
                 else
                     className += " ani_" + key;
             }
@@ -306,6 +308,15 @@ public class JQueryExport
         {
             style += "display:none;";
             js3 += "if (" + expOf(e.getVisible(), exp) + ") { $(\"#" + id + "\").show(); }";
+        }
+
+        if (!Common.isEmpty(e.getVideo()))
+        {
+            String v = e.getVideo();
+//            if (v.startsWith("http:") || v.startsWith("https:"))
+//                v = "\"" + v + "\"";
+//            es += "<video src="+v+" style='width:100%;height:100%'></video>";
+            es += v;
         }
 
         String ea = "";

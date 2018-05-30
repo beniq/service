@@ -13,6 +13,7 @@
     <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/qqdialog.js"></script>
     <script src="https://cdn.iyb.tm/common/js/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="../../js/activity.js"></script>
+    <script src="../../js/play.js"></script>
 </head>
 <body>
 <div id="aaa" style="width:100%;height:100%;text-align:center;">
@@ -36,27 +37,39 @@
             <polygon points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
          </svg>
      </div>
+     <div id="percent" style="margin:30px auto 0 auto;">0%</div>
 </div>
 <!-- PAGES -->
 </body>
 
 <script>
-    ENV.H = <!-- HEIGHT -->;
-    var gotoPrd = function(prdId) {
-        var dest = '<!-- IYB_SERVER -->/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
-        stat("GoProduct", dest, prdId);
-        goUrl(dest);
+    var ENV = {
+        H: <!-- HEIGHT -->,
+        init: {}
     };
-    var goUrl = function(dest) {
+    var gotoPrd = function(prdId) {
+        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        stat("GoProduct", dest, prdId);
+        try{IYB.go(dest);}catch(e){document.location.href = dest;}
+    };
+    var goUrl = function(dest, appendAccountId) {
+        if (appendAccountId) {
+            if (dest.indexOf("?") > 0)
+                dest += "&accountId=" + gpo.accountId;
+            else
+                dest += "?accountId=" + gpo.accountId;
+        }
+        stat("visit", dest);
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
-        var dest = '<!-- IYB_SERVER -->/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         p.link = dest;
         stat("ShareProduct", dest);
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
     var shareH5 = function(p){
+        p.link += '&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         stat("ShareHot", p.link);
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
@@ -105,6 +118,7 @@
             },
             onProgress : function(current, total){
                 var percent = current/total*100;
+                $("#percent").html(percent.toFixed(2) + "%");
             },
             onComplete : function(total) {
                 document.getElementById("aaa").style.display = "none";
@@ -115,17 +129,10 @@
                 if (gpo.accountId != null && gpo.accountId != "") {
                     gpo.runJS();
                 } else {
-                    if (typeof iHealthBridge != "undefined") {
-                        iHealthBridge.getData("userInfo", "", function(r) {
-                            if (r == null || r.accountId == null) {
-                                Life.Dialog.alert("无法获取APP用户信息");
-                            } else {
-                                gpo.accountId = r.accountId;
-                                gpo.runJS();
-                            }
-                        });
-                    } else {
-                        gpo.post("/iybapi/broker/app/salesmanInfoAjax/getSalemanInfo.json", null, function (r) {
+                    $.ajax({
+                        url:"<!-- IYB_SERVER -->/iyb/broker/app/salesmanInfoAjax/getSalemanInfo.json",
+                        type:"POST", crossDomain: true, xhrFields: {withCredentials: true}, data:null, contentType:'application/json;charset=UTF-8', dataType:"json",
+                        success:function (r) {
                             if (r.isSuccess)
                                 gpo.accountId = r.result.accountId;
                             if (gpo.accountId == null || gpo.accountId == "") {
@@ -133,15 +140,26 @@
                             } else {
                                 gpo.runJS();
                             }
-                        }, function (r) {
-                            Life.Dialog.alert("服务器连接失败，请重试" + JSON.stringify(r));
+                        },
+                        error:function (r) {
+                             Life.Dialog.alert("服务器连接失败，请重试" + JSON.stringify(r));
+                        }
+                    });
+/*
+                    if (typeof iHealthBridge != "undefined") {
+                        iHealthBridge.getData("userInfo", "", function(r) {
+                            if (r == null || r.accountId == null) {
+                            } else {
+                                gpo.accountId = r.accountId;
+                                gpo.runJS();
+                            }
                         });
                     }
+*/
                 }
             }
         });
         imgloader.start();
-
     });
 </script>
 

@@ -2,6 +2,7 @@ var ENV = {
     W: 750,
     H: 1200,
     index: 0,
+    counter: 1,
     ready: {},
     mapping: {},
     doc: {
@@ -20,7 +21,11 @@ var ENV = {
         submit: {text: "提交表单"},
         redirect: {
             text: "跳转至URL",
-            comp: [{label: "URL", code: "value", type: "input"}]
+            comp: [
+                {label: "URL", code: "url", type: "input"},
+                {label: "JS表达式", code: "value", type: "input"},
+                {label: "追加用户id", code: "accountId", type: "switch"}
+            ]
         },
         js: {
             text: "执行js",
@@ -29,13 +34,17 @@ var ENV = {
         toProduct: {
             text: "跳转至产品",
             comp: [
-                {label: "产品", code: "value", type: "select", value: []}
+                {label: "产品", code: "value", type: "select", value: [{code: "", text: "请选择"}]}
             ]
         },
         shareProduct: {
             text: "转发产品",
             comp: [
-                {label: "产品", code: null, type: "select", value: []}
+                {label: "产品", code: null, type: "option", value: [{code: "", text: "请选择"}]},
+                {label: "标题", code: "title", type: "input"},
+                {label: "介绍", code: "desc", type: "input"},
+                {label: "小图", code: "imgUrl", type: "input"},
+                {label: "产品ID", code: "productId", type: "input"}
             ]
         }
     },
@@ -54,6 +63,10 @@ var ENV = {
         },
         shake3: {
             text: "大摇摆抖动",
+            comp: [{label: "开始", code: "begin", type: "input"}]
+        },
+        shake4: {
+            text: "放大抖动",
             comp: [{label: "开始", code: "begin", type: "input"}]
         },
         rotate: {
@@ -114,7 +127,11 @@ ENV.products = [
     {name: "和谐宝贝健康成长计划（升级）", productId: 1023622, title: '和谐宝贝健康成长计划（升级）', desc: '交费灵活，多重保障，月月复利，收益递增', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000002_3_4_5/hexiebaobei_share.png'},
     {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
     {name: "和谐健康之享定期重大疾病保险", productId: 1006015, title: '和谐健康之享定期重大疾病保险', desc: '50种重疾最高60万，次年保额翻倍 投保年龄：28天-50周岁 缴费期间：5/10/15/20年 本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000001/share_hexiezhixiang.png'},
-    {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
+    {name: "中荷顾家保定期寿险", productId: 1010421, title: '中荷顾家保定期寿险', desc: '最高150万保额，最低每年63元起，保险期间灵活可选 投保年龄：18-45周岁 保障期限：10年/15年/20年/25年/30年 缴费期间：5/10/15/20/25年', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/120000001/iyb10004share.jpg'},
+    {name: "同方全球「慧馨安」少儿保险产品计划", productId: 1020311, title: '同方全球「慧馨安」少儿保险产品计划', desc: '50种重疾+8种特定重疾双倍赔付！满期可返还保费，可附加投保人豁免！多种交费期限和保障期间灵活选择！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/190000002/share.png'},
+    {name: "同方全球「同佑e生」保险产品计划", productId: 1020312, title: '同方全球「同佑e生」保险产品计划', desc: '涵盖100种重疾，保障高达50万！保障50种轻症，最多不分组3次赔付且豁免保费！可选70周岁或80周岁返还100%主附险累计已交保费！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/120000001/iyb10004share.jpg'},
+    {name: "阳光人寿i保终身重大疾病保险", productId: 1022556, title: '阳光人寿i保终身重大疾病保险', desc: '涵盖100种重大疾病、20种轻症疾病、轻症豁免、身故四大保障！保障至终身，身故返还保额！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/230000001/logo.jpg'},
+    {name: "信泰i立方多次防癌险", productId: 1015008, title: '信泰i立方多次防癌险', desc: '确诊赔付3年后，未治愈、复发、转移、新确诊都能再赔，不分组3次赔付，累计最高可获赔90万', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/170000001/icon.jpg'},
     {name: "童安保儿童兴趣潜力基因检测", productId: 1021044, title: '童安保儿童兴趣潜力基因检测', desc: '检测孩子的空间定位能力、乐感、爆发力和耐力，科学获知孩子的体育、艺术等方面能力。检测结果高达99.99%！让孩子站在天赋的基石上，快乐成长，轻松成才！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000001/xingquqianli_share.png'},
     {name: "童安保安全用药基因检测", productId: 1021045, title: '童安保安全用药基因检测', desc: '覆盖内科、消化科、呼吸科等六大科室，涉及感冒、哮喘等11种常见儿童用药需求的基因检测。检测结果准确率高达99.99%！父母培养健康成长的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000002/anquanyongyao_share.png'},
     {name: "童安保学习能力基因检测", productId: 1021046, title: '童安保学习能力基因检测', desc: '检测孩子的理解能力、数学计算能力、记忆力、求知欲、动手能力、阅读能力在内的6种学习能力。基因检测结果准确率高达99.99%！父母因材施教的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000003/xuexinengli_share.png'},
@@ -122,11 +139,26 @@ ENV.products = [
     {name: "孝欣保老年防癌保险（升级）", productId: 1021554, title: '众安孝欣保老年防癌保险（升级）', desc: '含质子重离子治疗及绿色通道服务！三高人群也可投保，最高可以续保到85岁！恶性肿瘤医疗保险金与质子重离子医疗保险金共享保额！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51337310_11_12_13/laonianfangaixian_share.jpg'},
     {name: "尊享e生旗舰版（升级）", productId: 1021043, title: '众安尊享e生旗舰版（升级）', desc: '保额600万，癌症无免赔，全家可共享免赔额，提供免费医疗垫付', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51335801_2_3_4/zunxiangyishengqijian_share.jpg'},
     {name: "尊享e生旗舰版", productId: 1012745, title: '众安尊享e生旗舰版', desc: '保额600万，癌症无免赔，全家可共享免赔额，提供免费医疗垫付', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/51321307_8/zunxiangyishengqijian_share.jpg'},
+    {name: "和谐建工意外险", productId: 1024732},
+    {name: "众安雇主责任险", productId: 1012986},
+    {name: "众安团体意外险A(推广费固定)", productId: 1012976},
+    {name: "众安团体意外险企惠保(推广费可调)", productId: 1012979},
+    {name: "安心团体意外险", productId: 1013086},
+    {name: "平安团体意外险", productId: 1015236},
+    {name: "众安团体医疗险", productId: 1012984},
+    {name: "太平建工意外险", productId: 1013087},
+    {name: "申根之王-安联申根旅行保障计划", productId: 1024846},
+    {name: "碧海蓝天-安联邮轮旅行保险", productId: 1024847},
+    {name: "史带“畅游华夏”境内旅行险", productId: 1017185},
+    {name: "史带境内户外运动保险", productId: 1017187},
+    {name: "史带境内拓展训练保险", productId: 1017186},
+    {name: "史带“乐游全球”境外旅行险", productId: 1017188}
 ];
 
 ENV.products.map(x => {
     ENV.event.toProduct.comp[0].value.push({text: x.name, code: x.productId});
-    ENV.event.shareProduct.comp[0].value.push({text: x.name, code: x});
+    if (x.title)
+        ENV.event.shareProduct.comp[0].value.push({text: x.name, code: x});
 });
 
 ENV.saveQueue = function() {
@@ -286,7 +318,7 @@ var Element = {
 
 var Event = React.createClass({
     getInitialState() {
-        return {events:[]};
+        return {};
     },
     componentDidMount() {
         this.setState({events:this.props.element.events});
@@ -321,20 +353,36 @@ var Event = React.createClass({
     },
     render() {
         return <div>
-            { this.state.events.map(s => {
+            { this.state.events == null ? null : this.state.events.map(s => {
                 let event = ENV.event[s.type];
                 if (s.param == null) s.param = {};
-                let comps = !event || !event.comp ? null : event.comp.map(c => {
+                let comps = !event || !event.comp ? null : event.comp.map((c, i) => {
                     let comp = null;
-                    if (c.type == "select") {
-                        comp = <select className="form-control" value={s.param[c.code]} onChange={v => { let val = JSON.parse(v.target.value); if (c.code) { s.param[c.code] = val; } else { s.param = val; } this.save(s); }}>
-                            { c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>) }
+                    if (c.type == "option") {
+                        comp = <select className="form-control" value={s.param[c.code]} onChange={v => {
+                            if (v.target.value != null && v.target.value != "") {
+                                let val = JSON.parse(v.target.value);
+                                for (let k in val)
+                                    s.param[k] = val[k];
+                                this.save(s);
+                            }
+                        }}>
+                            {c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>)}
                         </select>;
+                    } else if (c.type == "select") {
+                            comp = <select className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}>
+                                { c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>) }
+                            </select>;
                     } else if (c.type == "input") {
                         comp = <input className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}/>;
+                    } else if (c.type == "switch") {
+                        comp = <select className="form-control" value={s.param[c.code] ? "Y" : "N"} onChange={v => { s.param[c.code] = v.target.value == "Y"; this.save(s); }}>
+                            <option value="N">否</option>
+                            <option value="Y">是</option>
+                        </select>;
                     }
                     return (
-                        <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
                             <div className="input-group-prepend">
                                 <div className="btn btn-primary" style={{width:"120px"}}>{c.label}</div>
                             </div>
@@ -343,7 +391,7 @@ var Event = React.createClass({
                     );
                 });
                 return (
-                    <div className="card mt-2 mb-1" key={s}>
+                    <div className="card mt-2 mb-1" key={s.id}>
                         <div className="card-header input-group">
                             <div className="mr-auto">{s.type}</div>
                             <div onClick={this.delete.bind(this, s.id)}>X</div>
@@ -369,7 +417,7 @@ var Event = React.createClass({
             <div className="input-group pl-2 pr-2 pt-1 pb-1">
                 <button id="eEvent" className="ml-auto btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">★ 事件</button>
                 <div className="dropdown-menu" aria-labelledby="eEvent">
-                    { Object.entries(ENV.event).map(v => <a className="dropdown-item" onClick={this.add.bind(this, v[0])}>{v[1].text}</a>) }
+                    { Object.entries(ENV.event).map(v => <a key={v[0]} className="dropdown-item" onClick={this.add.bind(this, v[0])}>{v[1].text}</a>) }
                 </div>
             </div>
         </div>
@@ -611,14 +659,30 @@ var Main = React.createClass({
             });
         }
     },
+    find(page, element) {
+        if (element == null)
+            return null;
+        let current = null;
+        let func = e => {
+            if (e.id == element.id) {
+                current = e;
+            } else if (e.children != null) {
+                e.children.map(func);
+            }
+        }
+        page.elements.map(func);
+        return current;
+    },
     rebuild(doc) {
         if (doc != null) {
+            ENV.counter++;
             ENV.doc = doc;
             let page = ENV.doc.pages[ENV.index];
             ENV.W = page.w;
             ENV.H = page.h;
             let w = document.getElementById('desk').clientWidth;
-            this.setState({w: w, h: ENV.H * w / ENV.W, element: null}, () => { ENV.draw(this.state.element) })
+            let current = this.find(page, this.state.element);
+            this.setState({w: w, h: ENV.H * w / ENV.W, element: current}, () => { ENV.draw(current) })
         }
     },
     refresh(element) {
@@ -865,6 +929,9 @@ var Main = React.createClass({
             alert(r);
         });
     },
+    look(env) {
+        window.open("./act/" + ENV.actId + "/" + env + ".html");
+    },
     setDetailMode(mode) {
         this.setState({mode:mode});
     },
@@ -988,16 +1055,16 @@ var Main = React.createClass({
                         <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>宽</div>
                         </div>
-                        <input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value}} onBlur={this.saveElement}/>
+                        <input type="text" className="form-control" ref="eW" defaultValue={e.w} onChange={v => {e.w = v.target.value; this.saveElement(); }}/>
                         <div className="input-group-append">
-                            <div className="btn btn-outline-primary" onClick={v => {e.w = 750; this.refs.eW.value = e.w; this.saveElement();}}>满屏</div>
+                            <div className="btn btn-outline-primary" onClick={v => {e.w = 750; this.refs.eW.value = e.w; this.saveElement(); }}>满屏</div>
                         </div>
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>高</div>
                         </div>
-                        <input type="text" className="form-control" ref="eH" defaultValue={e.hs == 1 ? "满屏" : e.h} onChange={v => {e.hs = 0; e.h = v.target.value;}} onFocus={v => {this.refs.eH.value = e.h}} onBlur={this.saveElement}/>
+                        <input type="text" className="form-control" ref="eH" defaultValue={e.hs == 1 ? "满屏" : e.h} onChange={v => {e.hs = 0; e.h = v.target.value; this.saveElement(); }} onFocus={v => {this.refs.eH.value = e.h}}/>
                         <div className="input-group-append">
                             <div className="btn btn-outline-primary" onClick={v => {e.hs = 1; this.saveElement();}}>满屏</div>
                         </div>
@@ -1015,7 +1082,7 @@ var Main = React.createClass({
                         <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>背景色</div>
                         </div>
-                        <input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value}}/>
+                        <input type="text" className="form-control" id="eBgColor" ref="eBgColor" defaultValue={e.bgColor} onChange={v => {e.bgColor = v.target.value; this.saveElement(); }}/>
                         <div className="input-group-append">
                             <div className="btn btn-outline-primary" onClick={this.fillBgColor.bind(this, e)}>同色填充</div>
                         </div>
@@ -1075,7 +1142,13 @@ var Main = React.createClass({
                         <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>文本</div>
                         </div>
-                        <input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value}} onBlur={this.saveElement}/>
+                        <input type="text" className="form-control" id="eText" ref="eText" defaultValue={e.text} onChange={v => {e.text = v.target.value; this.saveElement(); }}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>视频</div>
+                        </div>
+                        <input type="text" className="form-control" id="eVideo" ref="eVideo" defaultValue={e.video} onChange={v => {e.video = v.target.value; this.saveElement(); }}/>
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
@@ -1089,33 +1162,28 @@ var Main = React.createClass({
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
-                            <div className="btn btn-primary" style={{width:"120px"}} id="eActionSel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">onClick</div>
-                            <div className="dropdown-menu" aria-labelledby="eActionSel">
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, null)}>清空</a>
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "redirect")}>跳转</a>
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "js")}>JS方法</a>
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "toProduct")}>跳转产品</a>
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "shareProduct")}>转发产品</a>
-                                <a className="dropdown-item" onClick={Element.addAction.bind(this, e, "submit")}>提交</a>
-                            </div>
+                            <div className="btn btn-primary" style={{width:"120px"}}>onClick</div>
                         </div>
                         <div className="form-control p-0 m-0 border-0">
                             <input data-drop="true" className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
                             <div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
                                 { e.action.map(act => {
-                                    return <div className="dropdown-item">
+                                    return <div className="dropdown-item" key={act.type}>
                                         {act.type}
-                                        <input type="text" className="form-control" defaultValue={act.param} onChange={v => {act.param = v.target.value}} onBlur={this.saveElement}/>
+                                        <input type="text" className="form-control" defaultValue={act.param} onChange={v => {act.param = v.target.value; this.saveElement(); }}/>
                                     </div>
                                 })}
                             </div>
+                        </div>
+                        <div className="input-group-append">
+                            <div className="btn btn-outline-primary" onClick={Element.addAction.bind(this, e, null)}>清空</div>
                         </div>
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>输入框</div>
                         </div>
-                        <input type="text" className="form-control" id="eInput" ref="eInput" defaultValue={e.input} onChange={v => {e.input = v.target.value}} onBlur={this.saveElement}/>
+                        <input type="text" className="form-control" id="eInput" ref="eInput" defaultValue={e.input} onChange={v => {e.input = v.target.value; this.saveElement(); }}/>
                         <div className="input-group-append">
                             <div className={e.inputVerify && e.inputVerify.require ? "btn btn-primary" : "btn btn-outline-primary"} onClick={() => {
                                 if (e.inputVerify == null)
@@ -1139,9 +1207,9 @@ var Main = React.createClass({
                     </div>
                 </div>
             } else if (this.state.mode == 2) {
-                divs = <Event parent={this} element={e}/>;
+                divs = <Event key={ENV.counter} parent={this} element={e}/>;
             } else if (this.state.mode == 3) {
-                divs = <Style element={e}/>;
+                divs = <Style key={ENV.counter} element={e}/>;
             }
             detail = <div key={e.id}>
                 <div className="input-group pl-2 pr-2 pt-1 pb-1 text-center">
@@ -1163,9 +1231,10 @@ var Main = React.createClass({
                     <div className="col-sm-8 m-0 p-0">
                         <div className="navbar navbar-expand-lg navbar-light bg-light m-0 p-3" style={{height:"60px"}}>
                             <div className="mr-auto">
-                                <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新</button>
-                                <button type="button" className="btn btn-success mr-2">页面</button>
-                                <button type="button" className="btn btn-success mr-2">元素</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新界面</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "uat")}>演示预发</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "prd")}>演示生产</button>
                             </div>
                             <div className="text-right">
                                 <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>

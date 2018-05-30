@@ -69,6 +69,7 @@ public class DocTool
             e.put("inputVerify", element.getInputVerify());
             e.put("visible", element.getVisible());
             e.put("list", element.getList());
+            e.put("video", element.getVideo());
 
             e.put("cx", x + element.getX());
             e.put("cy", y + element.getRealY());
@@ -161,6 +162,7 @@ public class DocTool
             element.setInput(e.getString("input"));
             element.setInputVerify(e.getJSONObject("inputVerify"));
             element.setList(e.getString("list"));
+            element.setVideo(e.getString("video"));
 
             if (e.containsKey("image"))
             {

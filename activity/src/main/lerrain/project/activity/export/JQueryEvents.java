@@ -111,7 +111,10 @@ public class JQueryEvents
                     "    canvas.width=canvas.clientWidth;\n" +
                     "    canvas.height=canvas.clientHeight;\n" +
                     "    ENV.sparks" + id + " = new Sparks(canvas);\n";
-            js += "ENV.sparks" + event.getElement().getId() + ".start(); }";
+            js += "ENV.sparks" + event.getElement().getId() + ".start();";
+            if (c != null)
+                js += "}";
+
             return js;
         }
         else if ("stopSparks".equals(event.getType()))
@@ -153,10 +156,18 @@ public class JQueryEvents
             if (event.getParam() == null)
                 return null;
 
-            String text = event.getParam().getString("value");
-            if (text.startsWith("http:") || text.startsWith("https:"))
-                text = "\"" + text + "\"";
-            return "document.location.href = " + jqe.expOf(text, exp) + ";\n";
+            String express = Common.trimStringOf(event.getParam().getString("value"));
+            String url = Common.trimStringOf(event.getParam().getString("url"));
+            boolean account = Common.boolOf(event.getParam().get("accountId"), false);
+
+            if (Common.isEmpty(express))
+            {
+                return "goUrl(\"" + url + "\", "+account+");\n";
+            }
+            else
+            {
+                return "goUrl(" + jqe.expOf(express, exp) + ", "+account+");\n";
+            }
         }
         else if ("toProduct".equals(event.getType()))
         {

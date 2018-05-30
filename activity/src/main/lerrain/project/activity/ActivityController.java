@@ -431,6 +431,7 @@ public class ActivityController
 		e.setVisible(o.getString("visible"));
 		e.setName(o.getString("name"));
 		e.setList(o.getString("list"));
+		e.setVideo(o.getString("video"));
 
 		if (o.containsKey("image"))
 		{
@@ -631,7 +632,7 @@ public class ActivityController
 
 		JSONObject res = new JSONObject();
 		res.put("result", "success");
-		res.put("content", "https://act.iyb.tm/" + env + "/" + actId + "/main.html");
+		res.put("content", "https://sact.iyunbao.com/" + env + "/" + actId + "/main.html");
 
 		return res;
 	}

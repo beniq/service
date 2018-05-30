@@ -63,7 +63,6 @@ body { margin:0;padding:0; }
     }
 }
 
-
 @-moz-keyframes shake1 {
     from {-moz-transform:scale(1, 1);}
     8%   {-moz-transform:scale(0.95, 0.95);}
@@ -97,6 +96,13 @@ body { margin:0;padding:0; }
     to   {transform:scale(1, 1);}
 }
 
+.ani_shake1 {
+    -moz-animation:shake1 1s linear 0s infinite alternate forwards;
+    -webkit-animation:shake1 1s linear 0s infinite alternate forwards;
+    -o-animation:shake1 1s linear 0s infinite alternate forwards;
+    animation:shake1 1s linear 0s infinite alternate forwards;
+}
+
 @-moz-keyframes shake2 {
     from {-moz-transform:rotateZ(0deg);}
     5%   {-moz-transform:rotateZ(-3deg);}
@@ -126,13 +132,6 @@ body { margin:0;padding:0; }
     to   {transform:rotateZ(0deg);}
 }
 
-.ani_shake1 {
-    -moz-animation:shake1 1s linear 0s infinite alternate forwards;
-    -webkit-animation:shake1 1s linear 0s infinite alternate forwards;
-    -o-animation:shake1 1s linear 0s infinite alternate forwards;
-    animation:shake1 1s linear 0s infinite alternate forwards;
-}
-
 .ani_shake2 {
     -moz-animation:shake2 1s linear 0s infinite alternate forwards;
     -webkit-animation:shake2 1s linear 0s infinite alternate forwards;
@@ -151,6 +150,22 @@ body { margin:0;padding:0; }
 }
 .ani_shake3 {
     animation:shake3 3s linear 0s infinite forwards;
+}
+
+@keyframes shake4 {
+    from {transform:scale(1, 1);}
+    8%   {transform:scale(1.1, 1.1);}
+    16%   {transform:scale(1, 1);}
+    24%   {transform:scale(1.1, 1.1);}
+    32%   {transform:scale(1, 1);}
+    to   {transform:scale(1, 1);}
+}
+
+.ani_shake4 {
+    -moz-animation:shake4 1s linear 0s infinite alternate forwards;
+    -webkit-animation:shake4 1s linear 0s infinite alternate forwards;
+    -o-animation:shake4 1s linear 0s infinite alternate forwards;
+    animation:shake4 1s linear 0s infinite alternate forwards;
 }
 
 @keyframes ani_float {

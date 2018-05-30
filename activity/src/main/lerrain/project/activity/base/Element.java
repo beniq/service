@@ -32,6 +32,8 @@ public class Element
 
     JSONArray action = new JSONArray();
 
+    String video;
+
     String fontSize;
     String lineHeight;
     String text;
@@ -72,6 +74,16 @@ public class Element
     public void setAlign(int align)
     {
         this.align = align;
+    }
+
+    public String getVideo()
+    {
+        return video;
+    }
+
+    public void setVideo(String video)
+    {
+        this.video = video;
     }
 
     public String getList()
