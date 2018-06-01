@@ -176,7 +176,7 @@ public class JQueryEvents
                 return null;
 
             String text = event.getParam().getString("value");
-            if (envPrds.indexOf("," + text + ",") < 0)
+            if (!Common.isEmpty(text) && text.length() > 2 && envPrds.indexOf("," + text + ",") < 0)
                 envPrds += text + ",";
             return "gotoPrd('"+text+"');\n";
         }
@@ -186,7 +186,7 @@ public class JQueryEvents
                 return null;
 
             String text = event.getParam().getString("productId");
-            if (!Common.isEmpty(text) && envPrds.indexOf("," + text + ",") < 0)
+            if (!Common.isEmpty(text) && text.length() > 2 && envPrds.indexOf("," + text + ",") < 0)
                 envPrds += text + ",";
 
             String t = JSON.toJSONString(event.getParam());
