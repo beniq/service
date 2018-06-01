@@ -63,9 +63,15 @@
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
-        var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
-        p.link = dest;
-        stat("ShareProduct", dest);
+        if (p.productId == 1) {
+            p.link = 'https://gpo.iyunbao.com/static/activity/product_list_share.html?accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        } else if (p.productId == 2) {
+            p.link = 'https://gpo.iyunbao.com/static/activity/product_list_share.html?accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->&showProductIds=<!-- ALL_PRODUCTS -->';
+        } else {
+            p.link = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+p.productId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        }
+        stat("ShareProduct", p.link);
+        $.ajax({url:"https://api.iyb.tm/util/share/save.json", type:"POST", data:JSON.stringify({shareType:'<!-- ACT_CODE -->', accountId:gpo.accountId, key:p.productId, share:p}), contentType:'application/json;charset=UTF-8', dataType:"json"});
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
     var shareH5 = function(p){

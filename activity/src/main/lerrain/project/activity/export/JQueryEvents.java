@@ -17,6 +17,7 @@ public class JQueryEvents
 
     String envJs = "";
     String envCss = "";
+    String envPrds = ",";
 
     public JQueryEvents(JQueryExport jqe)
     {
@@ -175,6 +176,8 @@ public class JQueryEvents
                 return null;
 
             String text = event.getParam().getString("value");
+            if (envPrds.indexOf("," + text + ",") < 0)
+                envPrds += text + ",";
             return "gotoPrd('"+text+"');\n";
         }
         else if ("shareProduct".equals(event.getType()))
@@ -182,8 +185,12 @@ public class JQueryEvents
             if (event.getParam() == null)
                 return null;
 
-            String text = JSON.toJSONString(event.getParam());
-            return "shareProduct("+text+");\n";
+            String text = event.getParam().getString("productId");
+            if (!Common.isEmpty(text) && envPrds.indexOf("," + text + ",") < 0)
+                envPrds += text + ",";
+
+            String t = JSON.toJSONString(event.getParam());
+            return "shareProduct("+t+");\n";
         }
         else if ("js".equals(event.getType()))
         {

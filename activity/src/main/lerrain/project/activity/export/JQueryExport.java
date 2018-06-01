@@ -99,6 +99,7 @@ public class JQueryExport
         root = root.replaceAll("<!-- SERVER -->", server);
         root = root.replaceAll("<!-- IYB_SERVER -->", iybServer);
         root = root.replaceAll("<!-- IMAGES -->", images);
+        root = root.replaceAll("<!-- ALL_PRODUCTS -->", tool.envPrds.length() > 1 ? tool.envPrds.substring(1, tool.envPrds.length() - 1) : "");
 
         for (Runnable r : finish)
             r.run();
