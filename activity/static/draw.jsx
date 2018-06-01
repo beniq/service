@@ -125,7 +125,8 @@ ENV.products = [
     {name: "信美相互爱我宝贝少儿白血病疾病保险", productId: 1020928, title: '信美相互爱我宝贝少儿白血病疾病保险', desc: '保障少儿高发疾病 最高50万保障 一天0.3元起', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/1010000001/share.jpg'},
     {name: "中信保诚［荣耀祯爱］定期寿险", productId: 1019133, title: '中信保诚［荣耀祯爱］定期寿险', desc: '超短等待期，保障额度高 健告宽松，职业限制少', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/180000001/share.jpg'},
     {name: "和谐宝贝健康成长计划（升级）", productId: 1023622, title: '和谐宝贝健康成长计划（升级）', desc: '交费灵活，多重保障，月月复利，收益递增', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000002_3_4_5/hexiebaobei_share.png'},
-    {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
+    {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '最高150万，全面涵盖身故和全残保障，女性费率市场最低，1-5类职业均可投保', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
+    {name: "上海人寿小蘑菇PLUS定期寿险", productId: 1025802, title: '上海人寿小蘑菇PLUS定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/share_h.jpg'},
     {name: "和谐健康之享定期重大疾病保险", productId: 1006015, title: '和谐健康之享定期重大疾病保险', desc: '50种重疾最高60万，次年保额翻倍 投保年龄：28天-50周岁 缴费期间：5/10/15/20年 本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000001/share_hexiezhixiang.png'},
     {name: "中荷顾家保定期寿险", productId: 1010421, title: '中荷顾家保定期寿险', desc: '最高150万保额，最低每年63元起，保险期间灵活可选 投保年龄：18-45周岁 保障期限：10年/15年/20年/25年/30年 缴费期间：5/10/15/20/25年', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/120000001/iyb10004share.jpg'},
     {name: "同方全球「慧馨安」少儿保险产品计划", productId: 1020311, title: '同方全球「慧馨安」少儿保险产品计划', desc: '50种重疾+8种特定重疾双倍赔付！满期可返还保费，可附加投保人豁免！多种交费期限和保障期间灵活选择！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/190000002/share.png'},
@@ -513,12 +514,8 @@ var Main = React.createClass({
         return {w:90, h:160, mode:1, element:null};
     },
     reload() {
-        if (ENV.actId == null || ENV.actId == "") {
-            common.req("new_act.json", {}, r => this.rebuild(r));
-        } else {
-            ENV.saveQueue();
-            common.req("view_act.json", {actId:ENV.actId}, r => this.rebuild(r));
-        }
+        ENV.saveQueue();
+        common.req("view_act.json", {actId:ENV.actId}, r => this.rebuild(r));
     },
     componentDidMount() {
         this.reload();
@@ -1067,7 +1064,7 @@ var Main = React.createClass({
                         <input type="text" className="form-control" ref="eH" defaultValue={e.hs == 1 ? "满屏" : e.h} onChange={v => {e.hs = 0; e.h = v.target.value; this.saveElement(); }} onFocus={v => {this.refs.eH.value = e.h}}/>
                         <div className="input-group-append">
                             <div className="btn btn-outline-primary" onClick={v => {e.hs = 1; this.saveElement();}}>满屏</div>
-                        </div>
+                        </div> 
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
@@ -1260,7 +1257,11 @@ var Main = React.createClass({
 
 $(document).ready( function() {
     ENV.actId = common.param("actId");
-    ReactDOM.render(<Main/>, document.getElementById("content"));
+
+    if (ENV.actId == null || ENV.actId == "")
+        common.req("new_act.json", {}, r => { document.location.href = "./draw.html?actId=" + r.actId });
+    else
+        ReactDOM.render(<Main/>, document.getElementById("content"));
 
     setInterval(ENV.saveQueue, 10000);
 });
