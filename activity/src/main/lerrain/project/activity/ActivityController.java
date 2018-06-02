@@ -50,12 +50,14 @@ public class ActivityController
 	public JSONObject list(@RequestBody JSONObject json)
 	{
 		JSONArray list = new JSONArray();
-		for (ActivityDoc doc : act.list(0, 10))
+		for (ActivityDoc doc : act.list(0, 20))
 		{
 			if (doc == null) continue;
 
 			JSONObject v = new JSONObject();
 			v.put("actId", doc.getActId());
+			v.put("code", doc.getCode());
+			v.put("name", doc.getName());
 			if (doc.getList().size() > 0)
 				v.put("img", doc.getList().get(0).getBackground());
 
