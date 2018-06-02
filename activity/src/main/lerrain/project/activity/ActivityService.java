@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActivityService
@@ -37,6 +35,15 @@ public class ActivityService
 		JQueryExport.textCss = Disk.load(new File("./static/template/text.cssx"), "utf-8");
 	}
 
+	public List<ActivityDoc> list(int from, int num)
+	{
+		List<Long> list = actDao.list(from, num);
+		List<ActivityDoc> r = new ArrayList<>();
+		for (Long id : list)
+			r.add(getAct(id));
+		return r;
+	}
+
 	public String getDestFile(String dest)
 	{
 		long k = 0;
@@ -48,12 +55,20 @@ public class ActivityService
 
 	public ActivityDoc getAct(Long actId)
 	{
-		ActivityDoc doc = map.get(actId);
+		if (map.containsKey(actId))
+			return map.get(actId);
 
-		if (doc == null)
+		ActivityDoc doc = null;
+
+		try
 		{
 			doc = actDao.load(actId);
 			map.put(actId, doc);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			map.put(actId, null);
 		}
 
 		return doc;

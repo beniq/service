@@ -6,11 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ActivityDao
 {
 	@Autowired
 	JdbcTemplate jdbc;
+
+	public List<Long> list(int from, int num)
+	{
+		String sql = "select id from t_activity_editor order by id desc limit ?, ?";
+		return jdbc.queryForList(sql, Long.class, from, num);
+	}
 
 	public ActivityDoc load(Long actId)
 	{

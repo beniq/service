@@ -45,6 +45,30 @@ public class ActivityController
 		return "success";
 	}
 
+	@RequestMapping("/list.json")
+	@ResponseBody
+	public JSONObject list(@RequestBody JSONObject json)
+	{
+		JSONArray list = new JSONArray();
+		for (ActivityDoc doc : act.list(0, 10))
+		{
+			if (doc == null) continue;
+
+			JSONObject v = new JSONObject();
+			v.put("actId", doc.getActId());
+			if (doc.getList().size() > 0)
+				v.put("img", doc.getList().get(0).getBackground());
+
+			list.add(v);
+		}
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", list);
+
+		return res;
+	}
+
 	@RequestMapping("/view_act.json")
 	@ResponseBody
 	public JSONObject viewAct(@RequestBody JSONObject json)
