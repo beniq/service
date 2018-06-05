@@ -34,6 +34,9 @@ public class ActivityController
 	ActivityService act;
 
 	@Autowired
+	MailServer mailServer;
+
+	@Autowired
 	WriteQueue queue;
 
 	@PostConstruct
@@ -674,6 +677,24 @@ public class ActivityController
 			os.write(html.getBytes("utf-8"));
 		}
 	}
+
+	@RequestMapping("/submit_test.json")
+	@ResponseBody
+	public void goTest(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+
+		String c = "《" + doc.getName() + "》提测：<br/><br/>";
+		c += "测试地址：https://sact.iyunbao.com/test/" + actId + "/main.html<br/>";
+		c += "预发地址：https://sact.iyunbao.com/uat/" + actId + "/main.html<br/>";
+		c += "生产地址：https://sact.iyunbao.com/prd/" + actId + "/main.html<br/>";
+		c += "<br/>";
+		c += "请安排测试";
+
+		mailServer.send(json.getString("address"), "提测活动：" + doc.getName(), c, null);
+	}
+
 
 //	@RequestMapping("/upload.json")
 //	@ResponseBody

@@ -12,7 +12,7 @@ var Content = React.createClass({
         return v == null ? null : (
             <div className="form-row m-0 p-0" style={{height:"100%"}}>
                 {/*<div className="col-6 m-0 p-0" style={{backgroundImage:"url(./" + v.img + ")", backgroundSize:"100%"}} onClick={this.edit}></div>*/}
-                <div className="col-6 m-0 p-0"><iframe style={{width:"100%", height:"100%", border:"0"}} src={"https://sact.iyunbao.com/act/" + v.actId + "/test.html?accountId=1"}></iframe></div>
+                <div className="col-6 m-0 p-0"><iframe style={{width:"100%", height:"100%", border:"0"}} src={"https://sact.iyunbao.com/act/" + v.actId + "/uat.html?accountId=1"}></iframe></div>
                 <div className="col-6 m-0 p-2">
                     <div className="input-group p-2">
                         <div className="input-group-prepend">

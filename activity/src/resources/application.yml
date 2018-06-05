@@ -9,3 +9,11 @@ datasource:
 spring.http.multipart.maxFileSize: 8Mb
 spring.http.multipart.maxRequestSize: 16Mb
 #spring.http.multipart.location: ./temp
+
+mail:
+  account: service@lerrain.com
+  password: Fffsg1m6
+  smtp:
+    host: smtp.mxhichina.com
+    port: 25
+    auth: true

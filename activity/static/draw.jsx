@@ -963,6 +963,11 @@ var Main = React.createClass({
             this.saveElement();
         }
     },
+    submitTest() {
+        if (confirm("确定提交？")) common.req("submit_test.json", {actId: ENV.actId, address: "guye@iyunbao.com,qinyang@iyunbao.com,baoting@iyunbao.com,lixinhao@iyunbao.com"}, r => {
+            alert(r);
+        });
+    },
     render() {
         let tree = ENV.doc.pages.map((page, i) => {
             return (
@@ -1239,6 +1244,7 @@ var Main = React.createClass({
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "uat")}>演示预发</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "prd")}>演示生产</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.submitTest}>提交测试</button>
                             </div>
                             <div className="text-right">
                                 <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>

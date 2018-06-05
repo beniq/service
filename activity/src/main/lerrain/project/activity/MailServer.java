@@ -1,4 +1,4 @@
-package lerrain.service.printer;
+package lerrain.project.activity;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,19 +16,19 @@ import java.util.Properties;
 @Service
 public class MailServer
 {
-	@Value("mail.account")
+	@Value("${mail.account}")
 	String from;
 
-	@Value("mail.password")
+	@Value("${mail.password}")
 	String password;
 
-	@Value("mail.smtp.host")
+	@Value("${mail.smtp.host}")
 	String smtpHost;
 
-	@Value("mail.smtp.port")
+	@Value("${mail.smtp.port}")
 	String smtpPort;
 
-	@Value("mail.smtp.auth")
+	@Value("${mail.smtp.auth}")
 	String smtpAuth;
 
 	Session mailSession;
@@ -50,7 +50,7 @@ public class MailServer
 			}
 		});
 	}
-	
+
 //	public static void main(String[] args)
 //	{
 //		MailServer mailServer = new MailServer();
@@ -61,7 +61,7 @@ public class MailServer
 //		mailServer.send("2957061@qq.com", "test", "1111", list);
 //	}
 
-	private void attachMail(Multipart multipart, String filePath, String fileName) throws Exception 
+	private void attachMail(Multipart multipart, String filePath, String fileName) throws Exception
 	{
 		// 附加文件到邮件
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -103,12 +103,12 @@ public class MailServer
 			mainPart.addBodyPart(html);
 			if (attachments != null) for (int i = 0; i < attachments.size(); i++)
 			{
-				try 
+				try
 				{
 					String[] s = (String[])attachments.get(i);
 					attachMail(mainPart, s[0], s[1]);
 				}
-				catch (Exception e) 
+				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
