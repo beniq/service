@@ -12,6 +12,15 @@ var ENV = {
         init: {text: "初始化"},
         open: {text: "显示图层"},
         close: {text: "关闭图层"},
+        closeAni: {
+            text: "带动画关闭图层",
+            comp: [
+                {label: "关闭动画", code: "ani", type: "select", value: [
+                    {code: "", text: "请选择"},
+                    {code: "slideUp", text: "向上滑动"}
+                ]}
+            ]
+        },
         play: {text: "轮播背景"},
         bgSwitch: {text: "切换背景"},
         tiger: {text: "转动抽奖机"},
@@ -19,6 +28,15 @@ var ENV = {
         stopSparks: {text: "关闭烟花"},
         scroll: {text: "滚动至此"},
         submit: {text: "提交表单"},
+        nextPage: {
+            text: "跳转下一页",
+            comp: [
+                {label: "动画", code: "ani", type: "select", value: [
+                    {code: "", text: "请选择"},
+                    {code: "slideUp", text: "向上滑动"}
+                ]}
+            ]
+        },
         redirect: {
             text: "跳转至URL",
             comp: [
@@ -203,7 +221,7 @@ ENV.getImage = function(url) {
     return img;
 }
 
-ENV.drawImage = function(c, src, x, y, w, h) {
+ENV.drawImage = function(c, src, x, y, w, h, mode) {
     let img = ENV.getImage(src);
     if (img.complete && img.succ) {
         c.drawImage(img, 0, 0, img.width, img.height, x, y, w, h);
@@ -221,8 +239,13 @@ ENV.draw = function(now) {
     c.fillStyle = "black";
     c.fillRect(0, 0, ENV.W, ENV.H);
     let page = ENV.doc.pages[ENV.index];
-    if (page.background != null)
-        ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
+    if (page.background != null) {
+        if (page.mode == 1) {
+            ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H);
+        } else {
+            ENV.drawImage(c, page.background, 0, 0, ENV.W, ENV.H, true);
+        }
+    }
     page.elements.map(e => {
         if (e.display == 0) return;
         ENV.drawElement(c, e);
@@ -299,13 +322,13 @@ var Element = {
         ev.dataTransfer.setData("dragType", "element");
         ev.dataTransfer.setData("srcId", e.id);
     },
-    toDivs: function(self, elements, parent) {
+    toDivs: function(self, i, elements, parent) {
         return elements == null ? null : elements.map(e => {
             ENV.mapping[e.id] = parent;
             let text = "元素 <" + Math.round(e.x) + "," + Math.round(e.y) + "><" + Math.round(e.w) + "," + Math.round(e.h) + ">" + (e.name ? e.name : "");
             return (
                 <div className="ml-3" key={e.id}>
-                    <div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == self.state.element ? "text-white bg-danger" : "")} onClick={self.select.bind(self, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
+                    <div className={"form-row pl-2 pr-2 pt-1 pb-1 " + (e == self.state.element ? "text-white bg-danger" : "")} onClick={self.select.bind(self, i, e)} draggable="true" onDragStart={this.onAdjust.bind(self, e)}>
                         <div data-drop="true" id={e.id} className="mr-auto">{text}</div>
                         <div onClick={self.display.bind(self, e)}>&nbsp;&nbsp;{e.display == 0?"☆":"★"}&nbsp;&nbsp;</div>
                         <div onClick={self.delete.bind(self, e.id)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
@@ -318,7 +341,7 @@ var Element = {
                             </div>
                         })}
                     </div>
-                    { Element.toDivs(self, e.children, e) }
+                    { Element.toDivs(self, i, e.children, e) }
                 </div>
             );
         });
@@ -380,7 +403,7 @@ var Event = React.createClass({
                         </select>;
                     } else if (c.type == "select") {
                             comp = <select className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}>
-                                { c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>) }
+                                { c.value.map(o => typeof o.code == "string" ? <option value={o.code}>{o.text}</option> : null) }
                             </select>;
                     } else if (c.type == "input") {
                         comp = <input className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}/>;
@@ -540,7 +563,7 @@ var Main = React.createClass({
                     }
                 };
                 var fd = new FormData();
-                fd.append("pageIndex", 0);
+                fd.append("pageIndex", ENV.index);
                 fd.append("actId", ENV.doc.actId);
                 if (e.target.id == 'pBg') {
                     fd.append("type", "desk");
@@ -580,7 +603,7 @@ var Main = React.createClass({
                 if (srcId != null && srcId != "" && dstId != null && dstId != "") {
                     if (type == "event") {
                         if (dstId == "eAction") {
-                            this.state.element.action.push({type: "event", param: srcId})
+                            this.state.element.action.push({type: "event", eventId: srcId})
                             this.saveElement();
                         } else {
                             this.link(srcId, dstId);
@@ -719,7 +742,8 @@ var Main = React.createClass({
         ENV.index = i;
         this.refresh();
     },
-    select(e) {
+    select(i, e) {
+        ENV.index = i;
         this.refresh(e);
     },
     selectById(eId) {
@@ -837,7 +861,22 @@ var Main = React.createClass({
             this.rebuild(r);
         });
     },
-    saveDPage() {
+    newPage() {
+        common.req("new_page.json", {actId: ENV.actId}, r => {
+            this.rebuild(r);
+        });
+    },
+    copyPage() {
+        common.req("copy_page.json", {actId: ENV.actId, pageIndex: ENV.index}, r => {
+            this.rebuild(r);
+        });
+    },
+    deletePage(i) {
+        common.req("delete_page.json", {actId: ENV.actId, pageIndex: i}, r => {
+            this.rebuild(r);
+        });
+    },
+    savePage() {
         common.req("save_page.json", {
             actId: ENV.actId,
             pageIndex: ENV.index,
@@ -932,11 +971,6 @@ var Main = React.createClass({
         }
         this.saveElement();
     },
-    newPage() {
-        common.req("new_page.json", {actId: ENV.actId}, r => {
-            this.rebuild(r);
-        });
-    },
     deploy(env) {
         common.req("deploy.json", {actId: ENV.actId, env:env}, r => {
             console.log(r);
@@ -982,8 +1016,11 @@ var Main = React.createClass({
         let tree = ENV.doc.pages.map((page, i) => {
             return (
                 <div className="ml-3" key={i}>
-                    <div data-drop="true" id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.selectPage.bind(this, i)}>第{i+1}页</div>
-                    { Element.toDivs(this, page.elements) }
+                    <div data-drop="true" id={"page"+i} className={"form-row pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.selectPage.bind(this, i)}>
+                        <div className="mr-auto">第{i+1}页</div>
+                        <div onClick={this.deletePage.bind(this, i)}>&nbsp;&nbsp;╳&nbsp;&nbsp;</div>
+                    </div>
+                    { Element.toDivs(this, i, page.elements) }
                 </div>
             )
         });
@@ -1020,13 +1057,23 @@ var Main = React.createClass({
                     <div className="input-group-prepend">
                         <div className="btn btn-primary" style={{width:"120px"}}>高</div>
                     </div>
-                    <input type="text" className="form-control" ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}} onBlur={this.savePage}/>
+                    <input type="text" className="form-control" readOnly={p.mode == 2} ref="pH" defaultValue={p.h} onChange={v => {p.h = v.target.value}} onBlur={this.savePage}/>
+                    <div className="input-group-append">
+                        <div className="btn btn-outline-primary" onClick={v => { p.mode = 2; this.savePage(); }}>满屏</div>
+                    </div>
                 </div>
                 <div className="input-group pl-2 pr-2 pt-1 pb-1">
                     <div className="input-group-prepend">
                         <div className="btn btn-primary" style={{width:"120px"}}>背景</div>
                     </div>
                     <input type="text" className="form-control" id="pBg" ref="pBg" value={p.background} readOnly="true"/>
+                    <div className="input-group-append">
+                        <button id="eBgStyle" className="ml-auto btn btn-outline-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">样式</button>
+                        <div className="dropdown-menu" aria-labelledby="eBgStyle">
+                            <a className="dropdown-item" onClick={v => { p.bgMode = 1; this.savePage(); }}>横撑满</a>
+                            <a className="dropdown-item" onClick={v => { p.bgMode = 3; this.savePage(); }}>重复</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         } else if (this.state.element != null) {
@@ -1184,15 +1231,7 @@ var Main = React.createClass({
                             <div className="btn btn-primary" style={{width:"120px"}}>onClick</div>
                         </div>
                         <div className="form-control p-0 m-0 border-0">
-                            <input data-drop="true" className="form-control" id="eAction" ref="eAction" readOnly="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={JSON.stringify(e.action)}/>
-                            <div className="dropdown-menu" style={{width:"400px"}} aria-labelledby="eAction">
-                                { e.action.map(act => {
-                                    return <div className="dropdown-item" key={act.type}>
-                                        {act.type}
-                                        <input type="text" className="form-control" defaultValue={act.param} onChange={v => {act.param = v.target.value; this.saveElement(); }}/>
-                                    </div>
-                                })}
-                            </div>
+                            <input data-drop="true" className="form-control" id="eAction" ref="eAction" readOnly="true" value={JSON.stringify(e.action)}/>
                         </div>
                         <div className="input-group-append">
                             <div className="btn btn-outline-primary" onClick={Element.addAction.bind(this, e, null)}>清空</div>
@@ -1252,6 +1291,7 @@ var Main = React.createClass({
                             <div className="mr-auto">
                                 <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新界面</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页面</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.copyPage}>复制页面</button>
                             </div>
                             <div className="text-right">
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>

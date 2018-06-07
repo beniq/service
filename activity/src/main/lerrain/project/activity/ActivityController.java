@@ -142,15 +142,62 @@ public class ActivityController
 
 	@RequestMapping("/save_page.json")
 	@ResponseBody
-	public JSONObject savePage(@RequestBody JSONObject json)
+	public JSONObject savePage(@RequestBody JSONObject p)
 	{
-		Long actId = json.getLong("actId");
+		Long actId = p.getLong("actId");
 		ActivityDoc doc = act.getAct(actId);
 
-		int pageIndex = json.getIntValue("pageIndex");
+		int pageIndex = p.getIntValue("pageIndex");
 		Page page = doc.getList().get(pageIndex);
-		page.setW(json.getIntValue("w"));
-		page.setH(json.getIntValue("h"));
+
+		JSONObject json = p.getJSONObject("page");
+		if (json.containsKey("w"))
+			page.setW(json.getIntValue("w"));
+		if (json.containsKey("h"))
+			page.setH(json.getIntValue("h"));
+		if (json.containsKey("background"))
+			page.setBackground(json.getString("background"));
+		if (json.containsKey("mode"))
+			page.setMode(json.getIntValue("mode"));
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/copy_page.json")
+	@ResponseBody
+	public JSONObject copyPage(@RequestBody JSONObject p)
+	{
+		Long actId = p.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+
+		int pageIndex = p.getIntValue("pageIndex");
+		Page page = doc.getList().get(pageIndex);
+		doc.getList().add(page.copy());
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	@RequestMapping("/delete_page.json")
+	@ResponseBody
+	public JSONObject deletePage(@RequestBody JSONObject p)
+	{
+		Long actId = p.getLong("actId");
+		ActivityDoc doc = act.getAct(actId);
+
+		int pageIndex = p.getIntValue("pageIndex");
+		doc.getList().remove(pageIndex);
 
 		queue.add(doc);
 

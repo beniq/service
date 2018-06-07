@@ -1,7 +1,10 @@
 package lerrain.project.activity.base;
 
 import com.alibaba.fastjson.JSONObject;
+import lerrain.project.activity.DocTool;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Event
@@ -77,5 +80,19 @@ public class Event
     public void setElement(Element element)
     {
         this.element = element;
+    }
+
+    public Event copy(Element element, Map<String, String> mm, List<Map> cb)
+    {
+        Event ev = new Event();
+        ev.element = element;
+        ev.type = this.type;
+        ev.param = DocTool.copy(param, null);
+        ev.finish = DocTool.copy(finish, cb);
+
+        if (mm != null)
+            mm.put(this.id, ev.id);
+
+        return ev;
     }
 }

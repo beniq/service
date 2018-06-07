@@ -227,6 +227,24 @@ body { margin:0;padding:0; }
     animation:ani_scroll 30s ease-in-out 0s infinite forwards;
 }
 
+@keyframes ani_leavetop {
+    from {transform:translate(0, 0%);}
+    to {transform:translate(0, -100%);}
+}
+
+.ani_leavetop {
+    animation:ani_leavetop 0.3s ease-in 0s 1 normal forwards;
+}
+
+@keyframes ani_enterbtm {
+    from {transform:translate(0, 100%);}
+    to {transform:translate(0, 0%);}
+}
+
+.ani_enterbtm {
+    animation:ani_enterbtm 0.3s ease-in 0s 1 normal forwards;
+}
+
 div {
     background-size:100% 100%;
     background-repeat:no-repeat;

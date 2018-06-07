@@ -1,12 +1,14 @@
 package lerrain.project.activity.base;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Page
 {
     public static final int MODE_NORMAL  = 1; //常规，横向铺满，纵向可滑动
-    public static final int MODE_FIXED   = 2; //固定，横向铺满，纵向超出截掉，不足留白
+    public static final int MODE_FIXED   = 2; //固定，
 
     int w = 750, h = 1200;
 
@@ -64,6 +66,9 @@ public class Page
 
     public int getH()
     {
+        if (mode == 2)
+            h = 1400;
+
         return h;
     }
 
@@ -134,5 +139,26 @@ public class Page
         }
 
         return null;
+    }
+
+    public Page copy()
+    {
+        Page p = new Page();
+
+        p.w = this.w;
+        p.h = this.h;
+        p.background = this.background;
+        p.mode = this.mode;
+
+        Map<String, String> mm = new HashMap<>();
+        List<Map> cb = new ArrayList<>();
+
+        for (Element e : this.list)
+            p.addElement(e.copy(p, mm, cb));
+
+        for (Map m : cb)
+            m.put("eventId", mm.get(m.get("eventId")));
+
+        return p;
     }
 }

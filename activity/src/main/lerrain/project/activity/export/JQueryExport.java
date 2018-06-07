@@ -64,11 +64,17 @@ public class JQueryExport
 
     public String export()
     {
-        js1 += "var xx = document.getElementById(\"ccc\");";
 
+        int i = 0;
         for (Page p : doc.getList())
         {
-            js1 += String.format("xx.style.height = xx.offsetWidth * %d / %d;", p.getH(), p.getW());
+            js1 += "var xx = document.getElementById('ccc" + i + "');";
+            js1 += "xx.style.position='absolute'; xx.style.left = 0; xx.style.top = 0;";
+            if (p.getMode() == 2)
+                js1 += "xx.style.height = window.innerHeight;";
+            else
+                js1 += String.format("xx.style.height = xx.offsetWidth * %d / %d;", p.getH(), p.getW());
+            js1 += "xx.setAttribute('h', window.innerHeight);";
 
             String ph = JQueryExport.pageHtml;
 
@@ -76,10 +82,12 @@ public class JQueryExport
             if (p.getBackground() != null)
                 style += String.format("background-image:url(%s);", uri(p.getBackground()));
 
+            ph = ph.replace("<!-- INDEX -->", i + "");
             ph = ph.replace("<!-- STYLE -->", style);
             ph = ph.replace("<!-- ELEMENTS -->", build(p.getList(), null));
 
             pages += ph;
+            i++;
         }
 
         js2 += tool.envJs;
@@ -90,7 +98,7 @@ public class JQueryExport
         root = root.replaceAll("<!-- ENV -->", env);
         root = root.replace("<!-- TITLE -->", doc.getName());
         root = root.replace("<!-- PAGES -->", pages);
-        root = root.replaceAll("<!-- HEIGHT -->", doc.getList().get(0).getH() + "");
+        root = root.replaceAll("<!-- HEIGHT -->", doc.getList().get(0).getMode() == 2 ? "null" : doc.getList().get(0).getH() + "");
         root = root.replace("<!-- JS_START -->", js1);
         root = root.replace("<!-- JS_ENV -->", js2);
         root = root.replace("<!-- JS_TEXT -->", js3);
@@ -370,9 +378,12 @@ public class JQueryExport
                 }
                 else if ("event".equals(type))
                 {
-                    String eventId = act.getString("param");
-                    Event event = tool.doc.findEvent(eventId);
-                    ec += tool.getJs(event, exp);
+                    String eventId = act.getString("eventId");
+                    if (eventId != null)
+                    {
+                        Event event = tool.doc.findEvent(eventId);
+                        ec += tool.getJs(event, exp);
+                    }
                 }
             }
 

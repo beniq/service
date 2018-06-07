@@ -1,10 +1,14 @@
 var zoom = function(){
-    var xx = document.getElementById("ccc");
+    var xx = document.getElementById("ccc0");
     return xx.offsetWidth / 750;
 };
 var zoomY = function(){
-    var xx = document.getElementById("ccc");
-    return xx.offsetHeight / ENV.H;
+    if (ENV.H) {
+        var xx = document.getElementById("ccc0");
+        return xx.offsetHeight / ENV.H;
+    } else {
+        return zoom();
+    }
 };
 var pot = function(name, x, y, w, h, tp)
 {

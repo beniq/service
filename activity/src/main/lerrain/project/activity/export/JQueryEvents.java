@@ -98,6 +98,19 @@ public class JQueryEvents
             //return "$('#" + id + "').hide();\n";
             return "document.getElementById('" + id + "').style.display = 'none';" + (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
         }
+        else if ("nextPage".equals(event.getType()))
+        {
+            int i = doc.getList().indexOf(event.getElement().getPage());
+
+            String str = "";
+            str += "$('#ccc" + (i+1) + "').addClass('ani_enterbtm');\n";
+            str += "$('#ccc" + i + "').addClass('ani_leavetop');\n";
+            str += "$('#ccc" + (i+1) + "').show();\n";
+            str += "setTimeout(function() { $('#ccc" + i + "').hide(); $('#ccc" + i + "').removeClass('ani_leavetop'); $('#ccc" + (i+1) + "').removeClass('ani_enterbtm'); }, 350);";
+            str += (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
+
+            return str;
+        }
         else if ("play".equals(event.getType()))
         {
             return null;
@@ -198,7 +211,7 @@ public class JQueryEvents
                 return null;
 
             String text = event.getParam().getString("value");
-            return "eval("+jqe.expOf(text, exp)+");";
+            return "eval(\""+jqe.expOf(text, exp)+"\");";
         }
 
         return null;

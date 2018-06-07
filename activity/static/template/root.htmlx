@@ -130,7 +130,7 @@
             },
             onComplete : function(total) {
                 document.getElementById("aaa").style.display = "none";
-                document.getElementById("ccc").style.display = "block";
+                document.getElementById("ccc0").style.display = "block";
                 <!-- JS_START -->
 
                 gpo.accountId = gpo.param("accountId");

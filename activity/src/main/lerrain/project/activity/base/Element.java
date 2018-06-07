@@ -434,10 +434,10 @@ public class Element
 
     public Element copy()
     {
-        return copy(null);
+        return copy(page, null, null, null);
     }
 
-    private Element copy(Element parent)
+    private Element copy(Page p, Element parent, Map<String, String> mm, List<Map> cb)
     {
         Element e = this;
         Element c = new Element();
@@ -446,7 +446,7 @@ public class Element
         c.name = e.name;
 
         c.parent = parent == null ? e.parent : parent;
-        c.page = e.page;
+        c.page = p;
 
         c.x = e.x;
         c.y = e.y;
@@ -461,32 +461,40 @@ public class Element
         c.bgColor = e.bgColor;
         c.visible = e.visible;
 
-        c.events = e.events;
+        c.events = new ArrayList<>();
+        for (Event ev : e.events)
+            c.events.add(ev.copy(c, mm, cb));
 
-        c.file = e.file;
+        c.file = new ArrayList<>();
+        c.file.addAll(e.file);
 
         c.children = new ArrayList<>();
         for (Element child : e.children)
-            c.children.add(child.copy(c));
+            c.children.add(child.copy(p, c, mm, cb));
 
-        c.action = e.action;
+        c.action = DocTool.copy(e.action, cb);
 
+        c.video = e.video;
         c.fontSize = e.fontSize;
         c.lineHeight = e.lineHeight;
         c.text = e.text;
         c.color = e.color;
         c.align = e.align;
 
-        c.style = e.style;
+        c.style = DocTool.copy(e.style, null);
 
         c.display = e.display;
 
         c.input = e.input;
-        c.inputVerify = e.inputVerify;
+        c.inputVerify = DocTool.copy(e.inputVerify, null);
 
         c.list = e.list;
 
         return c;
     }
 
+    public Element copy(Page p, Map<String, String> mm, List<Map> cb)
+    {
+        return copy(p, null, mm, cb);
+    }
 }

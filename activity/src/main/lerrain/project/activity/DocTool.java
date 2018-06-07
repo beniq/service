@@ -9,7 +9,9 @@ import lerrain.project.activity.base.Page;
 import lerrain.tool.Common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DocTool
 {
@@ -30,6 +32,7 @@ public class DocTool
             pageObj.put("background", page.getBackground());
             pageObj.put("w", page.getW());
             pageObj.put("h", page.getH());
+            pageObj.put("mode", page.getMode());
             pageObj.put("elements", toJson(page.getList(), 0, 0));
 
             list.add(pageObj);
@@ -120,6 +123,7 @@ public class DocTool
             Page page = new Page();
             page.setW(pageObj.getIntValue("w"));
             page.setH(pageObj.getIntValue("h"));
+            page.setMode(pageObj.getIntValue("mode"));
             page.setBackground(pageObj.getString("background"));
             page.setList(toElements(page, null, pageObj.getJSONArray("elements")));
 
@@ -205,4 +209,54 @@ public class DocTool
         return r;
     }
 
+    public static JSONArray copy(List list, List<Map> resetEvent)
+    {
+        if (list == null)
+            return null;
+
+        JSONArray r = new JSONArray();
+        for (Object o : list)
+        {
+            if (o instanceof Map)
+                r.add(copy((Map<String, Object>)o, resetEvent));
+            else if (o instanceof List)
+                r.add(copy((List)o, resetEvent));
+            else
+                r.add(o);
+        }
+        return r;
+    }
+
+//    public static JSONObject copy(Map<String, Object> map)
+//    {
+//        return copy(map, null);
+//    }
+
+    public static JSONObject copy(Map<String, Object> map, List<Map> resetEvent)
+    {
+        if (map == null)
+            return null;
+
+        JSONObject m = new JSONObject();
+        for (Map.Entry<String, Object> e : map.entrySet())
+        {
+            if (e.getValue() instanceof Map)
+            {
+                m.put(e.getKey(), copy((Map<String, Object>)e.getValue(), resetEvent));
+            }
+            else if (e.getValue() instanceof List)
+            {
+                m.put(e.getKey(), copy((List)e.getValue(), resetEvent));
+            }
+            else
+            {
+                m.put(e.getKey(), e.getValue());
+
+                if ("eventId".equals(e.getKey()))
+                    resetEvent.add(m);
+            }
+        }
+
+        return m;
+    }
 }
