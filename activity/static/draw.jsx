@@ -715,6 +715,10 @@ var Main = React.createClass({
         if (element != null)
             this.refresh(element);
     },
+    selectPage(i) {
+        ENV.index = i;
+        this.refresh();
+    },
     select(e) {
         this.refresh(e);
     },
@@ -928,6 +932,11 @@ var Main = React.createClass({
         }
         this.saveElement();
     },
+    newPage() {
+        common.req("new_page.json", {actId: ENV.actId}, r => {
+            this.rebuild(r);
+        });
+    },
     deploy(env) {
         common.req("deploy.json", {actId: ENV.actId, env:env}, r => {
             console.log(r);
@@ -973,7 +982,7 @@ var Main = React.createClass({
         let tree = ENV.doc.pages.map((page, i) => {
             return (
                 <div className="ml-3" key={i}>
-                    <div data-drop="true" id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.select.bind(this, null)}>第{i+1}页</div>
+                    <div data-drop="true" id={"page"+i} className={"pl-2 pr-2 pt-1 pb-1 " + (this.state.element == null && i == ENV.index ? "text-white bg-danger" : "")} onClick={this.selectPage.bind(this, i)}>第{i+1}页</div>
                     { Element.toDivs(this, page.elements) }
                 </div>
             )
@@ -1242,12 +1251,13 @@ var Main = React.createClass({
                         <div className="navbar navbar-expand-lg navbar-light bg-light m-0 p-3" style={{height:"60px"}}>
                             <div className="mr-auto">
                                 <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新界面</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页面</button>
+                            </div>
+                            <div className="text-right">
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "uat")}>演示预发</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "prd")}>演示生产</button>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.submitTest}>提交测试</button>
-                            </div>
-                            <div className="text-right">
                                 <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
                                 <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "uat")}>发布预发</button>
                                 <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "prd")}>发布生产</button>

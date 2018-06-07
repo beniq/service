@@ -12,7 +12,7 @@ public class Page
 
     String background;
 
-    int mode;
+    int mode = 1;
 
     List<Element> list = new ArrayList<>();
 
