@@ -102,11 +102,11 @@ public class JQueryEvents
         {
             int i = doc.getList().indexOf(event.getElement().getPage());
 
-            String str = "";
+            String str = "if (ENV.sleep) return; ENV.sleep = true;";
             str += "$('#ccc" + (i+1) + "').addClass('ani_enterbtm');\n";
             str += "$('#ccc" + i + "').addClass('ani_leavetop');\n";
             str += "$('#ccc" + (i+1) + "').show();\n";
-            str += "setTimeout(function() { $('#ccc" + i + "').hide(); $('#ccc" + i + "').removeClass('ani_leavetop'); $('#ccc" + (i+1) + "').removeClass('ani_enterbtm'); }, 350);";
+            str += "setTimeout(function() { ENV.sleep = false; $('#ccc" + i + "').hide(); $('#ccc" + i + "').removeClass('ani_leavetop'); $('#ccc" + (i+1) + "').removeClass('ani_enterbtm'); }, 350);";
             str += (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
 
             return str;

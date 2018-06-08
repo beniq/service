@@ -70,7 +70,7 @@ var Main = React.createClass({
         let list = this.state.list.map(v =>
             <div className={"input-group p-2" + (this.state.now == v ? " bg-success" : "")} onClick={this.select.bind(this, v)}>
                 <div className="input-group-prepend">
-                    <div className={"btn" + (this.state.now == v ? " btn-light" : " btn-success")} style={{width:"120px"}}>{v.code}</div>
+                    <div className={"btn" + (this.state.now == v ? " btn-light" : " btn-success")} style={{width:"200px"}}>{v.code}</div>
                 </div>
                 <div type="text" className={"form-control btn text-left" + (this.state.now == v ? " btn-outline-light" : " btn-outline-dark")}>{v.name}</div>
             </div>
