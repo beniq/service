@@ -1179,6 +1179,9 @@ var Main = React.createClass({
                             <option value="24">24px</option>
                             <option value="28">28px</option>
                             <option value="32">32px</option>
+                            <option value="32">48px</option>
+                            <option value="32">64px</option>
+                            <option value="32">72px</option>
                         </select>
                         <div className="input-group-append">
                             <select className="form-control" ref="eLineHeight" defaultValue={e.lineHeight} onChange={v => { e.lineHeight = v.target.value; this.saveElement(); }}>
@@ -1188,8 +1191,14 @@ var Main = React.createClass({
                                 <option value="20">20px</option>
                                 <option value="24">24px</option>
                                 <option value="30">30px</option>
+                                <option value="30">36px</option>
                                 <option value="40">40px</option>
                                 <option value="50">50px</option>
+                                <option value="50">60px</option>
+                                <option value="50">70px</option>
+                                <option value="50">80px</option>
+                                <option value="50">90px</option>
+                                <option value="50">100px</option>
                             </select>
                             <select className="form-control" ref="eAlign" defaultValue={e.align} onChange={v => { e.align = v.target.value; this.saveElement(); }}>
                                 <option value="5">居中</option>
