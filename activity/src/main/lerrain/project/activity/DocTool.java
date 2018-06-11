@@ -147,7 +147,7 @@ public class DocTool
             element.setId(e.getString("id"));
             element.setX(e.getFloat("x"));
             element.setY(e.getFloat("y"));
-            element.setZ(e.getInteger("z"));
+            element.setZ(Common.intOf(e.get("z"), 1));
             element.setW(e.getFloat("w"));
             element.setH(e.getFloat("h"));
             element.setYs(Common.intOf(e.get("ys"), 0));
@@ -155,7 +155,13 @@ public class DocTool
             element.setName(e.getString("name"));
             element.setDisplay(Common.intOf(e.getInteger("display"), 1));
             element.setBgColor(e.getString("bgColor"));
-            element.setAction(e.getJSONArray("action"));
+            try
+            {
+                element.setAction(e.getJSONArray("action"));
+            }
+            catch (Exception e1)
+            {
+            }
             element.setFontSize(e.getString("fontSize"));
             element.setLineHeight(e.getString("lineHeight"));
             element.setAlign(Common.intOf(e.get("align"), 5));
@@ -252,7 +258,7 @@ public class DocTool
             {
                 m.put(e.getKey(), e.getValue());
 
-                if ("eventId".equals(e.getKey()))
+                if ("eventId".equals(e.getKey()) && resetEvent != null)
                     resetEvent.add(m);
             }
         }

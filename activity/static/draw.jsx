@@ -458,16 +458,16 @@ var Event = React.createClass({
 
 var Style = React.createClass({
     getInitialState() {
-        return {};
+        return {css: {}};
     },
     componentDidMount() {
-        this.setState(this.props.element.style);
+        this.setState({css: this.props.element.style});
     },
     delete(k) {
-        let m = this.state;
+        let m = this.state.css;
         delete m[k];
-        this.setState(m, () => {
-            this.props.element.style = this.state;
+        this.setState({css: m}, () => {
+            this.props.element.style = m;
             this.save();
         });
     },
@@ -479,25 +479,25 @@ var Style = React.createClass({
         }, r => {});
     },
     add(type) {
-        let p = {};
+        let p = this.state.css;
         p[type] = {};
-        this.setState(p, () => {
-            this.props.element.style = this.state;
+        this.setState({css: p}, () => {
+            this.props.element.style = p;
             this.save();
         });
     },
     render() {
         return <div>
-            { Object.keys(this.state).map(s => {
+            { Object.keys(this.state.css).map(s => {
                 let style = ENV.style[s];
                 let comps = !style || !style.comp ? null : style.comp.map(c => {
-                    let p = this.state[s];
+                    let p = this.state.css[s];
                     let func = v => {
-                        let q = {};
+                        let q = this.state.css;
                         p[c.code] = v.target.value;
                         q[s] = p;
-                        this.setState(q, () => {
-                            this.props.element.style = this.state;
+                        this.setState({css: q}, () => {
+                            this.props.element.style = this.state.css;
                             this.save();
                         });
                     };
