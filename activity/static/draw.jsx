@@ -10,6 +10,7 @@ var ENV = {
     },
     event: {
         init: {text: "初始化"},
+        certfiOnly: {text: "资格验证"},
         open: {text: "显示图层"},
         close: {text: "关闭图层"},
         closeAni: {
@@ -113,6 +114,10 @@ var ENV = {
                 ]},
             ]
         },
+        progress: {
+            text: "进度条",
+            comp: [{label: "百分比JS", code: "percent", type: "input"}]
+        },
         canvas: {text: "画板背景(烟花等)"},
         play: {text: "背景轮播"},
         popup: {text: "弹出动效"},
@@ -177,13 +182,15 @@ ENV.products = [
     {name: "团/众安团体医疗险", productId: 1012984},
     {name: "团/众安团体意外险A(推广费固定)", productId: 1012976},
     {name: "团/众安团体意外险企惠保(推广费可调)", productId: 1012979},
+    {name: "商/众安宫颈癌HPV基因检测", productId: 1023390, title: '宫颈癌HPV基因检测', desc: '荷兰原装进口，居家采样，全程隐私保密送检，优先预定4价疫苗，尊享宫颈医疗服务', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000008/gongjingai_share.jpg'},
+    {name: "商/众安乳腺癌Brca1/2基因检测", productId: 1023389, title: '乳腺癌Brca1/2基因检测', desc: '科学检测基因 关爱乳腺健康 防范于未然 赠电话医生服务', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000007/ruxianai_share.jpg'},
     {name: "商/众安童安保儿童兴趣潜力基因检测", productId: 1021044, title: '童安保儿童兴趣潜力基因检测', desc: '检测孩子的空间定位能力、乐感、爆发力和耐力，科学获知孩子的体育、艺术等方面能力。检测结果高达99.99%！让孩子站在天赋的基石上，快乐成长，轻松成才！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000001/xingquqianli_share.png'},
     {name: "商/众安童安保安全用药基因检测", productId: 1021045, title: '童安保安全用药基因检测', desc: '覆盖内科、消化科、呼吸科等六大科室，涉及感冒、哮喘等11种常见儿童用药需求的基因检测。检测结果准确率高达99.99%！父母培养健康成长的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000002/anquanyongyao_share.png'},
     {name: "商/众安童安保学习能力基因检测", productId: 1021046, title: '童安保学习能力基因检测', desc: '检测孩子的理解能力、数学计算能力、记忆力、求知欲、动手能力、阅读能力在内的6种学习能力。基因检测结果准确率高达99.99%！父母因材施教的权威指南！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/service/370000003/xuexinengli_share.png'},
 ];
 
 ENV.products.map(x => {
-    ENV.event.toProduct.comp[0].value.push({text: x.name, code: x.productId});
+    ENV.event.toProduct.comp[0].value.push({text: x.name, code: x.productId + ""});
     if (x.title)
         ENV.event.shareProduct.comp[0].value.push({text: x.name, code: x});
 });
@@ -1008,7 +1015,7 @@ var Main = React.createClass({
         }
     },
     submitTest() {
-        if (confirm("确定提交？")) common.req("submit_test.json", {actId: ENV.actId, address: "guye@iyunbao.com,qinyang@iyunbao.com,baoting@iyunbao.com,lixinhao@iyunbao.com"}, r => {
+        if (confirm("确定提交？")) common.req("submit_test.json", {actId: ENV.actId, address: "guye@iyunbao.com,caojianxiang@iyunbao.com,zhangqiliang@iyunbao.com,dingliang@iyunbao.com,xuechuangwei@iyunbao.com,qinyang@iyunbao.com,baoting@iyunbao.com,lixinhao@iyunbao.com"}, r => {
             alert(r);
         });
     },
@@ -1179,9 +1186,9 @@ var Main = React.createClass({
                             <option value="24">24px</option>
                             <option value="28">28px</option>
                             <option value="32">32px</option>
-                            <option value="32">48px</option>
-                            <option value="32">64px</option>
-                            <option value="32">72px</option>
+                            <option value="48">48px</option>
+                            <option value="64">64px</option>
+                            <option value="72">72px</option>
                         </select>
                         <div className="input-group-append">
                             <select className="form-control" ref="eLineHeight" defaultValue={e.lineHeight} onChange={v => { e.lineHeight = v.target.value; this.saveElement(); }}>
@@ -1194,11 +1201,11 @@ var Main = React.createClass({
                                 <option value="30">36px</option>
                                 <option value="40">40px</option>
                                 <option value="50">50px</option>
-                                <option value="50">60px</option>
-                                <option value="50">70px</option>
-                                <option value="50">80px</option>
-                                <option value="50">90px</option>
-                                <option value="50">100px</option>
+                                <option value="60">60px</option>
+                                <option value="70">70px</option>
+                                <option value="80">80px</option>
+                                <option value="90">90px</option>
+                                <option value="100">100px</option>
                             </select>
                             <select className="form-control" ref="eAlign" defaultValue={e.align} onChange={v => { e.align = v.target.value; this.saveElement(); }}>
                                 <option value="5">居中</option>

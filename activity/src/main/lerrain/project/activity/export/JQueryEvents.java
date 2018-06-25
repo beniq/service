@@ -15,6 +15,7 @@ public class JQueryEvents
     JQueryExport jqe;
     ActivityDoc doc;
 
+    String plug = "";
     String envJs = "";
     String envCss = "";
     String envPrds = ",";
@@ -40,6 +41,11 @@ public class JQueryEvents
             envJs += "ENV.reqInit = true;";
             if (onFinish != null)
                 envJs += "ENV.afterInit = finish" + event.getId() + ";";
+        }
+        else if ("certfiOnly".equals(event.getType()))
+        {
+            plug += "<script src=\"https://static.iyunbao.com/website/health/iybApp/h5/js/authAgent/authAgent.min.js\"></script>";
+            //envJs += "_AuthAgent.isAuth(function() {  }, function() { Life.Dialog.alert('参加该活动需认证代理人资质，请于首页认证') });";
         }
         else if ("tiger".equals(event.getType()))
         {

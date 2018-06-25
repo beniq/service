@@ -1,10 +1,14 @@
 var zoom = function(){
     var xx = document.getElementById("ccc0");
+    if (xx == null)
+        xx = document.getElementById("ccc");
     return xx.offsetWidth / 750;
 };
 var zoomY = function(){
     if (ENV.H) {
         var xx = document.getElementById("ccc0");
+        if (xx == null)
+            xx = document.getElementById("ccc");
         return xx.offsetHeight / ENV.H;
     } else {
         return zoom();

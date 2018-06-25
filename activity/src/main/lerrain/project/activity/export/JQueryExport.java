@@ -108,6 +108,7 @@ public class JQueryExport
         root = root.replaceAll("<!-- IYB_SERVER -->", iybServer);
         root = root.replaceAll("<!-- IMAGES -->", images);
         root = root.replaceAll("<!-- ALL_PRODUCTS -->", tool.envPrds.length() > 1 ? tool.envPrds.substring(1, tool.envPrds.length() - 1) : "");
+        root = root.replace("<!-- PLUG -->", tool.plug);
 
         for (Runnable r : finish)
             r.run();
@@ -131,11 +132,20 @@ public class JQueryExport
                 {
                     js3 += "ENV.LIST" + e.getId() + " = " + e.getList() + ";";
 
+                    boolean xy = e.getParent().getW() > e.getW() * 1.7f;
+                    if (xy)
+                        e.getParent().getStyle().put("scrollX", new JSONObject());
+                    else
+                        e.getParent().getStyle().put("scroll", new JSONObject());
+
                     List<String> ids = new ArrayList<>();
                     for (int i=0;i<10;i++)
                     {
                         Element ee = e.copy();
-                        ee.setY(e.getH() * i);
+                        if (xy)
+                            ee.setX(e.getW() * i);
+                        else
+                            ee.setY(e.getH() * i);
                         ee.getStyle().put("hide", null);
 
                         elements += stringOf(ee, "(ENV.LIST" + e.getId() + "&&ENV.LIST" + e.getId() + ".length > "+i+" ?" + "ENV.LIST" + e.getId() + "[" + i + "] : {})");
@@ -199,6 +209,8 @@ public class JQueryExport
                 style += "display:none; overflow:hidden;";
             if ("scroll".equals(key) || "autoScroll".equals(key))
                 style += "overflow-y:scroll;";
+            if ("scrollX".equals(key))
+                style += "overflow-x:scroll;";
 
             if (key.startsWith("shake") || "rotate".equals(key) || "float".equals(key))
             {
@@ -214,13 +226,21 @@ public class JQueryExport
                 String bg = null;
                 for (String f : e.getFile())
                     bg = (bg == null ? "" : bg + ",") + "\"" + uri(f) + "\"";
-                js3 += "var bg = ["+bg+"][" + val.getString("index") + "];";
+                js3 += "var bg = ["+bg+"][" + expOf(val.getString("index"), exp)  + "];";
                 js3 += "$('#" + id + "').css('background-image', 'url(' + bg + ')');";
             }
 
             if ("bgUrl".equals(key))
             {
                 js3 += "$('#" + id + "').css('background-image', 'url(' + " + expOf(val.getString("url"), exp) + " + ')');";
+            }
+
+            if ("progress".equals(key))
+            {
+                es += "<div class='progress'><div id='PROG"+e.getId()+"' class='progress-active'></div></div>";
+                js3 += "if(" + expOf(val.getString("percent"), exp) + " > 0)";
+                js3 += "$('#PROG" + id + "').css('width', " + expOf(val.getString("percent"), exp) + " + '%');";
+                js3 += "else $('#PROG" + id + "').hide();";
             }
 
             if ("textin".equals(key))

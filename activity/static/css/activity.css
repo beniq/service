@@ -264,3 +264,25 @@ input {
     height: 100%;
     font-size: 14pt;
 }
+
+.progress {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 0 5px rgba(0, 198, 255,.6);
+    box-shadow: 0 0 5px rgba(0, 198, 255,.6);
+    background-color: rgba(0, 198, 255,.6);
+}
+
+.progress-active {
+    height: 100%;
+    border: 1px solid #4dafe2;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #008cd5;
+    background-size: 20px 38px;
+    -box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    box-shadow: 1px 1px 5px rgba(0, 140, 213, .8);
+    -webkit-animation: process 800ms infinite linear;
+    animation: process 800ms infinite linear;
+}
