@@ -81,6 +81,7 @@ public class JQueryEvents
                     "                if (r != null && r.result == \"success\") {\n" +
                     "                    var c = r.content;\n" +
                     "                    ENV.init.times = c.times;\n" +
+                    "                    ENV.init.result = c.result;\n" +
                     "                    ENV.init.link = c.link;\n" +
                     "      ENV.tiger.go('" + id + "', 65+eval(c.result), finish" + event.getId() + ", "+x+", "+y+", "+w+", "+h+");\n" +
                     "                    refreshText();\n" +
