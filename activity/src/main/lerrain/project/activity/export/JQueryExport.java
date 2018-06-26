@@ -227,6 +227,7 @@ public class JQueryExport
                 for (String f : e.getFile())
                     bg = (bg == null ? "" : bg + ",") + "\"" + uri(f) + "\"";
                 js3 += "var bg = ["+bg+"][" + expOf(val.getString("index"), exp)  + "];";
+                js3 += "$('#" + id + "').css('background-size', 'contain');";
                 js3 += "$('#" + id + "').css('background-image', 'url(' + bg + ')');";
             }
 
