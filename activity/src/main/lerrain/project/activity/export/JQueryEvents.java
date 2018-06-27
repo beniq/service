@@ -83,6 +83,7 @@ public class JQueryEvents
             int h = (int)event.getElement().getH();
 
             return "        try{\n" +
+                    " if(ENV.init.times>0) {" +
                     "            gpo.post(\"/npo/temp.json\", {activity:'"+doc.getCode()+"', event:'tiger', account:gpo.accountId}, function(r){\n" +
                     "                if (r != null && r.result == \"success\") {\n" +
                     "                    var c = r.content;\n" +
@@ -93,6 +94,7 @@ public class JQueryEvents
                     "                    refreshText();\n" +
                     "                }\n" +
                     "            });\n" +
+                    " } else { Life.Dialog.alert('抽奖机会已用完，快去推广获得新的机会吧！'); }"+
                     "        }catch(e){console.log('refreshAcc-err', e);}";
 
         }
