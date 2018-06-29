@@ -94,7 +94,7 @@ public class JQueryEvents
                     "                    refreshText();\n" +
                     "                }\n" +
                     "            });\n" +
-                    " } else { Life.Dialog.alert('抽奖机会已用完，快去推广获得新的机会吧！'); }"+
+                    " } else { Life.Dialog.alert('您暂时没有抽奖机会，获取方法：1、每天10~11点、20~21点转发产品和素材（每天最多2次）；2、成功推广可抽3次；'); }"+
                     "        }catch(e){console.log('refreshAcc-err', e);}";
 
         }

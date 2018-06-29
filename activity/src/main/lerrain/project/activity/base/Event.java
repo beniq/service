@@ -14,6 +14,7 @@ public class Event
 
     JSONObject param;
     JSONObject finish;
+    JSONObject fail;
 
     Element element;
 
@@ -50,6 +51,16 @@ public class Event
         p.put("eventId", event.getId());
 
         setFinish(p);
+    }
+
+    public JSONObject getFail()
+    {
+        return fail;
+    }
+
+    public void setFail(JSONObject fail)
+    {
+        this.fail = fail;
     }
 
     public String getType()
