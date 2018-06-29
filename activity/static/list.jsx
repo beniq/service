@@ -79,7 +79,7 @@ var Main = React.createClass({
         //let list = this.state.list.map(v => <div className={"p-3" + (this.state.now == v ? " bg-success" : "")} onClick={this.select.bind(this, v)}>{v.code} / {v.name}</div>);
         return <div className="form-horizontal m-0 p-0">
             <div className="form-row m-0 p-0">
-                <div className="col-4 m-0 p-2" style={{overflowY:"scroll"}}>
+                <div className="col-4 m-0 p-2" style={{height:"100%", overflowY:"scroll"}}>
                     {list}
                     <div className="input-group p-2">
                         <button className="form-control btn btn-danger" onClick={this.create}>新的活动</button>
