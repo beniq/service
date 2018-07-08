@@ -83,6 +83,7 @@ public class JQueryEvents
             int h = (int)event.getElement().getH();
 
             return "        try{\n" +
+                    " if(ENV.init.times>0) {" +
                     "            gpo.post(\"/npo/temp.json\", {activity:'"+doc.getCode()+"', event:'tiger', account:gpo.accountId}, function(r){\n" +
                     "                if (r != null && r.result == \"success\") {\n" +
                     "                    var c = r.content;\n" +
@@ -93,6 +94,7 @@ public class JQueryEvents
                     "                    refreshText();\n" +
                     "                }\n" +
                     "            });\n" +
+                    " } else { Life.Dialog.alert('您暂时没有抽奖机会，获取方法：1、每天10~11点、20~21点转发产品和素材（每天最多2次）；2、成功推广可抽3次；'); }"+
                     "        }catch(e){console.log('refreshAcc-err', e);}";
 
         }

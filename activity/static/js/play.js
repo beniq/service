@@ -37,7 +37,7 @@ Tiger1.prototype.go = function(d, l, of, x, y, w, h) {
             setTimeout(_this.run.bind(_this), t);
         } else {
             if (_this.onFinish != null)
-                _this.onFinish();
+                setTimeout(_this.onFinish, 1000);
         }
     };
     setTimeout(this.run, 200);
