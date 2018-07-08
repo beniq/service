@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title><!-- TITLE --></title>
-    <link rel="stylesheet" href="../../css/activity.css">
+    <link rel="stylesheet" href="./activity.css">
     <style type="text/css">
         <!-- CSS -->
     </style>
     <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/zepto.min.js"></script>
     <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/qqdialog.js"></script>
     <script src="https://cdn.iyb.tm/common/js/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="../../js/activity.js"></script>
-    <script src="../../js/play.js"></script>
+    <script src="./activity.js"></script>
+    <script src="./play.js"></script>
     <!-- PLUG -->
 </head>
 <body>

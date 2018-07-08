@@ -691,6 +691,8 @@ public class ActivityController
 		ActivityDoc doc = act.getAct(actId);
 		String env = json.getString("env");
 
+		copyPublicFile(actId.toString(), env);
+
 		File dest = new File(Common.pathOf("./static/" + env, actId.toString(), "main.html"));
 
 		File parent = dest.getParentFile();
@@ -718,11 +720,23 @@ public class ActivityController
 	{
 		ActivityDoc doc = act.getAct(actId);
 
+		copyPublicFile(actId.toString(), env);
 		String html = new JQueryExport(doc, env).export();
 		try (OutputStream os = res.getOutputStream())
 		{
 			os.write(html.getBytes("utf-8"));
 		}
+	}
+
+	// 复制公共文件（css/js）等
+	private void copyPublicFile(String actId, String env){
+		File dir = new File(Common.pathOf("./static/act", actId));
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		Disk.copy(new File(Common.pathOf("./static/css/activity.css")), new File(Common.pathOf("./static/act", actId, "activity.css")), true);
+		Disk.copy(new File(Common.pathOf("./static/js/activity.js")), new File(Common.pathOf("./static/act", actId, "activity.js")), true);
+		Disk.copy(new File(Common.pathOf("./static/js/play.js")), new File(Common.pathOf("./static/act", actId, "play.js")), true);
 	}
 
 	@RequestMapping("/submit_test.json")
