@@ -516,7 +516,7 @@ var Style = React.createClass({
                             { c.value.map(o => <option value={o.code}>{o.text}</option>) }
                         </select>;
                     } else if (c.type == "input") {
-                        comp = <input className="form-control" value={p[c.code]} onChange={func}/>;
+                        comp = <input className="form-control" value={p[c.code]} onBlur={func} onChange={func}/>;
                     }
                     return (
                         <div className="input-group pl-2 pr-2 pt-1 pb-1">

@@ -143,9 +143,9 @@ public class JQueryExport
                     {
                         Element ee = e.copy();
                         if (xy)
-                            ee.setX(e.getW() * i);
+                            ee.setX(e.getX() + (e.getX() + e.getW()) * i);
                         else
-                            ee.setY(e.getH() * i);
+                            ee.setY(e.getY() + (e.getH() + e.getY()) * i);
                         ee.getStyle().put("hide", null);
 
                         elements += stringOf(ee, "(ENV.LIST" + e.getId() + "&&ENV.LIST" + e.getId() + ".length > "+i+" ?" + "ENV.LIST" + e.getId() + "[" + i + "] : {})");
@@ -179,8 +179,8 @@ public class JQueryExport
             js3 += "for (var i=0;i<9;i++) {";
             js3 += "text+='<div>'+TX"+id+"[i % TX" + id + ".length]+'</div>'; }";
             js3 += "text+='<div>'+TX"+id+"[0]+'</div>';";
-            js3 += "$('#" + id + "').html('<div class=\"ani_scroll\">'+text+'</div>'); }";
-            js3 += "else { $('#" + id + "').html('<div>'+TX" + id + "+'</div>'); }\n";
+            js3 += "$('#" + id + "').html('<div class=\"ani_scroll\" style=\"margin:auto;\">'+text+'</div>'); }";
+            js3 += "else { $('#" + id + "').html('<div style=\"margin:auto;\">'+TX" + id + "+'</div>'); }\n";
         }
 
         String es = build(e.getChildren(), exp);
@@ -316,6 +316,9 @@ public class JQueryExport
             style += "text-align:right;";
         else
             style += "text-align:center;";
+
+        if (e.getAlign() == 4 || e.getAlign() == 5 || e.getAlign() == 6)
+            style += "display:flex; align-items:center; ";
 
         if (!Common.isEmpty(e.getInput()))
         {
