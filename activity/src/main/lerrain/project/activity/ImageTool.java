@@ -1,5 +1,6 @@
 package lerrain.project.activity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
@@ -15,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class ImageTool
 {
@@ -108,5 +110,52 @@ public class ImageTool
         Disk.copy(src, dst, true);
 
         return dst;
+    }
+
+    public static void draw(File src, JSONObject param, OutputStream fos)
+    {
+        try
+        {
+            BufferedImage n = ImageIO.read(src);
+            Graphics2D g = n.createGraphics();
+
+            String qrUrl = param.getString("qrUrl");
+            if (!Common.isEmpty(qrUrl))
+            {
+                float qrx = param.getFloat("qrx");
+                float qry = param.getFloat("qry");
+            }
+
+            String name = param.getString("name");
+            if (!Common.isEmpty(name))
+            {
+                String nameFontSize = param.getString("nameFontSize");
+                float nx = param.getFloat("nx");
+                float ny = param.getFloat("ny");
+
+                g.setFont(g.getFont().deriveFont((float)Common.doubleOf(nameFontSize, 32.0f)));
+                g.drawString(name, nx, ny);
+            }
+
+
+            try (ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
+            {
+                JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpg").next();
+                imageWriter.setOutput(ios);
+
+                IIOMetadata imageMetaData = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(n), null);
+
+                JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
+                jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+                jpegParams.setCompressionQuality(0.6f);
+
+                imageWriter.write(imageMetaData, new IIOImage(n, null, null), null);
+                imageWriter.dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

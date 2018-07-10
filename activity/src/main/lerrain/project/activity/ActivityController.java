@@ -1,5 +1,6 @@
 package lerrain.project.activity;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lerrain.project.activity.base.ActivityDoc;
@@ -756,6 +757,20 @@ public class ActivityController
 		mailServer.send(json.getString("address"), "提测活动：" + doc.getName(), c, null);
 	}
 
+	@RequestMapping("/{actId}/poster.jpg")
+	public void poster(HttpServletRequest req, HttpServletResponse res, String actId)
+	{
+		JSONObject param = JSON.parseObject(req.getParameter("param"));
+		String imgUrl = param.getString("imgUrl");
+		try (OutputStream os = res.getOutputStream())
+		{
+			ImageTool.draw(new File(Common.pathOf(root, "act/" + actId + "/" + imgUrl)), param, os);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 //	@RequestMapping("/upload.json")
 //	@ResponseBody

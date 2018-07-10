@@ -174,6 +174,7 @@ ENV.products = [
     {name: "团/安联申根旅行保障计划(申根之王)", productId: 1024846},
     {name: "团/安心团体意外险", productId: 1013086},
     {name: "团/和谐建工意外险", productId: 1024732},
+    {name: "团/平安乐享餐饮综合保险", productId: 1027058},
     {name: "团/平安团体意外险", productId: 1015236},
     {name: "团/史带“畅游华夏”境内旅行险", productId: 1017185},
     {name: "团/史带境内户外运动保险", productId: 1017187},
