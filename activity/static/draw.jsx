@@ -206,9 +206,9 @@ ENV.saveQueue = function() {
         actId: ENV.actId,
         elements: ready
     }, r => {
-        for (let x in ready)
-            if (ENV.ready[x] == null)
-                ENV.ready[x] = ready[x];
+        // for (let x in ready)
+        //     if (ENV.ready[x] == null)
+        //         ENV.ready[x] = ready[x];
     });
 };
 
@@ -260,6 +260,9 @@ ENV.draw = function(now) {
         ENV.drawElement(c, e);
         if (e.children != null) e.children.map(e => {
             ENV.drawElement(c, e);
+            if (e.children != null) e.children.map(e => {
+                ENV.drawElement(c, e);
+            });
         });
     })
     if (now) {
@@ -481,11 +484,12 @@ var Style = React.createClass({
         });
     },
     save() {
-        common.req("style.json", {
-            actId: ENV.actId,
-            elementId: this.props.element.id,
-            style: this.props.element.style
-        }, r => {});
+        ENV.ready[this.props.element.id] = this.props.element;
+        // common.req("style.json", {
+        //     actId: ENV.actId,
+        //     elementId: this.props.element.id,
+        //     style: this.props.element.style
+        // }, r => {});
     },
     add(type) {
         let p = this.state.css;
