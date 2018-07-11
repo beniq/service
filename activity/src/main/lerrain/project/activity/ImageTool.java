@@ -1,6 +1,11 @@
 package lerrain.project.activity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
 import lerrain.tool.Common;
 import lerrain.tool.Disk;
@@ -14,9 +19,13 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.Buffer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImageTool
 {
@@ -124,6 +133,23 @@ public class ImageTool
             {
                 float qrx = param.getFloat("qrx");
                 float qry = param.getFloat("qry");
+                float qrw = param.getFloat("qrw");
+
+                try
+                {
+                    Map hints = new HashMap();
+                    hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                    BitMatrix bitMatrix = multiFormatWriter.encode(qrUrl, BarcodeFormat.QR_CODE, 400, 400, hints);
+
+                    BufferedImage bi = MatrixToImageWriter.toBufferedImage(bitMatrix);
+                    g.drawImage(bi, (int)qrx, (int)qry, (int)qrw, (int)qrw, null);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
 
             String name = param.getString("name");
@@ -136,7 +162,6 @@ public class ImageTool
                 g.setFont(g.getFont().deriveFont((float)Common.doubleOf(nameFontSize, 32.0f)));
                 g.drawString(name, nx, ny);
             }
-
 
             try (ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
             {

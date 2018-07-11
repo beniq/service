@@ -361,6 +361,32 @@ var Element = {
     }
 }
 
+var Poster = React.createClass({
+    render() {
+        return (
+            <div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>二维码</div>
+                    </div>
+                    <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>二维码坐标</div>
+                    </div>
+                    <input type="text" className="form-control" ref="qrw" value={this.props.value.qrw}/>
+                    <div className="input-group-append">
+                        <input type="text" className="form-control" ref="qrx" value={this.props.value.qrx}/>
+                        <input type="text" className="form-control" ref="qry" value={this.props.value.qry}/>
+                    </div>
+                </div>
+                <img data-event={this.props.eventId} src={this.props.value.imgUrl?this.props.value.imgUrl:"images/empty_img.png"} style={{width:"100%"}}/>
+            </div>
+        )
+    }
+})
+
 var Event = React.createClass({
     getInitialState() {
         return {};
@@ -600,7 +626,13 @@ var Main = React.createClass({
                     }
                     fd.append("type", "element");
                 } else {
-                    fd = null;
+                    let eventId = e.target.getAttribute("data-event");
+                    if (eventId) {
+                        fd.append("eventId", eventId);
+                        fd.append("type", "poster");
+                    } else {
+                        fd = null;
+                    }
                 }
                 if (fd != null) {
                     for (var i = 0; i < fileList.length; i++)
