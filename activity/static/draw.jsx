@@ -174,6 +174,7 @@ ENV.products = [
     {name: "团/安联申根旅行保障计划(申根之王)", productId: 1024846},
     {name: "团/安心团体意外险", productId: 1013086},
     {name: "团/和谐建工意外险", productId: 1024732},
+    {name: "团/平安乐享餐饮综合保险", productId: 1027058},
     {name: "团/平安团体意外险", productId: 1015236},
     {name: "团/史带“畅游华夏”境内旅行险", productId: 1017185},
     {name: "团/史带境内户外运动保险", productId: 1017187},
@@ -206,9 +207,9 @@ ENV.saveQueue = function() {
         actId: ENV.actId,
         elements: ready
     }, r => {
-        for (let x in ready)
-            if (ENV.ready[x] == null)
-                ENV.ready[x] = ready[x];
+        // for (let x in ready)
+        //     if (ENV.ready[x] == null)
+        //         ENV.ready[x] = ready[x];
     });
 };
 
@@ -260,6 +261,9 @@ ENV.draw = function(now) {
         ENV.drawElement(c, e);
         if (e.children != null) e.children.map(e => {
             ENV.drawElement(c, e);
+            if (e.children != null) e.children.map(e => {
+                ENV.drawElement(c, e);
+            });
         });
     })
     if (now) {
@@ -356,6 +360,61 @@ var Element = {
         });
     }
 }
+
+var Poster = React.createClass({
+    render() {
+        return (
+            <div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>二维码</div>
+                    </div>
+                    <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl}/>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>二维码坐标</div>
+                    </div>
+                    <input type="text" className="form-control" ref="qrw" value={this.props.value.qrw}/>
+                    <div className="input-group-append">
+                        <input type="text" className="form-control" ref="qrx" value={this.props.value.qrx}/>
+                        <input type="text" className="form-control" ref="qry" value={this.props.value.qry}/>
+                    </div>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>姓名</div>
+                    </div>
+                    <select className="form-control" ref="nameFontSize" defaultValue={this.props.value.fontSize} onChange={v => { this.props.value.fontSize = v.target.value; }}>
+                        <option value="0">无</option>
+                        <option value="7">7px</option>
+                        <option value="8">8px</option>
+                        <option value="9">9px</option>
+                        <option value="10">10px</option>
+                        <option value="11">11px</option>
+                        <option value="12">12px</option>
+                        <option value="14">14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                        <option value="20">20px</option>
+                        <option value="22">22px</option>
+                        <option value="24">24px</option>
+                        <option value="28">28px</option>
+                        <option value="32">32px</option>
+                        <option value="48">48px</option>
+                        <option value="64">64px</option>
+                        <option value="72">72px</option>
+                    </select>
+                    <div className="input-group-append">
+                        <input type="text" className="form-control" ref="namex" value={this.props.value.namex}/>
+                        <input type="text" className="form-control" ref="namey" value={this.props.value.namey}/>
+                    </div>
+                </div>
+                <img data-event={this.props.eventId} src={this.props.value.imgUrl?this.props.value.imgUrl:"images/empty_img.png"} style={{width:"100%"}}/>
+            </div>
+        )
+    }
+})
 
 var Event = React.createClass({
     getInitialState() {
@@ -481,11 +540,12 @@ var Style = React.createClass({
         });
     },
     save() {
-        common.req("style.json", {
-            actId: ENV.actId,
-            elementId: this.props.element.id,
-            style: this.props.element.style
-        }, r => {});
+        ENV.ready[this.props.element.id] = this.props.element;
+        // common.req("style.json", {
+        //     actId: ENV.actId,
+        //     elementId: this.props.element.id,
+        //     style: this.props.element.style
+        // }, r => {});
     },
     add(type) {
         let p = this.state.css;
@@ -595,7 +655,13 @@ var Main = React.createClass({
                     }
                     fd.append("type", "element");
                 } else {
-                    fd = null;
+                    let eventId = e.target.getAttribute("data-event");
+                    if (eventId) {
+                        fd.append("eventId", eventId);
+                        fd.append("type", "poster");
+                    } else {
+                        fd = null;
+                    }
                 }
                 if (fd != null) {
                     for (var i = 0; i < fileList.length; i++)
