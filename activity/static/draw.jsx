@@ -365,13 +365,13 @@ var Poster = React.createClass({
     render() {
         return (
             <div>
-                <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
                     <div className="input-group-prepend">
                         <div className="btn btn-primary" style={{width:"120px"}}>二维码</div>
                     </div>
                     <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl}/>
                 </div>
-                <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
                     <div className="input-group-prepend">
                         <div className="btn btn-primary" style={{width:"120px"}}>二维码坐标</div>
                     </div>
@@ -379,6 +379,35 @@ var Poster = React.createClass({
                     <div className="input-group-append">
                         <input type="text" className="form-control" ref="qrx" value={this.props.value.qrx}/>
                         <input type="text" className="form-control" ref="qry" value={this.props.value.qry}/>
+                    </div>
+                </div>
+                <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                    <div className="input-group-prepend">
+                        <div className="btn btn-primary" style={{width:"120px"}}>姓名</div>
+                    </div>
+                    <select className="form-control" ref="nameFontSize" defaultValue={this.props.value.fontSize} onChange={v => { this.props.value.fontSize = v.target.value; }}>
+                        <option value="0">无</option>
+                        <option value="7">7px</option>
+                        <option value="8">8px</option>
+                        <option value="9">9px</option>
+                        <option value="10">10px</option>
+                        <option value="11">11px</option>
+                        <option value="12">12px</option>
+                        <option value="14">14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                        <option value="20">20px</option>
+                        <option value="22">22px</option>
+                        <option value="24">24px</option>
+                        <option value="28">28px</option>
+                        <option value="32">32px</option>
+                        <option value="48">48px</option>
+                        <option value="64">64px</option>
+                        <option value="72">72px</option>
+                    </select>
+                    <div className="input-group-append">
+                        <input type="text" className="form-control" ref="namex" value={this.props.value.namex}/>
+                        <input type="text" className="form-control" ref="namey" value={this.props.value.namey}/>
                     </div>
                 </div>
                 <img data-event={this.props.eventId} src={this.props.value.imgUrl?this.props.value.imgUrl:"images/empty_img.png"} style={{width:"100%"}}/>
