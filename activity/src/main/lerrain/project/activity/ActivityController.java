@@ -577,8 +577,7 @@ public class ActivityController
 			img = page.find(req.getParameter("elementId"));
 			img.getFile().clear();
 		}
-
-		if ("element".equalsIgnoreCase(type))
+		else if ("element".equalsIgnoreCase(type))
 		{
 			img = new Element();
 
@@ -666,6 +665,14 @@ public class ActivityController
 					{
 						img.addFile(uriName);
 						img.setH(h * img.getW() / w);
+					}
+					else if ("poster".equalsIgnoreCase(type))
+					{
+						String eventId = req.getParameter("eventId");
+						Event event = doc.findEvent(eventId);
+						if (event.getParam() == null)
+							event.setParam(new JSONObject());
+						event.getParam().put("imgUrl", uriName);
 					}
 				}
 				catch (Exception e)
