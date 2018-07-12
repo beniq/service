@@ -372,12 +372,15 @@ var Poster = React.createClass({
         return {mode: 0};
     },
     point(e) {
-        if (this.state.mode == 0)
+        if (this.state.mode == 0) {
+            this.props.value.name = "李测试"
+            window.open("act/" + ENV.actId + "/poster.jpg?param=" + encodeURI(JSON.stringify(this.props.value)))
             return;
+        }
         let c = $("#poster");
         let s = c.offset();
-        let x = (e.clientX - s.left) * 100 / c.width();
-        let y = (e.clientY - s.top) * 100 / c.height();
+        let x = (e.pageX - s.left) * 100 / c.width();
+        let y = (e.pageY - s.top) * 100 / c.height();
         x = x.toFixed(2);
         y = y.toFixed(2);
         if (this.state.mode == 1) {
@@ -390,9 +393,13 @@ var Poster = React.createClass({
             this.props.value.namey = y;
         }
         this.setState({mode: 0});
+        this.onChange();
     },
     setMode(mode) {
         this.setState({mode: mode});
+    },
+    onChange() {
+        this.props.refreshParent(this.props.value);
     },
     render() {
         return (
@@ -401,13 +408,13 @@ var Poster = React.createClass({
                     <div className="input-group-prepend">
                         <div className="btn btn-primary" style={{width:"120px"}}>二维码URL</div>
                     </div>
-                    <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl} onChange={v => { this.props.value.qrUrl = v.target.value; }}/>
+                    <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl} onChange={v => { this.props.value.qrUrl = v.target.value; this.onChange(); }}/>
                 </div>
                 <div className="input-group pl-2 pr-2 pt-1 pb-1">
                     <div className="input-group-prepend">
-                        <div className="btn btn-primary" style={{width:"120px"}}>二维码</div>
+                        <div className="btn btn-primary" style={{width:"120px"}}>二维码XYS</div>
                     </div>
-                    <input type="text" className="form-control" ref="qrw" value={this.props.value.qrw}/>
+                    <input type="text" className="form-control" ref="qrw" value={this.props.value.qrw} onChange={v => { this.props.value.qrw = v.target.value; this.onChange(); }}/>
                     <div className="input-group-append">
                         <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.qrx}</div>
                         <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.qry}</div>
@@ -416,9 +423,9 @@ var Poster = React.createClass({
                 </div>
                 <div className="input-group pl-2 pr-2 pt-1 pb-1">
                     <div className="input-group-prepend">
-                        <div className="btn btn-primary" style={{width:"120px"}}>姓名</div>
+                        <div className="btn btn-primary" style={{width:"120px"}}>姓名XYS</div>
                     </div>
-                    <select className="form-control" ref="nameFontSize" defaultValue={this.props.value.fontSize} onChange={v => { this.props.value.fontSize = v.target.value; }}>
+                    <select className="form-control" ref="nameFontSize" defaultValue={this.props.value.fontSize} onChange={v => { this.props.value.fontSize = v.target.value; this.onChange(); }}>
                         <option value="0">无</option>
                         <option value="7">7px</option>
                         <option value="8">8px</option>
@@ -444,7 +451,10 @@ var Poster = React.createClass({
                         <div className="btn btn-outline-primary" style={{width:"80px"}} onClick={this.setMode.bind(this, 2)}>选择</div>
                     </div>
                 </div>
-                <img id="poster" data-event={this.props.eventId} src={this.props.value.imgUrl?this.props.value.imgUrl:"images/empty_img.png"} style={{width:"60%"}} onClick={this.point.bind(this)}/>
+                { this.props.value.imgUrl ?
+                    <img id="poster" data-event={this.props.eventId} src={this.props.value.imgUrl} style={{width:"60%", marginLeft:"20%"}} onClick={this.point.bind(this)}/> :
+                    <div id="poster" data-event={this.props.eventId} style={{width:"60%", height:"200px", marginLeft:"20%", border:"#000 1px dotted", textAlign:"center"}}>拖拽海报图片至此</div>
+                }
             </div>
         )
     }
@@ -492,7 +502,13 @@ var Event = React.createClass({
                 if (s.param == null) s.param = {};
                 let comps = !event || !event.comp ? null : event.comp.map((c, i) => {
                     if (c.type == "poster") {
-                        return <Poster value={s.param} eventId={s.id}/>;
+                        let onChange = m => {
+                            for (let k in m) {
+                                s.param[k] = m[k];
+                            }
+                            this.save(s);
+                        };
+                        return <Poster value={s.param} eventId={s.id} refreshParent={onChange}/>;
                     }
                     let comp = null;
                     if (c.type == "option") {

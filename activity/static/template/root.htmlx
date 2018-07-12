@@ -63,6 +63,11 @@
         stat("visit", dest);
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
+    var sharePoster = function(p) {
+        document.location.href = "poster.jpg?param=" + JSON.stringify(p);
+        stat("ShareProduct", p.link);
+        iHealthBridge.doAction("share", JSON.stringify(p));
+    };
     var shareProduct = function(p){
         if (p.productId == 1) {
             p.link = 'https://gpo.iyunbao.com/static/activity/product_list_share.html?accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';

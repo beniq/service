@@ -222,6 +222,14 @@ public class JQueryEvents
             String text = event.getParam().getString("value");
             return "eval(\""+jqe.expOf(text, exp)+"\");";
         }
+        else if ("sharePoster".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String t = JSON.toJSONString(event.getParam());
+            return "sharePoster("+t+");\n";
+        }
 
         return null;
     }

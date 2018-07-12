@@ -17,6 +17,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.ByteArrayOutputStream;
@@ -128,12 +129,15 @@ public class ImageTool
             BufferedImage n = ImageIO.read(src);
             Graphics2D g = n.createGraphics();
 
+            int w = n.getWidth();
+            int h = n.getHeight();
+
             String qrUrl = param.getString("qrUrl");
             if (!Common.isEmpty(qrUrl))
             {
-                float qrx = param.getFloat("qrx");
-                float qry = param.getFloat("qry");
-                float qrw = param.getFloat("qrw");
+                double qrw = Common.doubleOf(param.get("qrw"), 0) * w / 100;
+                double qrx = Common.doubleOf(param.get("qrx"), 0) * w / 100 - qrw / 2;
+                double qry = Common.doubleOf(param.get("qry"), 0) * h / 100 - qrw / 2;
 
                 try
                 {
@@ -153,14 +157,15 @@ public class ImageTool
             }
 
             String name = param.getString("name");
-            if (!Common.isEmpty(name))
+            float size = (float)Common.doubleOf(param.getString("nameFontSize"), 0);
+            if (!Common.isEmpty(name) && size > 0)
             {
-                String nameFontSize = param.getString("nameFontSize");
-                float nx = param.getFloat("nx");
-                float ny = param.getFloat("ny");
+                double nx = Common.doubleOf(param.get("namex"), 0) * w / 100;
+                double ny = Common.doubleOf(param.get("namey"), 0) * h / 100;
 
-                g.setFont(g.getFont().deriveFont((float)Common.doubleOf(nameFontSize, 32.0f)));
-                g.drawString(name, nx, ny);
+                g.setFont(g.getFont().deriveFont(size));
+                Rectangle2D r2 = g.getFontMetrics().getStringBounds(name, g);
+                g.drawString(name, (float)nx - (float)r2.getWidth() / 2, (float)ny + (float)r2.getHeight() / 2);
             }
 
             try (ImageOutputStream ios = ImageIO.createImageOutputStream(fos);)
