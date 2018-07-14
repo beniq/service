@@ -111,7 +111,7 @@ public class ImageTool
         }
     }
 
-    private static File copy(File src, String path, String dest)
+    public static File copy(File src, String path, String dest)
     {
         String suffix = src.getName();
         suffix = suffix.substring(suffix.length() - 4);
@@ -156,7 +156,7 @@ public class ImageTool
                 }
             }
 
-            String name = param.getString("name");
+            String name = param.getString("cust");
             float size = (float)Common.doubleOf(param.getString("nameFontSize"), 0);
             if (!Common.isEmpty(name) && size > 0)
             {

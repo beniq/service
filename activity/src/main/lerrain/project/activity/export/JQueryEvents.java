@@ -230,6 +230,14 @@ public class JQueryEvents
             String t = JSON.toJSONString(event.getParam());
             return "sharePoster("+t+");\n";
         }
+        else if ("downloadPoster".equals(event.getType()))
+        {
+            if (event.getParam() == null)
+                return null;
+
+            String t = JSON.toJSONString(event.getParam());
+            return "downloadPoster("+t+");\n";
+        }
 
         return null;
     }

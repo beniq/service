@@ -59,17 +59,25 @@ var ENV = {
         shareProduct: {
             text: "转发产品",
             comp: [
-                {label: "产品", code: null, type: "option", value: [{code: "", text: "请选择"}]},
+                {label: "产品", code: "productId", type: "option", value: [{code: {}, text: "请选择"}]},
                 {label: "标题", code: "title", type: "input"},
                 {label: "介绍", code: "desc", type: "input"},
                 {label: "小图", code: "imgUrl", type: "input"},
                 {label: "产品ID", code: "productId", type: "input"}
             ]
         },
+        downloadPoster: {
+            text: "下载海报",
+            comp: [
+                {label: "海报", code: "id", type: "option", value: [{code: {}, text: "请选择"}]},
+                {label: "预览", type: "posterPreview"},
+            ]
+        },
         sharePoster: {
             text: "转发海报",
             comp: [
-                {type: "poster"}
+                {label: "海报", code: "id", type: "option", value: [{code: {}, text: "请选择"}]},
+                {label: "预览", type: "posterPreview"},
             ]
         }
     },
@@ -367,99 +375,6 @@ var Element = {
     }
 }
 
-var Poster = React.createClass({
-    getInitialState() {
-        return {mode: 0};
-    },
-    point(e) {
-        if (this.state.mode == 0) {
-            this.props.value.name = "李测试"
-            window.open("act/" + ENV.actId + "/poster.jpg?param=" + encodeURI(JSON.stringify(this.props.value)))
-            return;
-        }
-        let c = $("#poster");
-        let s = c.offset();
-        let x = (e.pageX - s.left) * 100 / c.width();
-        let y = (e.pageY - s.top) * 100 / c.height();
-        x = x.toFixed(2);
-        y = y.toFixed(2);
-        if (this.state.mode == 1) {
-            this.props.value.qrx = x;
-            this.props.value.qry = y;
-            if (!this.props.value.qrw)
-                this.props.value.qrw = 20;
-        } else if (this.state.mode == 2) {
-            this.props.value.namex = x;
-            this.props.value.namey = y;
-        }
-        this.setState({mode: 0});
-        this.onChange();
-    },
-    setMode(mode) {
-        this.setState({mode: mode});
-    },
-    onChange() {
-        this.props.refreshParent(this.props.value);
-    },
-    render() {
-        return (
-            <div>
-                <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                    <div className="input-group-prepend">
-                        <div className="btn btn-primary" style={{width:"120px"}}>二维码URL</div>
-                    </div>
-                    <input type="text" className="form-control" ref="qrUrl" value={this.props.value.qrUrl} onChange={v => { this.props.value.qrUrl = v.target.value; this.onChange(); }}/>
-                </div>
-                <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                    <div className="input-group-prepend">
-                        <div className="btn btn-primary" style={{width:"120px"}}>二维码XYS</div>
-                    </div>
-                    <input type="text" className="form-control" ref="qrw" value={this.props.value.qrw} onChange={v => { this.props.value.qrw = v.target.value; this.onChange(); }}/>
-                    <div className="input-group-append">
-                        <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.qrx}</div>
-                        <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.qry}</div>
-                        <div className="btn btn-outline-primary" style={{width:"80px"}} onClick={this.setMode.bind(this, 1)}>选择</div>
-                    </div>
-                </div>
-                <div className="input-group pl-2 pr-2 pt-1 pb-1">
-                    <div className="input-group-prepend">
-                        <div className="btn btn-primary" style={{width:"120px"}}>姓名XYS</div>
-                    </div>
-                    <select className="form-control" ref="nameFontSize" defaultValue={this.props.value.fontSize} onChange={v => { this.props.value.fontSize = v.target.value; this.onChange(); }}>
-                        <option value="0">无</option>
-                        <option value="7">7px</option>
-                        <option value="8">8px</option>
-                        <option value="9">9px</option>
-                        <option value="10">10px</option>
-                        <option value="11">11px</option>
-                        <option value="12">12px</option>
-                        <option value="14">14px</option>
-                        <option value="16">16px</option>
-                        <option value="18">18px</option>
-                        <option value="20">20px</option>
-                        <option value="22">22px</option>
-                        <option value="24">24px</option>
-                        <option value="28">28px</option>
-                        <option value="32">32px</option>
-                        <option value="48">48px</option>
-                        <option value="64">64px</option>
-                        <option value="72">72px</option>
-                    </select>
-                    <div className="input-group-append">
-                        <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.namex}</div>
-                        <div className="btn btn-outline-primary" style={{width:"80px"}}>{this.props.value.namey}</div>
-                        <div className="btn btn-outline-primary" style={{width:"80px"}} onClick={this.setMode.bind(this, 2)}>选择</div>
-                    </div>
-                </div>
-                { this.props.value.imgUrl ?
-                    <img id="poster" data-event={this.props.eventId} src={this.props.value.imgUrl} style={{width:"60%", marginLeft:"20%"}} onClick={this.point.bind(this)}/> :
-                    <div id="poster" data-event={this.props.eventId} style={{width:"60%", height:"200px", marginLeft:"20%", border:"#000 1px dotted", textAlign:"center"}}>拖拽海报图片至此</div>
-                }
-            </div>
-        )
-    }
-})
-
 var Event = React.createClass({
     getInitialState() {
         return {};
@@ -501,27 +416,25 @@ var Event = React.createClass({
                 let event = ENV.event[s.type];
                 if (s.param == null) s.param = {};
                 let comps = !event || !event.comp ? null : event.comp.map((c, i) => {
-                    if (c.type == "poster") {
-                        let onChange = m => {
-                            for (let k in m) {
-                                s.param[k] = m[k];
-                            }
-                            this.save(s);
-                        };
-                        return <Poster value={s.param} eventId={s.id} refreshParent={onChange}/>;
-                    }
                     let comp = null;
                     if (c.type == "option") {
-                        comp = <select className="form-control" value={s.param[c.code]} onChange={v => {
+                        let keyn = s.param[c.code];
+                        let keyc;
+                        let opts = c.value.map(o => {
+                            let optv = JSON.stringify(o.code);
+                            if (o.code[c.code] == keyn)
+                                keyc = optv;
+                            return <option value={optv}>{o.text}</option>
+                        });
+                        let onc = v => {
                             if (v.target.value != null && v.target.value != "") {
                                 let val = JSON.parse(v.target.value);
                                 for (let k in val)
                                     s.param[k] = val[k];
                                 this.save(s);
                             }
-                        }}>
-                            {c.value.map(o => <option value={JSON.stringify(o.code)}>{o.text}</option>)}
-                        </select>;
+                        };
+                        comp = <select className="form-control" value={keyc} onChange={onc}>{opts}</select>;
                     } else if (c.type == "select") {
                             comp = <select className="form-control" value={s.param[c.code]} onChange={v => { s.param[c.code] = v.target.value; this.save(s); }}>
                                 { c.value.map(o => typeof o.code == "string" ? <option value={o.code}>{o.text}</option> : null) }
@@ -533,6 +446,9 @@ var Event = React.createClass({
                             <option value="N">否</option>
                             <option value="Y">是</option>
                         </select>;
+                    } else if (c.type == "posterPreview") {
+                        s.param.cust = "李测试";
+                        comp = <div className="form-control" value={s.param.imgUrl} onClick={v => { window.open("/poster.jpg?param=" + encodeURI(JSON.stringify(s.param))) }}>点击查看</div>;
                     }
                     return (
                         <div className="input-group pl-2 pr-2 pt-1 pb-1" key={i}>
@@ -555,13 +471,13 @@ var Event = React.createClass({
                                 <div className="input-group-prepend">
                                     <div className="btn btn-primary" style={{width:"120px"}}>参数json</div>
                                 </div>
-                                <input type="text" className="form-control" ref="evOnFinish" value={s.param==null?null:JSON.stringify(s.param)} readOnly="true"/>
+                                <input type="text" className="form-control" value={s.param==null?null:JSON.stringify(s.param)} readOnly="true"/>
                             </div>
                             <div className="input-group pl-2 pr-2 pt-1 pb-1">
                                 <div className="input-group-prepend">
                                     <div className="btn btn-primary" style={{width:"120px"}}>结束事件</div>
                                 </div>
-                                <input type="text" className="form-control" ref="evOnFinish" value={s.onFinish==null?null:JSON.stringify(s.onFinish)} readOnly="true"/>
+                                <input type="text" className="form-control" value={s.onFinish==null?null:JSON.stringify(s.onFinish)} readOnly="true"/>
                             </div>
                         </div>
                     </div>
@@ -1445,7 +1361,7 @@ var Main = React.createClass({
                                 <div className="pl-2 pr-2 pt-1 pb-1">活动文档</div>
                                 {tree}
                             </div>
-                            <div className="col-sm-6 p-3" id="detail">
+                            <div className="col-sm-6 p-3" id="detail" style={{overflowY:"scroll", overflowX:"hidden", height:window.innerHeight - 60 + "px"}}>
                                 {detail}
                             </div>
                         </div>
@@ -1463,6 +1379,13 @@ $(document).ready( function() {
         common.req("new_act.json", {}, r => { document.location.href = "./draw.html?actId=" + r.actId });
     else
         ReactDOM.render(<Main/>, document.getElementById("content"));
+
+    common.req("list_poster.json", {from:0, number:100}, r => {
+        r.map(x => {
+            ENV.event.downloadPoster.comp[0].value.push({text: x.name, code: x});
+            ENV.event.sharePoster.comp[0].value.push({text: x.name, code: x});
+        })
+    });
 
     setInterval(ENV.saveQueue, 10000);
 });

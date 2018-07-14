@@ -764,21 +764,6 @@ public class ActivityController
 		mailServer.send(json.getString("address"), "提测活动：" + doc.getName(), c, null);
 	}
 
-	@RequestMapping("/act/{actId}/poster.jpg")
-	public void poster(HttpServletRequest req, HttpServletResponse res) throws Exception
-	{
-		JSONObject param = JSON.parseObject(java.net.URLDecoder.decode(req.getParameter("param"), "utf-8"));
-		String imgUrl = param.getString("imgUrl");
-		try (OutputStream os = res.getOutputStream())
-		{
-			ImageTool.draw(new File(Common.pathOf(root, imgUrl)), param, os);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 //	@RequestMapping("/upload.json")
 //	@ResponseBody
 //	public JSONObject upload(@RequestBody JSONObject req)

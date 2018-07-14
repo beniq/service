@@ -64,9 +64,14 @@
         try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var sharePoster = function(p) {
-        document.location.href = "poster.jpg?param=" + JSON.stringify(p);
-        stat("ShareProduct", p.link);
-        iHealthBridge.doAction("share", JSON.stringify(p));
+        p.cust = "代理人"; //此处要获取用户姓名
+        var imgUrl = "poster.jpg?param=" + JSON.stringify(p);
+        stat("sharePoster", p.link);
+    };
+    var downloadPoster = function(p) {
+        p.cust = "代理人"; //此处要获取用户姓名
+        var imgUrl = "poster.jpg?param=" + JSON.stringify(p);
+        stat("downloadPoster", p.link);
     };
     var shareProduct = function(p){
         if (p.productId == 1) {

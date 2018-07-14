@@ -35,6 +35,16 @@ public class ActivityService
 		JQueryExport.textCss = Disk.load(new File("./static/template/text.cssx"), "utf-8");
 	}
 
+	public List listPoster(int from, int num)
+	{
+		return actDao.listPoster(from, num);
+	}
+
+	public Map savePoster(Map poster)
+	{
+		return actDao.savePoster(poster);
+	}
+
 	public List<ActivityDoc> list(int from, int num)
 	{
 		List<Long> list = actDao.list(from, num);
