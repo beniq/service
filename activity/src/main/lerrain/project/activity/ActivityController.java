@@ -502,12 +502,12 @@ public class ActivityController
 		e.setHs(Common.intOf(o.get("hs"), 0));
 
 		e.setDisplay(Common.intOf(o.getInteger("display"), 1));
-		e.setInput(o.getString("input"));
+		e.setInput(Common.trimStringOf(o.getString("input")));
 		e.setInputVerify(o.getJSONObject("inputVerify"));
 		e.setAction(o.getJSONArray("action"));
 		e.setVisible(o.getString("visible"));
-		e.setName(o.getString("name"));
-		e.setList(o.getString("list"));
+		e.setName(Common.trimStringOf(o.getString("name")));
+		e.setList(Common.trimStringOf(o.getString("list")));
 		e.setVideo(o.getString("video"));
 
 		if (o.containsKey("image"))
