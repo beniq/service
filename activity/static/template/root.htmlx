@@ -99,7 +99,7 @@
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
     var shareH5 = function(p){
-        p.link += '&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
+        p.link += (p.link.indexOf("?") >= 0 ? "&" : "?")+'accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
         p.thumb = p.imgUrl;
         stat("ShareHot", p.link);
         iHealthBridge.doAction("share", JSON.stringify(p));
