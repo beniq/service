@@ -68,7 +68,7 @@
         if(p.qrUrlUserId == "Y" && (p.qrUrl != null && p.qrUrl != "")){
             p.qrUrl += (p.qrUrl.indexOf("?") >= 0 ? "&" : "?")+"accountId="+gpo.accountId;
         }
-        var imgUrl = "poster.jpg?param=" + JSON.stringify(p);
+        var imgUrl = "poster.jpg?param=" + encodeURIComponent(JSON.stringify(p));
         stat("sharePoster", p.link, null, p.code);
         var so = {
             onlyImage: "https://sact.iyunbao.com/"+imgUrl,
@@ -78,6 +78,7 @@
             }
         };
         iHealthBridge.doAction("share", JSON.stringify(so));
+        // IYB.share(JSON.stringify(so));
     };
     var downloadPoster = function(p) {
         p.cust = "代理人"; //此处要获取用户姓名
