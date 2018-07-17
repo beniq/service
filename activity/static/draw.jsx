@@ -160,6 +160,7 @@ ENV.products = [
     {name: "全部", productId: 1, title: "全部", desc: "", imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/160000001/icon.jpg'},
     {name: "已选全部", productId: 2, title: "已选全部", desc: "", imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/160000001/icon.jpg'},
     {name: "百年康惠保重大疾病保险", productId: 1014999, title: '百年康惠保重大疾病保险', desc: '最高保额50万，1-6类职业可投保，100种重疾+30种轻症，可保终身。本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/160000001/icon.jpg'},
+    {name: "百年定惠保定期寿险", productId: 1028042, title: '百年定惠保定期寿险', desc: '高性价比、核保宽松、保额最高150万、免责条款仅4条!给家人一份稳稳的爱与责任！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/160000002/icon.jpg'},
     {name: "复星联合康乐e生重大疾病保险", productId: 1004329, title: '复星联合康乐e生重大疾病保险', desc: '80种重疾35种轻症，身故责任可选，保费双豁免，保障缴费期限灵活', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/70000001/share_kangleyisheng.png'},
     {name: "和谐宝贝健康成长计划（升级）", productId: 1023622, title: '和谐宝贝健康成长计划（升级）', desc: '交费灵活，多重保障，月月复利，收益递增', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000002_3_4_5/hexiebaobei_share.png'},
     {name: "和谐健康之享定期重大疾病保险", productId: 1006015, title: '和谐健康之享定期重大疾病保险', desc: '50种重疾最高60万，次年保额翻倍 投保年龄：28天-50周岁 缴费期间：5/10/15/20年 本产品支持人工核保，有需要请联系客服', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/60000001/share_hexiezhixiang.png'},

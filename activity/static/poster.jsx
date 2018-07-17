@@ -28,6 +28,10 @@ var Content = React.createClass({
         this.setState({mode: mode});
     },
     save() {
+        if(this.props.value.code == null || this.props.value.code == ""){
+            alert("海报编码不能为空，且保证唯一");
+            return false;
+        }
         common.req("save_poster.json", this.props.value, r => {});
     },
     render() {
@@ -51,9 +55,21 @@ var Content = React.createClass({
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
+                            <div className="btn btn-primary" style={{width:"120px"}}>海报编码</div>
+                        </div>
+                        <input type="text" className="form-control" value={v.code} onChange={e => { v.code = e.target.value; }}/>
+                    </div>
+                    <div className="input-group pl-2 pr-2 pt-1 pb-1">
+                        <div className="input-group-prepend">
                             <div className="btn btn-primary" style={{width:"120px"}}>二维码URL</div>
                         </div>
                         <input type="text" className="form-control" value={v.qrUrl} onChange={e => { v.qrUrl = e.target.value; }}/>
+                        <div className="input-group-append">
+                            <select className="form-control" value={v.qrUrlUserId} onChange={e => { v.qrUrlUserId = e.target.value; }}>
+                                <option value="Y">追加用户id</option>
+                                <option value="N">不追加用户id</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="input-group pl-2 pr-2 pt-1 pb-1">
                         <div className="input-group-prepend">
@@ -146,7 +162,7 @@ var Main = React.createClass({
         this.setState({now: v});
     },
     create() {
-        let np = { name:"新海报", qrUrl:"https://" };
+        let np = { name:"新海报", qrUrl:"https://", qrUrlUserId: "Y"};
         this.state.list.push(np);
         this.setState({list: this.state.list, now: np});
     },

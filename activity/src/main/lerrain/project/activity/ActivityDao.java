@@ -69,11 +69,13 @@ public class ActivityDao
 				Map m = new HashMap();
 				m.put("id", rs.getLong("id"));
 				m.put("name", rs.getString("name"));
+				m.put("code", rs.getString("code"));
 				m.put("imgUrl", rs.getString("img_url"));
 				m.put("qrx", Common.toDouble(rs.getObject("qr_x")));
 				m.put("qry", Common.toDouble(rs.getObject("qr_y")));
 				m.put("qrw", Common.toDouble(rs.getObject("qr_w")));
 				m.put("qrUrl", rs.getString("qr_url"));
+				m.put("qrUrlUserId", rs.getString("qr_url_user_id"));
 				m.put("namex", Common.toDouble(rs.getObject("name_x")));
 				m.put("namey", Common.toDouble(rs.getObject("name_y")));
 				m.put("nameFontSize", rs.getString("name_font_size"));
@@ -88,15 +90,17 @@ public class ActivityDao
 		if (!poster.containsKey("id"))
 			poster.put("id", ++idSeq);
 
-		String sql = "replace into t_activity_poster(id, name, img_url, qr_x, qr_y, qr_w, qr_url, name_x, name_y, name_font_size) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "replace into t_activity_poster(id, name, code, img_url, qr_x, qr_y, qr_w, qr_url, qr_url_user_id, name_x, name_y, name_font_size) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		jdbc.update(sql,
 				poster.get("id"),
 				poster.get("name"),
+				poster.get("code"),
 				poster.get("imgUrl"),
 				poster.get("qrx"),
 				poster.get("qry"),
 				poster.get("qrw"),
 				poster.get("qrUrl"),
+				poster.get("qrUrlUserId"),
 				poster.get("namex"),
 				poster.get("namey"),
 				poster.get("nameFontSize")

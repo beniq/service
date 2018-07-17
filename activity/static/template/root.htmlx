@@ -65,8 +65,19 @@
     };
     var sharePoster = function(p) {
         p.cust = "代理人"; //此处要获取用户姓名
+        if(p.qrUrlUserId == "Y" && (p.qrUrl != null && p.qrUrl != "")){
+            p.qrUrl += (p.qrUrl.indexOf("?") >= 0 ? "&" : "?")+"accountId="+gpo.accountId;
+        }
         var imgUrl = "poster.jpg?param=" + JSON.stringify(p);
-        stat("sharePoster", p.link);
+        stat("sharePoster", p.link, null, p.code);
+        var so = {
+            onlyImage: "https://sact.iyunbao.com/"+imgUrl,
+            actionPlus: {
+                actionType: '<!-- ACT_CODE -->/sharePoster',
+                code: p.code
+            }
+        };
+        iHealthBridge.doAction("share", JSON.stringify(so));
     };
     var downloadPoster = function(p) {
         p.cust = "代理人"; //此处要获取用户姓名
@@ -92,8 +103,8 @@
         stat("ShareHot", p.link);
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
-    var stat = function(code, dest, productId) {
-        $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
+    var stat = function(code, dest, productId, code) {
+        $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId, code: code}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
     }
     var gpo = {};
     gpo.post = function(url, val, callback, failcall) {
