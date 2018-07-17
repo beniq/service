@@ -90,7 +90,7 @@ public class ActivityDao
 		if (!poster.containsKey("id"))
 			poster.put("id", ++idSeq);
 
-		String sql = "replace into t_activity_poster(id, name, code, img_url, qr_x, qr_y, qr_w, qr_url, qr_url_user_id, name_x, name_y, name_font_size) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "replace into t_activity_poster(id, name, code, img_url, qr_x, qr_y, qr_w, qr_url, qr_url_user_id, name_x, name_y, name_font_size) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		jdbc.update(sql,
 				poster.get("id"),
 				poster.get("name"),
