@@ -104,8 +104,8 @@
         stat("ShareHot", p.link);
         iHealthBridge.doAction("share", JSON.stringify(p));
     };
-    var stat = function(code, dest, productId, code) {
-        $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId, code: code}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
+    var stat = function(code, dest, productId, plusCode) {
+        $.ajax({url:"<!-- SERVER -->/stat/action.json", type:"POST", data:JSON.stringify({action:'<!-- ACT_CODE -->/' + code, plus:{productId:productId, code: plusCode}, accountId:gpo.accountId, url:dest}), contentType:'application/json;charset=UTF-8', dataType:"json"});
     }
     var gpo = {};
     gpo.post = function(url, val, callback, failcall) {
