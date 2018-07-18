@@ -167,6 +167,7 @@ ENV.products = [
     {name: "中宏宏创驾享意外险", productId: 1027430, title: '中宏宏创驾享意外险', desc: '无论驾驶、乘坐私家车的意外身故、伤残、意外医疗全保障，尊享全年2次免费代驾服务', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/390000001/zhiro_share.jpg'},
     {name: "平安驾乘人员意外伤害保险", productId: 1013515, title: '平安驾乘人员意外伤害保险', desc: '无论驾驶、乘坐汽车的意外都能保障，多种车型供选择 最高50万保额，一张保单保全车人员', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/car/110000003/110000003_share.jpg'},
     {name: "人保高额意外险", productId: 1019138, title: '人保高额意外险', desc: '意外身故、伤残最高600万', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/200000001_2_3_4_5_6/renbaogaoeyiwai_share.jpg'},
+    {name: "人保个人意外伤害保险", productId: 1028332, title: '人保个人意外伤害保险', desc: '1-6类职业均可投保！保障意外身故和残疾，涵盖意外门诊、住院医疗和住院津贴费用！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/insurance/200000011_2_3/rb_share.jpg'},
     {name: "上海人寿小蘑菇定期寿险", productId: 1012028, title: '上海人寿小蘑菇定期寿险', desc: '最高150万，全面涵盖身故和全残保障，女性费率市场最低，1-5类职业均可投保', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/iyb10005share.jpg'},
     {name: "上海人寿小蘑菇PLUS定期寿险", productId: 1025802, title: '上海人寿小蘑菇PLUS定期寿险', desc: '保额提升至300万！全面涵盖身故和全残保障！ 运用专业智能核保技术，AI赋能，享便捷高效投保！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/130000001/share_h.jpg'},
     {name: "同方全球「慧馨安」少儿保险产品计划", productId: 1020311, title: '同方全球「慧馨安」少儿保险产品计划', desc: '50种重疾+8种特定重疾双倍赔付！满期可返还保费，可附加投保人豁免！多种交费期限和保障期间灵活选择！', imgUrl: 'https://static.zhongan.com/website/health/iybApp/upload/life/190000002/share.png'},
