@@ -39,6 +39,10 @@ public class FontTool {
      */
     private boolean loadFont(String fontType, String fileName){
         try {
+            if(!Disk.fileOf(ROOT, fileName).exists()){
+                return false;
+            }
+
             Font font = Font.createFont(Font.TRUETYPE_FONT, Disk.fileOf(ROOT, fileName));
             if(font == null){
                 return false;
