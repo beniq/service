@@ -163,7 +163,8 @@ public class ImageTool
                 double nx = Common.doubleOf(param.get("namex"), 0) * w / 100;
                 double ny = Common.doubleOf(param.get("namey"), 0) * h / 100;
 
-                g.setFont(g.getFont().deriveFont(size));
+//                g.setFont(g.getFont().deriveFont(size));
+                g.setFont(FontTool.getFont("微软雅黑", g.getFont()).deriveFont(size));
                 Rectangle2D r2 = g.getFontMetrics().getStringBounds(name, g);
                 g.drawString(name, (float)nx - (float)r2.getWidth() / 2, (float)ny + (float)r2.getHeight() / 2);
             }
