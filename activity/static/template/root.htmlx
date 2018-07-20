@@ -83,8 +83,9 @@
     var downloadPoster = function(p) {
         p.cust = (ENV.init != null ? ENV.init.accountName || "" : ""); //此处要获取用户姓名
         var imgUrl = "poster.jpg?param=" + encodeURIComponent(JSON.stringify(p));
-        stat("downloadPoster", p.link);
-        try{IYB.go(p.link);}catch(e){document.location.href = p.link;}
+        var dest = "https://sact.iyunbao.com/"+imgUrl;
+        stat("downloadPoster", dest, null, p.code);
+        try{IYB.go(dest);}catch(e){document.location.href = dest;}
     };
     var shareProduct = function(p){
         if (p.productId == 1) {
