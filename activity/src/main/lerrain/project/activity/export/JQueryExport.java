@@ -317,8 +317,18 @@ public class JQueryExport
         else
             style += "text-align:center;";
 
+        if (e.getVisible() != null)
+        {
+            style += "display:none;";
+            js3 += "if (" + expOf(e.getVisible(), exp) + ") { $(\"#" + id + "\").show(); }";
+        }
+
         if (e.getAlign() == 4 || e.getAlign() == 5 || e.getAlign() == 6)
-            style += "display:flex; align-items:center; ";
+        {
+            if (style.indexOf("display:") < 0)
+                style += "display:flex;";
+            style += "align-items:center; ";
+        }
 
         if (!Common.isEmpty(e.getInput()))
         {
@@ -336,12 +346,6 @@ public class JQueryExport
 
             if ("play".equals(ev.getType()))
                 className += " play" + ev.getId();
-        }
-
-        if (e.getVisible() != null)
-        {
-            style += "display:none;";
-            js3 += "if (" + expOf(e.getVisible(), exp) + ") { $(\"#" + id + "\").show(); }";
         }
 
         if (!Common.isEmpty(e.getVideo()))

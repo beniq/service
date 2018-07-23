@@ -508,7 +508,7 @@ public class ActivityController
 		e.setVisible(o.getString("visible"));
 		e.setName(Common.trimStringOf(o.getString("name")));
 		e.setList(Common.trimStringOf(o.getString("list")));
-		e.setVideo(o.getString("video"));
+		e.setVideo(Common.trimStringOf(o.getString("video")));
 
 		if (o.containsKey("image"))
 		{
@@ -518,18 +518,18 @@ public class ActivityController
 				e.getFile().add(ja.getString(k));
 		}
 
-		String bgColor = o.getString("bgColor");
+		String bgColor = Common.trimStringOf(o.getString("bgColor"));
 		e.setBgColor(Common.isEmpty(bgColor) ? null : bgColor);
 
-		String fontSize = o.getString("fontSize");
+		String fontSize = Common.trimStringOf(o.getString("fontSize"));
 		e.setFontSize(Common.isEmpty(fontSize) ? null : fontSize);
 		e.setLineHeight(o.getString("lineHeight"));
 		e.setAlign(Common.intOf(o.get("align"), 5));
 
-		String text = o.getString("text");
+		String text = Common.trimStringOf(o.getString("text"));
 		e.setText(Common.isEmpty(text) ? null : text);
 
-		String color = o.getString("color");
+		String color = Common.trimStringOf(o.getString("color"));
 		e.setColor(Common.isEmpty(color) ? null : color);
 
 		if (o.containsKey("style"))
