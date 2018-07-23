@@ -318,7 +318,11 @@ public class JQueryExport
             style += "text-align:center;";
 
         if (e.getAlign() == 4 || e.getAlign() == 5 || e.getAlign() == 6)
-            style += "display:flex; align-items:center; ";
+        {
+            if (style.indexOf("display:") < 0)
+                style += "display:flex;";
+            style += "align-items:center; ";
+        }
 
         if (!Common.isEmpty(e.getInput()))
         {
