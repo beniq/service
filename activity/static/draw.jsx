@@ -1354,7 +1354,7 @@ var Main = React.createClass({
         if (comps.fixed == null) {
             let y = $("#desk").scrollTop() * ENV.H / $("#canvas").height();
             content.map(v => {
-                v.y = v.y + y;
+                v.y = y;
             })
         }
         common.req("add_comps.json", {
@@ -1752,26 +1752,33 @@ var Main = React.createClass({
                     </div>
                     <div className="col-sm-8 m-0 p-0">
                         <div className="navbar navbar-expand-lg navbar-light bg-light m-0 p-3" style={{height:"60px"}}>
-                            <div className="mr-auto">
+                            <div className="mr-auto" style={{display:"flex"}}>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页面</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.copyPage}>复制页面</button>
-                                <button id="insertComps" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">插入</button>
-                                <div className="dropdown-menu" aria-labelledby="insertComps">
-                                    { ENV.comps.map(v => <a className="dropdown-item" onClick={this.insertComps.bind(this, v)}>{v.name}</a>) }
+                                <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.copyPage}>复制页</button>
+                                <div className="input-group">
+                                    <button id="insertComps" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">插入</button>
+                                    <div className="dropdown-menu" aria-labelledby="insertComps">
+                                        { ENV.comps.map(v => <a className="dropdown-item" onClick={this.insertComps.bind(this, v)}>{v.name}</a>) }
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="text-right">
-                                <button id="demo" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">演示</button>
-                                <div className="dropdown-menu" aria-labelledby="demo">
-                                    <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>
-                                    <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "uat")}>演示预发</button>
-                                    <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "prd")}>演示生产</button>
+                                <div className="input-group">
+                                    <button id="demo" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">演示</button>
+                                    <div className="dropdown-menu" aria-labelledby="demo">
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "test")}>演示测试</a>
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "uat")}>演示预发</a>
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "prd")}>演示生产</a>
+                                    </div>
                                 </div>
                                 <button type="button" className="btn btn-success mr-2" onClick={this.submitTest}>提测</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "uat")}>发布预发</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "prd")}>发布生产</button>
+                                <div className="input-group">
+                                    <button id="deploy" type="button" className="btn btn-danger mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">发布</button>
+                                    <div className="dropdown-menu" aria-labelledby="deploy">
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "test")}>发布测试</a>
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "uat")}>发布预发</a>
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "prd")}>发布生产</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="form-row m-0 p-0">
