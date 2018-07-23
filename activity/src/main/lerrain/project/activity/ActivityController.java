@@ -24,7 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class ActivityController
@@ -408,6 +411,79 @@ public class ActivityController
 		event.setType(ej.getString("type"));
 		event.setParam(ej.getJSONObject("param"));
 		event.setFinish(ej.getJSONObject("onFinish"));
+
+		queue.add(doc);
+
+		JSONObject res = new JSONObject();
+		res.put("result", "success");
+		res.put("content", DocTool.toJson(doc));
+
+		return res;
+	}
+
+	private void replaceId(Map<String, Object> m, Map<String, String> keys)
+	{
+		if (m == null)
+			return;
+
+		for (Map.Entry<String, Object> e : m.entrySet())
+		{
+			if ("id".equals(e.getKey()) || "eventId".equals(e.getKey()))
+			{
+				String str = e.getValue().toString();
+				if (keys.containsKey(str))
+				{
+					e.setValue(keys.get(str));
+				}
+				else
+				{
+					String nid = UUID.randomUUID().toString().replaceAll("[-]", "");
+					e.setValue(nid);
+
+					keys.put(str, nid);
+				}
+			}
+			else if (e.getValue() instanceof List)
+			{
+				for (Object val : (List)e.getValue())
+				{
+					if (val instanceof Map)
+					{
+						replaceId((Map)val, keys);
+					}
+				}
+			}
+		}
+	}
+
+	@RequestMapping("/add_comps.json")
+	@ResponseBody
+	public JSONObject addComps(@RequestBody JSONObject json)
+	{
+		Long actId = json.getLong("actId");
+		int index = json.getInteger("pageIndex");
+
+		ActivityDoc doc = act.getAct(actId);
+		Page page = doc.getList().get(index);
+
+		Map keys = new HashMap();
+
+		JSONArray list = json.getJSONArray("comps");
+		for (int i=0;i<list.size();i++)
+		{
+			JSONObject o = list.getJSONObject(i);
+			String parentId = o.getString("parentId");
+
+			replaceId(o, keys);
+
+			Element parent = parentId == null ? null : doc.find(parentId);
+			Element e = DocTool.toElement(page, parent, o);
+
+			if (parent == null)
+				page.addElement(e);
+			else
+				parent.addElement(e);
+		}
 
 		queue.add(doc);
 

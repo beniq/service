@@ -140,58 +140,62 @@ public class DocTool
         for (int j=0;j<elements.size();j++)
         {
             JSONObject e = elements.getJSONObject(j);
-
-            Element element = new Element();
-            element.setPage(page);
-            element.setParent(parent);
-            element.setId(e.getString("id"));
-            element.setX(e.getFloat("x"));
-            element.setY(e.getFloat("y"));
-            element.setZ(Common.intOf(e.get("z"), 1));
-            element.setW(e.getFloat("w"));
-            element.setH(e.getFloat("h"));
-            element.setYs(Common.intOf(e.get("ys"), 0));
-            element.setHs(Common.intOf(e.get("hs"), 0));
-            element.setName(e.getString("name"));
-            element.setDisplay(Common.intOf(e.getInteger("display"), 1));
-            element.setBgColor(e.getString("bgColor"));
-            try
-            {
-                element.setAction(e.getJSONArray("action"));
-            }
-            catch (Exception e1)
-            {
-            }
-            element.setFontSize(e.getString("fontSize"));
-            element.setLineHeight(e.getString("lineHeight"));
-            element.setAlign(Common.intOf(e.get("align"), 5));
-            element.setText(e.getString("text"));
-            element.setColor(e.getString("color"));
-            element.setStyle(e.getJSONObject("style"));
-            element.setVisible(e.getString("visible"));
-            element.setInput(e.getString("input"));
-            element.setInputVerify(e.getJSONObject("inputVerify"));
-            element.setList(e.getString("list"));
-            element.setVideo(e.getString("video"));
-
-            if (e.containsKey("image"))
-            {
-                element.getFile().clear();
-                JSONArray ja = e.getJSONArray("image");
-                for (int k=0;k<ja.size();k++)
-                    element.getFile().add(ja.getString(k));
-            }
-
-            if (e.containsKey("children"))
-                element.setChildren(toElements(page, element, e.getJSONArray("children")));
-
-            if (e.containsKey("events"))
-                element.setEvents(toEvents(element, e.getJSONArray("events")));
-
-            list.add(element);
+            list.add(toElement(page, parent, e));
         }
 
         return list;
+    }
+
+    public static Element toElement(Page page, Element parent, JSONObject e)
+    {
+        Element element = new Element();
+        element.setPage(page);
+        element.setParent(parent);
+        element.setId(e.getString("id"));
+        element.setX(e.getFloat("x"));
+        element.setY(e.getFloat("y"));
+        element.setZ(Common.intOf(e.get("z"), 1));
+        element.setW(e.getFloat("w"));
+        element.setH(e.getFloat("h"));
+        element.setYs(Common.intOf(e.get("ys"), 0));
+        element.setHs(Common.intOf(e.get("hs"), 0));
+        element.setName(e.getString("name"));
+        element.setDisplay(Common.intOf(e.getInteger("display"), 1));
+        element.setBgColor(e.getString("bgColor"));
+        try
+        {
+            element.setAction(e.getJSONArray("action"));
+        }
+        catch (Exception e1)
+        {
+        }
+        element.setFontSize(e.getString("fontSize"));
+        element.setLineHeight(e.getString("lineHeight"));
+        element.setAlign(Common.intOf(e.get("align"), 5));
+        element.setText(e.getString("text"));
+        element.setColor(e.getString("color"));
+        element.setStyle(e.getJSONObject("style"));
+        element.setVisible(e.getString("visible"));
+        element.setInput(e.getString("input"));
+        element.setInputVerify(e.getJSONObject("inputVerify"));
+        element.setList(e.getString("list"));
+        element.setVideo(e.getString("video"));
+
+        if (e.containsKey("image"))
+        {
+            element.getFile().clear();
+            JSONArray ja = e.getJSONArray("image");
+            for (int k=0;k<ja.size();k++)
+                element.getFile().add(ja.getString(k));
+        }
+
+        if (e.containsKey("children"))
+            element.setChildren(toElements(page, element, e.getJSONArray("children")));
+
+        if (e.containsKey("events"))
+            element.setEvents(toEvents(element, e.getJSONArray("events")));
+
+        return element;
     }
 
     private static List<Event> toEvents(Element element, JSONArray events)
