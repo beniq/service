@@ -316,7 +316,7 @@ public class JQueryExport
             style += "text-align:right;";
         else
             style += "text-align:center;";
-        
+
         if (e.getVisible() != null)
         {
             style += "display:none;";
