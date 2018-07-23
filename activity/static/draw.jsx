@@ -152,6 +152,399 @@ var ENV = {
         autoScroll: {text: "滚动字幕"},
         scroll: {text: "可卷动"},
     },
+    comps: [
+        {
+            name: "弹出框",
+            fixed: 0,
+            content: [{
+                "action": [{
+                    "eventId": "e760e5f9d89641378d7392add7fc0624",
+                    "type": "event"
+                }],
+                "align": 5,
+                "bgColor": "rgba(0,0,0,0.7)",
+                "children": [{
+                    "action": [],
+                    "align": 0,
+                    "cx": 19.5,
+                    "cy": 245.5,
+                    "display": 1,
+                    "h": 709,
+                    "hs": 0,
+                    "id": "baf87a27cb74459ea577f6acfd421b5f",
+                    "image": ["act/22/1223.png"],
+                    "name": "弹出框",
+                    "style": {
+                        "popup": {}
+                    },
+                    "w": 711,
+                    "x": 19.5,
+                    "y": 363,
+                    "ys": 1,
+                    "z": 1
+                }],
+                "cx": 0,
+                "cy": 0,
+                "display": 0,
+                "events": [{
+                    "id": "7ddf6636d8e0487ba50ef1eabcb1ed19",
+                    "type": "open"
+                }, {
+                    "id": "e760e5f9d89641378d7392add7fc0624",
+                    "type": "close"
+                }],
+                "h": 1200,
+                "hs": 1,
+                "id": "f4ca39de9d7945189514b606128a4ec6",
+                "image": [],
+                "name": "弹出灰幕遮罩",
+                "style": {
+                    "fixed": {},
+                    "hide": {}
+                },
+                "w": 750,
+                "x": 0,
+                "y": 0,
+                "ys": 0,
+                "z": 7
+            }]
+        },
+        {
+            name: "抽奖",
+            fixed: 0,
+            content: [{
+                "action": [],
+                "align": 0,
+                "name": "抽奖转子",
+                "cx": 85,
+                "cy": 1343,
+                "display": 1,
+                "events": [{
+                    "id": "c261ac039d474407a56e05a7404783ac",
+                    "onFinish": {
+                        "eventId": "39fb9076a4854ea1ad86cbabdbfdfcfe",
+                        "type": "event"
+                    },
+                    "type": "tiger"
+                }],
+                "h": 194,
+                "hs": 0,
+                "id": "b24ebe3952bd4a36afa42942efd972be",
+                "image": ["act/22/525.png"],
+                "style": {
+                    "alpha50": {}
+                },
+                "w": 194,
+                "x": 85,
+                "y": 1343,
+                "ys": 0,
+                "z": 1
+            }, {
+                "action": [{
+                    "eventId": "8f8cf48f958b4e8ab3c1ca31bf5ae4f8",
+                    "type": "event"
+                }],
+                "name": "弹出灰幕遮罩",
+                "align": 5,
+                "bgColor": "rgba(0,0,0,0.7)",
+                "children": [{
+                    "action": [],
+                    "align": 0,
+                    "name": "弹出框",
+                    "children": [{
+                        "action": [],
+                        "align": 5,
+                        "name": "奖品图",
+                        "cx": 143.80939,
+                        "cy": 503.7873,
+                        "display": 1,
+                        "events": [{
+                            "id": "d1bbfb72ac544b22aab6d1c3d6774bfa",
+                            "type": "bgSwitch"
+                        }],
+                        "h": 197.66728,
+                        "hs": 0,
+                        "id": "93a11714fe43471dbb0be8a4a02571ac",
+                        "image": ["act/22/1385.png", "act/22/1386.png", "act/22/1387.png", "act/22/1388.png", "act/22/1389.png", "act/22/1390.png", "act/22/1391.png", "act/22/1392.png"],
+                        "style": {
+                            "bgSwitch": {}
+                        },
+                        "w": 464.0884,
+                        "x": 124.309395,
+                        "y": 258.2873,
+                        "ys": 0,
+                        "z": 1
+                    }, {
+                        "action": [{
+                            "eventId": "cec6fd634d36462f8d5909c502ad98c9",
+                            "type": "event"
+                        }],
+                        "align": 0,
+                        "name": "跳转至奖品",
+                        "cx": 263.89227,
+                        "cy": 729.1354,
+                        "display": 1,
+                        "events": [{
+                            "id": "cec6fd634d36462f8d5909c502ad98c9",
+                            "param": {
+                                "url": "",
+                                "value": "ENV.init.link"
+                            },
+                            "type": "redirect"
+                        }],
+                        "h": 70,
+                        "hs": 0,
+                        "id": "cdc363a84d174484b0784ea63c2117f2",
+                        "image": ["act/22/1447.png"],
+                        "style": {},
+                        "w": 230,
+                        "x": 244.39226,
+                        "y": 483.63535,
+                        "ys": 0,
+                        "z": 1
+                    }],
+                    "cx": 19.5,
+                    "cy": 245.5,
+                    "display": 1,
+                    "h": 709,
+                    "hs": 0,
+                    "id": "e89d26285c534280941360798f1b40b2",
+                    "image": ["act/22/1223.png"],
+                    "style": {
+                        "popup": {}
+                    },
+                    "w": 711,
+                    "x": 19.5,
+                    "y": 363,
+                    "ys": 1,
+                    "z": 1
+                }],
+                "cx": 0,
+                "cy": 0,
+                "display": 0,
+                "events": [{
+                    "id": "39fb9076a4854ea1ad86cbabdbfdfcfe",
+                    "onFinish": {
+                        "eventId": "5d3e09ec5eff4aeab5a72b888a069b2f",
+                        "type": "event"
+                    },
+                    "type": "open"
+                }, {
+                    "id": "8f8cf48f958b4e8ab3c1ca31bf5ae4f8",
+                    "onFinish": {
+                        "eventId": "a52993d164394747b74c84a861d7aeb8",
+                        "type": "event"
+                    },
+                    "type": "close"
+                }, {
+                    "id": "5d3e09ec5eff4aeab5a72b888a069b2f",
+                    "onFinish": {
+                        "eventId": "d1bbfb72ac544b22aab6d1c3d6774bfa",
+                        "type": "event"
+                    },
+                    "type": "sparks"
+                }, {
+                    "id": "a52993d164394747b74c84a861d7aeb8",
+                    "type": "stopSparks"
+                }],
+                "h": 1200,
+                "hs": 1,
+                "id": "cf04b5da8e4b49ffb7657f2cfeba0b85",
+                "image": [],
+                "style": {
+                    "canvas": {},
+                    "fixed": {},
+                    "hide": {}
+                },
+                "w": 750,
+                "x": 0,
+                "y": 0,
+                "ys": 0,
+                "z": 7
+            }, {
+                "action": [],
+                "align": 5,
+                "name": "剩余抽奖次数",
+                "color": "#000000",
+                "cx": 321,
+                "cy": 1197,
+                "display": 1,
+                "fontSize": "32",
+                "h": 40,
+                "hs": 0,
+                "id": "8bf4a948524c4a68bc9317376a6faa7d",
+                "image": [],
+                "lineHeight": "40",
+                "style": {},
+                "text": "ENV.init.times",
+                "w": 50.27933,
+                "x": 321,
+                "y": 1197,
+                "ys": 0,
+                "z": 1
+            }]
+        },
+        {
+            name: "素材纵排",
+            content: [{
+                "action": [],
+                "align": 5,
+                "name": "素材滚动框",
+                "children": [{
+                    "action": [],
+                    "align": 0,
+                    "name": "单个 素材",
+                    "children": [{
+                        "action": [{
+                            "eventId": "451d9064d06343e5b23712e1da72c465",
+                            "type": "event"
+                        }],
+                        "align": 5,
+                        "name": "查看素材",
+                        "cx": 276.4972,
+                        "cy": 2383.8882,
+                        "display": 1,
+                        "events": [{
+                            "id": "451d9064d06343e5b23712e1da72c465",
+                            "param": {
+                                "value": "SELF.link"
+                            },
+                            "type": "redirect"
+                        }],
+                        "h": 75.41899,
+                        "hs": 0,
+                        "id": "f7f2327858254345bf88ceafe494b969",
+                        "image": [],
+                        "style": {},
+                        "w": 198.32402,
+                        "x": 209.4972,
+                        "y": 129.88828,
+                        "ys": 0,
+                        "z": 1
+                    }, {
+                        "action": [{
+                            "eventId": "1d4f83c83fd2450980ad2a7663a522cd",
+                            "type": "event"
+                        }],
+                        "align": 5,
+                        "name": "转发素材",
+                        "cx": 481.80447,
+                        "cy": 2379.6982,
+                        "display": 1,
+                        "events": [{
+                            "id": "1d4f83c83fd2450980ad2a7663a522cd",
+                            "param": {
+                                "value": "eval(SELF.event)"
+                            },
+                            "type": "js"
+                        }],
+                        "h": 82.40224,
+                        "hs": 0,
+                        "id": "88013e82c3f048a9a806cf99b36000f3",
+                        "image": [],
+                        "style": {},
+                        "w": 192.73743,
+                        "x": 414.80447,
+                        "y": 125.698326,
+                        "ys": 0,
+                        "z": 1
+                    }, {
+                        "action": [],
+                        "align": 4,
+                        "name": "热度数值",
+                        "color": "#FF0000",
+                        "cx": 431,
+                        "cy": 2344,
+                        "display": 1,
+                        "fontSize": "28",
+                        "h": 36,
+                        "hs": 0,
+                        "id": "a5c743f582df433da1b122788056bd21",
+                        "image": [],
+                        "lineHeight": "30",
+                        "style": {},
+                        "text": "SELF.level",
+                        "w": 163.40782,
+                        "x": 364,
+                        "y": 90,
+                        "ys": 0,
+                        "z": 1
+                    }, {
+                        "action": [],
+                        "align": 4,
+                        "name": "素材标题",
+                        "color": "#000000",
+                        "cx": 289.06705,
+                        "cy": 2260.9832,
+                        "display": 1,
+                        "fontSize": "28",
+                        "h": 80,
+                        "hs": 0,
+                        "id": "391545fe123742efac8985d59ec3a102",
+                        "image": [],
+                        "lineHeight": "40",
+                        "style": {},
+                        "text": "SELF.text",
+                        "w": 379.88828,
+                        "x": 222.06705,
+                        "y": 6.98324,
+                        "ys": 0,
+                        "z": 1
+                    }, {
+                        "action": [],
+                        "align": 5,
+                        "name": "素材图标",
+                        "cx": 87,
+                        "cy": 2270,
+                        "display": 1,
+                        "h": 180,
+                        "hs": 0,
+                        "id": "44b2eb2a93fa4bb5a1a2b4f1f0f09145",
+                        "image": [],
+                        "style": {
+                            "bgUrl": {
+                                "url": "SELF.img"
+                            }
+                        },
+                        "w": 180,
+                        "x": 20,
+                        "y": 16,
+                        "ys": 0,
+                        "z": 1
+                    }],
+                    "cx": 67,
+                    "cy": 2254,
+                    "display": 1,
+                    "h": 214,
+                    "hs": 0,
+                    "id": "fc23e2ad14874eceb9815ad20744b997",
+                    "image": ["act/25/805.png"],
+                    "list": "ENV.init.hot",
+                    "style": {},
+                    "w": 615,
+                    "x": 2,
+                    "y": 40,
+                    "ys": 0,
+                    "z": 1
+                }],
+                "cx": 65,
+                "cy": 2214,
+                "display": 1,
+                "h": 861,
+                "hs": 0,
+                "id": "a03473a890b04aab9b236dbd79325c79",
+                "image": [],
+                "style": {
+                    "scroll": {}
+                },
+                "w": 620,
+                "x": 65,
+                "y": 2214,
+                "ys": 0,
+                "z": 1
+            }]
+        },
+    ],
     images: {},
     imagesOnload: {}
 };
@@ -956,6 +1349,22 @@ var Main = React.createClass({
             });
         }
     },
+    insertComps(comps) {
+        let content = comps.content;
+        if (comps.fixed == null) {
+            let y = $("#desk").scrollTop() * ENV.H / $("#canvas").height();
+            content.map(v => {
+                v.y = y;
+            })
+        }
+        common.req("add_comps.json", {
+            actId: ENV.actId,
+            pageIndex: ENV.index,
+            comps: content
+        }, r => {
+            this.rebuild(r);
+        });
+    },
     fillBgColor(e) { //以element的四个角的颜色平均值填充背景色
         let img = ENV.getImage(ENV.doc.pages[ENV.index].background);
         let canvas = document.getElementById("canvas");
@@ -1343,19 +1752,33 @@ var Main = React.createClass({
                     </div>
                     <div className="col-sm-8 m-0 p-0">
                         <div className="navbar navbar-expand-lg navbar-light bg-light m-0 p-3" style={{height:"60px"}}>
-                            <div className="mr-auto">
-                                <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新界面</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页面</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.copyPage}>复制页面</button>
-                            </div>
-                            <div className="text-right">
-                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "test")}>演示测试</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "uat")}>演示预发</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.look.bind(this, "prd")}>演示生产</button>
-                                <button type="button" className="btn btn-success mr-2" onClick={this.submitTest}>提交测试</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "test")}>发布测试</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "uat")}>发布预发</button>
-                                <button type="button" className="btn btn-danger ml-2" onClick={this.deploy.bind(this, "prd")}>发布生产</button>
+                            <div className="mr-auto" style={{display:"flex"}}>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.reload}>刷新</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.newPage}>新增页</button>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.copyPage}>复制页</button>
+                                <div className="input-group">
+                                    <button id="insertComps" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">插入</button>
+                                    <div className="dropdown-menu" aria-labelledby="insertComps">
+                                        { ENV.comps.map(v => <a className="dropdown-item" onClick={this.insertComps.bind(this, v)}>{v.name}</a>) }
+                                    </div>
+                                </div>
+                                <div className="input-group">
+                                    <button id="demo" type="button" className="btn btn-success mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">演示</button>
+                                    <div className="dropdown-menu" aria-labelledby="demo">
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "test")}>演示测试</a>
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "uat")}>演示预发</a>
+                                        <a className="dropdown-item" onClick={this.look.bind(this, "prd")}>演示生产</a>
+                                    </div>
+                                </div>
+                                <button type="button" className="btn btn-success mr-2" onClick={this.submitTest}>提测</button>
+                                <div className="input-group">
+                                    <button id="deploy" type="button" className="btn btn-danger mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">发布</button>
+                                    <div className="dropdown-menu" aria-labelledby="deploy">
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "test")}>发布测试</a>
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "uat")}>发布预发</a>
+                                        <a className="dropdown-item" onClick={this.deploy.bind(this, "prd")}>发布生产</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="form-row m-0 p-0">
