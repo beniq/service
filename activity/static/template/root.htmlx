@@ -85,7 +85,8 @@
         if(p.qrUrlUserId == "Y" && (p.qrUrl != null && p.qrUrl != "")){
             p.qrUrl += (p.qrUrl.indexOf("?") >= 0 ? "&" : "?")+"accountId="+gpo.accountId;
         }
-        var imgUrl = "poster.jpg?param=" + encodeURIComponent(JSON.stringify(p));
+        // var imgUrl = "poster.jpg?param=" + encodeURIComponent(JSON.stringify(p));
+        var imgUrl = "posterShow.html?param=" + escape(JSON.stringify(p));
         var dest = "https://sact.iyunbao.com/"+imgUrl;
         stat("downloadPoster", dest, null, p.code);
         try{IYB.go(dest);}catch(e){document.location.href = dest;}

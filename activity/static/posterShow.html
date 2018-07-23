@@ -1,0 +1,34 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<meta name="description" content=""/>
+		<meta name="author" content=""/>
+
+		<title>ACTIVITY</title>
+
+		<link href="./css/bootstrap.min.css" rel="stylesheet"/>
+		<link href="./css/web.css" rel="stylesheet"/>
+
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/popper.min.js"></script>
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/common.js"></script>
+
+		<script src="./js/browser.min.js"></script>
+	</head>
+
+	<body>
+		<img id="poster" title="海报" width="100%">
+	</body>
+
+	<script type="text/javascript">
+        $(document).ready( function() {
+            var param = common.param("param");
+            // console.log(param);
+			$("#poster").attr("src", "https://sact.iyunbao.com/poster.jpg?param=" + encodeURIComponent(param));
+        });
+	</script>
+</html>
