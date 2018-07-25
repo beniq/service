@@ -12,6 +12,7 @@
     <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/zepto.min.js"></script>
     <script src="https://cdn-qcloud.zhongan.com/a00000/Project/HealthInsurance/js/qqdialog.js"></script>
     <script src="https://cdn.iyb.tm/common/js/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://static.zhongan.com/website/health/iyb/resource/activity/gpo/common/js/shareAgain.2.0.js"></script>
     <script src="./activity.js"></script>
     <script src="./play.js"></script>
     <!-- PLUG -->
@@ -47,6 +48,45 @@
     var ENV = {
         H: <!-- HEIGHT -->,
         init: {}
+    };
+    // 分享当前页面
+    var sharePageInApp = function(){
+        var p = ENV.sharePageObj;
+        if(p.link != null && p.link != "") {
+            p.link = p.link.substr(0, p.link.indexOf('?') == -1 ? p.link.length : p.link.indexOf('?'));
+        }else{
+            p.link = window.location.origin + window.location.pathname;
+        }
+        p.thumb = p.imgUrl;
+        p.link = p.link + "?accountId=" + gpo.accountId;
+        p.actionPlus = {actionType: '<!-- ACT_CODE -->/share'};
+
+        stat("share", p.link);
+        iHealthBridge.doAction("share", JSON.stringify(p));
+    };
+    // 分享页面初始化
+    var shareIt = function(shareObj){
+        ENV.sharePageObj = shareObj;
+        // APP内分享初始化
+        try{IYB.setRightButton(JSON.stringify([{title:"分享", func:"javascript:sharePageInApp();", color:"#333333", font:"17"}]));}catch(e){}
+        // try{iHealthBridge.doAction("setRightButton", JSON.stringify({title:"分享", action:"javascript:sharePageInApp();", color:"#333333", font:"17"}));}catch(e){};
+
+        try{
+            // 二次分享初始化
+            var dest = window.location.origin + window.location.pathname;
+            if(shareObj.link != null && shareObj.link != ""){
+                dest = shareObj.link.substr(0, shareObj.link.indexOf('?') == -1 ? shareObj.link.length : shareObj.link.indexOf('?'));
+            }
+            dest = dest + "?accountId=ACCOUNT_ID&time=TIME";
+
+            ShareA.setWechatShare({
+                title: shareObj.title,
+                desc: shareObj.desc,
+                thumb: shareObj.imgUrl,
+                imgUrl: shareObj.imgUrl,
+                link: dest
+            }, '<!-- ACT_CODE -->/sharePage');
+        }catch(e){}
     };
     var gotoPrd = function(prdId) {
         var dest = 'https://www.iyunbao.com/open/qrcode/iybQrcodeProduct?productId='+prdId+'&accountId='+gpo.accountId+'&shareType=<!-- ACT_CODE -->';
