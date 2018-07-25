@@ -56,8 +56,11 @@ public class ActivityController
 	@ResponseBody
 	public JSONObject list(@RequestBody JSONObject json)
 	{
+		int from = Common.intOf(json.get("from"), 0);
+		int num = Common.intOf(json.get("number"), 20);
+
 		JSONArray list = new JSONArray();
-		for (ActivityDoc doc : act.list(0, 20))
+		for (ActivityDoc doc : act.list(from, num))
 		{
 			if (doc == null) continue;
 

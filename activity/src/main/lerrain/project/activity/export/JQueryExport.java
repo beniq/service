@@ -333,7 +333,10 @@ public class JQueryExport
         if (!Common.isEmpty(e.getInput()))
         {
             String inputId = Common.trimStringOf(e.getInput());
-            es += "<input id='INPUT" + inputId + "'/>";
+            String ph = "";
+            if (e.getText() != null)
+                ph = "placeholder='"+e.getText()+"'";
+            es += "<input id='INPUT" + inputId + "' "+ph+"/>";
             js3 += "$('#INPUT" + inputId + "').val(ENV.init." + inputId + ");";
             input.put(inputId, e.getInputVerify());
         }
