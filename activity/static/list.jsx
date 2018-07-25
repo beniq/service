@@ -55,10 +55,19 @@ var Content = React.createClass({
 
 var Main = React.createClass({
     getInitialState() {
-        return {list: [], now: null};
+        return {list: [], now: null, from: 0};
     },
     componentDidMount() {
-        common.req("list.json", {}, r => this.setState({list: r, now: r.length > 0 ? r[0] : null}));
+        this.more();
+    },
+    more() {
+        common.req("list.json", {from: this.state.from, number: 50}, r => {
+            if (r != null && r.length > 0) {
+                this.setState({from: this.state.from + 50, list: this.state.list.concat(r)});
+                if (this.state.now == null)
+                    this.setState({now: r[0]});
+            }
+        });
     },
     select(v) {
         this.setState({now: v});
@@ -82,7 +91,7 @@ var Main = React.createClass({
                 <div className="col-4 m-0 p-2" style={{height:"100%", overflowY:"scroll"}}>
                     {list}
                     <div className="input-group p-2">
-                        <button className="form-control btn btn-danger" onClick={this.create}>新的活动</button>
+                        <button className="form-control btn btn-danger" onClick={this.more}>加载更多</button>
                     </div>
                 </div>
                 <div className="col-8 m-0" style={{overflowY:"scroll"}}>
