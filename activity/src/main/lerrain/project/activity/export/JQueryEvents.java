@@ -47,6 +47,11 @@ public class JQueryEvents
             plug += "<script src=\"https://static.iyunbao.com/website/health/iybApp/h5/js/authAgent/authAgent.min.js\"></script>";
             //envJs += "_AuthAgent.isAuth(function() {  }, function() { Life.Dialog.alert('参加该活动需认证代理人资质，请于首页认证') });";
         }
+        else if ("dispatch".equals(event.getType()))
+        {
+            String c = event.getParam() != null ? JSON.toJSONString(event.getParam()) : "{}";
+            jqe.js1 += "shareIt("+c+");\n";
+        }
         else if ("tiger".equals(event.getType()))
         {
             envJs += "ENV.tiger = new Tiger1();\n";
@@ -135,6 +140,7 @@ public class JQueryEvents
                     "    canvas.height=canvas.clientHeight;\n" +
                     "    ENV.sparks" + id + " = new Sparks(canvas);\n";
             js += "ENV.sparks" + event.getElement().getId() + ".start();";
+            js += (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
             if (c != null)
                 js += "}";
 
@@ -142,7 +148,7 @@ public class JQueryEvents
         }
         else if ("stopSparks".equals(event.getType()))
         {
-            return "ENV.sparks" + event.getElement().getId() + ".stop();";
+            return "ENV.sparks" + event.getElement().getId() + ".stop();\n" + (event.getFinish() == null ? "" : "finish" + event.getId() + "();\n");
         }
         else if ("scroll".equals(event.getType()))
         {

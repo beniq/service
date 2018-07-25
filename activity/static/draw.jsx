@@ -11,6 +11,14 @@ var ENV = {
     event: {
         init: {text: "初始化"},
         certfiOnly: {text: "资格验证"},
+        dispatch: {
+            text: "可转发",
+            comp: [
+                {label: "标题", code: "title", type: "input"},
+                {label: "介绍", code: "desc", type: "input"},
+                {label: "小图", code: "imgUrl", type: "input"}
+            ]
+        },
         open: {text: "显示图层"},
         close: {text: "关闭图层"},
         closeAni: {
@@ -1463,7 +1471,7 @@ var Main = React.createClass({
         }
     },
     submitTest() {
-        if (confirm("确定提交？")) common.req("submit_test.json", {actId: ENV.actId, address: "guye@iyunbao.com,caojianxiang@iyunbao.com,zhangqiliang@iyunbao.com,dingliang@iyunbao.com,xuechuangwei@iyunbao.com,qinyang@iyunbao.com,baoting@iyunbao.com,lixinhao@iyunbao.com"}, r => {
+        if (confirm("确定提交？")) common.req("submit_test.json", {actId: ENV.actId, address: "guye@iyunbao.com,caojianxiang@iyunbao.com,zhangqiliang@iyunbao.com,dingliang@iyunbao.com,xuechuangwei@iyunbao.com,qinyang@iyunbao.com,baoting@iyunbao.com,lixinhao@iyunbao.com,liuxiao@iyunbao.com,luwenming@iyunbao.com"}, r => {
             alert(r);
         });
     },
