@@ -51,6 +51,9 @@
     };
     // 分享当前页面
     var sharePageInApp = function(){
+        if(gpo.accountId == null || gpo.accountId == "") {
+            return;
+        }
         var p = ENV.sharePageObj;
         if(p.link != null && p.link != "") {
             p.link = p.link.substr(0, p.link.indexOf('?') == -1 ? p.link.length : p.link.indexOf('?'));
